@@ -71,8 +71,18 @@ export class ForgotPasswordComponent implements OnInit {
       return false;
     }
 
-    if (this.resetPasswordDto.newPassword.trim().length < 4) {
+    if(this.resetPasswordDto.newPassword.includes(" ")){
+      this.toastr.error("Password can't contain space");
+      return false;
+    }
+
+    if (this.resetPasswordDto.newPassword.length < 4) {
       this.toastr.error('Password must be at lest 4 characters');
+      return false;
+    }
+
+    if (this.resetPasswordDto.newPassword.length > 8) {
+      this.toastr.error("Password contains maximum 8 characters");
       return false;
     }
 

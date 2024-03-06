@@ -20,10 +20,10 @@ export class RegisterComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.accountService.currentUser$.subscribe({
-      next: (user) =>{
-        if(user) this.router.navigateByUrl('/')
-      }
-    })
+      next: (user) => {
+        if (user) this.router.navigateByUrl('/');
+      },
+    });
   }
 
   register() {
@@ -69,8 +69,18 @@ export class RegisterComponent implements OnInit {
       return false;
     }
 
-    if (this.registerDto.password.trim().length < 4) {
+    if (this.registerDto.password.includes(' ')) {
+      this.toastr.error("Password can't contain space");
+      return false;
+    }
+
+    if (this.registerDto.password.length < 4) {
       this.toastr.error('Password must be at lest 4 characters');
+      return false;
+    }
+
+    if (this.registerDto.password.length > 8) {
+      this.toastr.error('Password contains maximum 8 characters');
       return false;
     }
 

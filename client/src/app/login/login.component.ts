@@ -93,8 +93,18 @@ export class LoginComponent implements OnInit {
       return false;
     }
 
-    if (this.loginDto.password.trim().length < 4) {
+    if (this.loginDto.password.includes(' ')) {
+      this.toastr.error("Password can't contain space");
+      return false;
+    }
+
+    if (this.loginDto.password.length < 4) {
       this.toastr.error('Password must be at lest 4 characters');
+      return false;
+    }
+
+    if (this.loginDto.password.length > 8) {
+      this.toastr.error('Password contains maximum 8 characters');
       return false;
     }
 

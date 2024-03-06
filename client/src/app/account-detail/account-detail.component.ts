@@ -74,13 +74,33 @@ export class AccountDetailComponent implements OnInit {
       return false;
     }
 
-    if (this.oldPassword.length < 4 || this.newPassword.length < 4) {
-      this.toastr.error('password at least 4 characters');
+    if (this.oldPassword.includes(' ')) {
+      this.toastr.error("old password can't contain space");
       return false;
     }
 
-    if (this.oldPassword.includes(' ') || this.newPassword.includes(' ')) {
-      this.toastr.error('password not include space');
+    if (this.newPassword.includes(' ')) {
+      this.toastr.error("new password can't contain space");
+      return false;
+    }
+
+    if (this.oldPassword.length < 4) {
+      this.toastr.error('old password at least 4 characters');
+      return false;
+    }
+
+    if (this.newPassword.length < 4) {
+      this.toastr.error('new password at least 4 characters');
+      return false;
+    }
+
+    if (this.oldPassword.length > 8) {
+      this.toastr.error('old Password contains maximum 8 characters');
+      return false;
+    }
+
+    if (this.newPassword.length > 8) {
+      this.toastr.error('new Password contains maximum 8 characters');
       return false;
     }
 
