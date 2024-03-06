@@ -1,0 +1,19 @@
+:host ::ng-deep {
+  .p-paginator-rpp-options.p-dropdown.p-component {
+    align-items: center;
+    text-align: left;
+    padding-left: 10px;
+  }
+  .p-dropdown-items.ng-star-inserted{
+    padding: 0;
+    margin-left: 10px;
+  }
+  .p-paginator-current.ng-star-inserted{
+    float: left;
+    text-align: left;
+  }
+
+  .ag-header-cell-label{
+    justify-content: center;
+  }
+}

@@ -1,0 +1,44 @@
+<button class="btn btn-info" routerLink="/upload-comic">
+  <i class="fa-solid fa-chevron-left"></i> Back
+</button>
+<h3 class="mt-2 mb-2">Chapter list of {{ comic.name }}</h3>
+<button class="btn btn-success mb-3" (click)="openModal(true)">
+  <i class="fa-solid fa-plus"></i> Add chapter
+</button>
+<button class="btn btn-info mb-3" style="margin-left: 10px" (click)="getAll()">
+  <i class="fa-solid fa-arrows-rotate"></i> Refesh
+</button>
+
+<p *ngIf="listChapter.length == 0">No chapter!</p>
+
+<div *ngIf="listChapter.length > 0">
+  <span class="header-item"> <i class="fa fa-list"></i> Danh sách chương </span>
+
+  <div class="row header-listChapter">
+    <div class="col-5"><span>Số chương</span></div>
+    <div class="col-4 text-center"><span>Cập nhật</span></div>
+    <div class="col-3 text-center"><span>Xem</span></div>
+  </div>
+  <ul class="listChapter">
+    <li *ngFor="let item of listChapter" class="listChapter-item">
+      <div class="row chapterInfo">
+        <div class="col-5">
+          <a class="chapterInfo-name">{{ item.name }}</a>
+        </div>
+        <div class="col-4 text-center">
+          {{ item.updateTime ?? item.creationTime | date : "dd/MM/YYYY" }}
+        </div>
+        <div class="col-3 text-center">{{ item.view }}</div>
+      </div>
+      <div class="row d-flex mt-2 mb-2 chapterAction">
+        <div class="col-xl-9 col-md-9 col-0"></div>
+        <div class="col-xl-3 col-md-3 col-12 d-flex justify-content-end">
+          <button class="btn btn-info" (click)="openModal(false, item)">
+            Edit
+          </button>
+          <button class="btn btn-danger" *ngIf="item.id" (click)="deleteChapter(item.id)">Delete</button>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>

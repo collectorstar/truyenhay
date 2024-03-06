@@ -8,6 +8,7 @@ namespace API.Entities
         public string Desc { get; set; }
         public bool Status { get; set; }
         public string MainImage { get; set; }
+        public int PhotoComicId {get; set;}
         public int Rate { get; set; }
         public int NOReviews { get; set; }
         public DateTime CreationTime { get; set; }

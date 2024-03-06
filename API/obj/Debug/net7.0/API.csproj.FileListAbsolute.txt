@@ -86,3 +86,9 @@ D:\truyenhay\API\bin\Debug\net7.0\Swashbuckle.AspNetCore.Swagger.dll
 D:\truyenhay\API\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 D:\truyenhay\API\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 D:\truyenhay\API\obj\Debug\net7.0\API.MvcApplicationPartsAssemblyInfo.cs
+D:\truyenhay\API\bin\Debug\net7.0\Data\UserSeedData.json
+D:\truyenhay\API\bin\Debug\net7.0\BouncyCastle.Cryptography.dll
+D:\truyenhay\API\bin\Debug\net7.0\MailKit.dll
+D:\truyenhay\API\bin\Debug\net7.0\MimeKit.dll
+D:\truyenhay\API\bin\Debug\net7.0\System.Security.Cryptography.Pkcs.dll
+D:\truyenhay\API\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Security.Cryptography.Pkcs.dll

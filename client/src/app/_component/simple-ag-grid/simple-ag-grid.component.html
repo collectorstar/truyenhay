@@ -1,0 +1,38 @@
+<div class="row">
+  <div class="col-12">
+    <ag-grid-angular
+      style="width: 100%; height: 500px"
+      [style]="style"
+      class="ag-theme-quartz"
+      [rowData]="rowData"
+      [columnDefs]="columnDefs"
+      [defaultColDef]="defaultColDef"
+      (selectionChanged)="onRowChange($event)"
+      (rowClicked)="onRowClicked($event)"
+      (gridReady)="onGridReady($event)"
+      [rowSelection]="rowSelection"
+      [pagination]="false"
+    />
+  </div>
+</div>
+
+<div
+  style="
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    background-color: #fff;
+  "
+  *ngIf="pagination && paginationParams"
+>
+  <p-paginator
+    locale="en-US"
+    (onPageChange)="paginationChange($event)"
+    [first]="(paginationParams.currentPage - 1)* paginationParams.itemsPerPage"
+    [rows]="paginationParams.itemsPerPage"
+    [totalRecords]="paginationParams.totalItems"
+    [rowsPerPageOptions]="[1, 2, 20, 50, 100, 500, 1000]"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="{first} - {last} of {totalRecords}"
+  ></p-paginator>
+</div>

@@ -7,8 +7,7 @@ namespace API.Entities
         public string Desc { get; set; }
         public bool IsFeatured { get; set; }
         public bool Status { get; set; }
-        public DateTime CreationTime { get; set; }
-        public bool IsDeleted { get; set; }
+        public DateTime CreationTime { get; set; } = DateTime.Now;
 
     }
 }

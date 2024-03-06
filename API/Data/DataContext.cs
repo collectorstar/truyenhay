@@ -20,6 +20,9 @@ namespace API.Data
         public DbSet<ComicGenre> ComicGenres { get; set; }
         public DbSet<Genre> Genres { get; set; }
         public DbSet<ComicFollow> ComicFollows { get; set; }
+        public DbSet<PhotoAvatar> PhotoAvatars { get; set; }
+        public DbSet<RequestAuthor> RequestAuthors { get; set; }
+        public DbSet<PhotoComic> PhotoComics { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -43,7 +46,11 @@ namespace API.Data
                 .WithOne(b => b.User)
                 .HasForeignKey(b => b.UserId)
                 .IsRequired();
-                
+
+            builder.Entity<AppUser>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
+
             #region Not recommended
             // builder.Entity<AppUser>()
             //     .HasMany(a => a.CommentsSent)

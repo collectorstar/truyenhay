@@ -1,0 +1,51 @@
+<h1>Your Comics</h1>
+
+<div class="no-author" *ngIf="!user.isAuthor">
+  <button class="btn btn-success mb-3" (click)="sendRequest()">
+    <i class="fa-solid fa-upload"></i> Register to become an author
+  </button>
+  <div class="form-floating">
+    <textarea
+      [(ngModel)]="request"
+      class="form-control"
+      placeholder="Leave a request here"
+      style="height: 100px; max-height: 400px"
+    ></textarea>
+    <label for="floatingTextarea2" style="width: 100%; overflow: hidden"
+      >Write little about yourself, the genre of the story</label
+    >
+  </div>
+</div>
+
+<div class="main" *ngIf="user.isAuthor">
+  <div class="create-comic">
+    <div class="boxsearch mt-1 mb-2">
+      <span>Search:</span>
+      <input type="text" [(ngModel)]="name" />
+      <button class="btn btn-success" (click)="getAll()">Search</button>
+      <button class="btn btn-success" (click)="openComicModal(true)"><i class="fa fa-plus"></i> Create</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xl-2 col-md-3 col-6" *ngFor="let item of rowData">
+      <div class="item-comic">
+        <img src="{{ item.mainImage || './assets/user.png'}}" onerror="this.src ='./assets/imageNotFound.png'" alt="" class="image-comic" />
+        <span class="name-comic">{{ item.name }}</span>
+        <div class="chapters-comic">
+          <ul>
+            <li *ngFor="let data of [1, 2, 3, 4, 5]">
+              <span><a class="chapter-name">chapter 1.1</a></span>
+              <span>3 hour ago</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="action d-flex justify-content-between">
+        <button class="btn btn-outline-success" (click)="openComicModal(false,item)">Edit</button>
+        <button class="btn btn-outline-danger" (click)="deleteComic(item.id ?? 0)">Delete</button>
+        <button class="btn btn-outline-info" routerLink="/upload-comic/{{item.id}}">Chapters</button>
+      </div>
+    </div>
+  </div>
+  <div class="paginate" *ngIf="paginationParams.totalPages > 1"></div>
+</div>

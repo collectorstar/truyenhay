@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using API.Data;
@@ -21,10 +22,15 @@ namespace API.Extensions
                 opt.Password.RequiredLength = 4;
                 opt.Password.RequireDigit = false;
                 opt.Password.RequireUppercase = false;
+                opt.Password.RequireLowercase = false;
+                opt.SignIn.RequireConfirmedEmail = true;
+                opt.User.RequireUniqueEmail = true;
+
             })
                 .AddRoles<AppRole>()
                 .AddRoleManager<RoleManager<AppRole>>()
-                .AddEntityFrameworkStores<DataContext>();
+                .AddEntityFrameworkStores<DataContext>()
+                .AddDefaultTokenProviders();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -47,7 +53,7 @@ namespace API.Extensions
                         {
                             context.Token = accessToken;
                         }
-                        
+
                         return Task.CompletedTask;
                     }
                 };
@@ -56,7 +62,8 @@ namespace API.Extensions
             services.AddAuthorization(opt =>
             {
                 opt.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
-                opt.AddPolicy("ModerationPhotoRole", policy => policy.RequireRole("Admin", "Moderator"));
+                opt.AddPolicy("RequireMemberRole", policy => policy.RequireRole("Member"));
+
             });
 
             return services;

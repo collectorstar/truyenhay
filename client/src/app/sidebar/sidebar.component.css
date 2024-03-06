@@ -1,0 +1,109 @@
+.sidenav {
+    background: #263238;
+    transition: all 0.5s ease;
+    z-index: 2;
+    width: 100%;
+    height: 100vh;
+    box-shadow: 0.1rem -0.6rem 1.25rem 0 #8690a3;
+  }
+  
+  .sidenav-nav {
+    list-style: none;
+    padding: 0.938rem;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+  
+    .sidenav-nav-item {
+      width: 100%;
+      margin-bottom: 0.625rem;
+  
+      .sidenav-nav-link {
+        display: flex;
+        align-items: center;
+        height: 3rem;
+        color: #f3f3f3;
+        text-decoration: none;
+        border-radius: 0.625rem;
+        transition: all 0.3s ease;
+  
+        .sidenav-link-icon {
+          font-size: 22px;
+          width: 2rem;
+          min-width: 2rem;
+          margin: 0 0.5rem;
+          text-align: center;
+        }
+  
+        .sidenav-link-text {
+          margin-left: 1.5rem;
+        }
+      }
+  
+      .sidenav-nav-link:hover {
+        background-color: #fff;
+        color: #000;
+  
+        .menu-collapse-icon {
+          color: #000;
+        }
+      }
+    }
+  }
+  
+  .active {
+    background-color: #fff;
+  
+    .menu-collapse-icon,
+    .sidenav-link-icon,
+    .sidenav-link-text {
+      color: #000;
+    }
+  }
+  
+  /* scrollbar and visiblity on hover and focus */
+  
+  .scrollwrap {
+    overflow-y: auto;
+    visibility: visible;
+    height: calc(100% - 3.65rem);
+    scrollbar-width: thin;
+    scrollbar-color: #556268 transparent;
+  }
+  
+  .sidenav-nav,
+  .scrollwrap:hover,
+  .scrollwrap:focus {
+    visibility: visible;
+  }
+  
+  .scrollwrap_delayed {
+    transition: visibility 0.5s 0.2s;
+  }
+  
+  .scrollwrap_delayed:hover {
+    transition: visibility 0.2s 0.2s;
+  }
+  
+  /* work on chrome, edge and safari */
+  .scrollwrap::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  .scrollwrap::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .scrollwrap::-webkit-scrollbar-thumb {
+    background-color: #556268;
+    border-radius: 20px;
+  }
+  
+  /* work on firefox */
+  .scrollwrap {
+    scrollbar-width: thin;
+    scrollbar-color: #556268 transparent;
+  }
+  

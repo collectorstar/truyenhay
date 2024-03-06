@@ -1,0 +1,30 @@
+<h1>Genre List</h1>
+
+<div class="boxsearch">
+  <span>Search:</span>
+  <input type="text" [(ngModel)]="nameSearch" />
+  <button class="btn btn-success" (click)="getAll()">Search</button>
+</div>
+
+<simple-ag-grid
+  [columnDefs]="columnDefs"
+  [rowData]="rowData"
+  [defaultColDef]="defaultColDef"
+  (callBackGrid)="onGridReady()"
+  (rowClicked)="selectedRowClicked($event)"
+  (changePage)="changePage($event)"
+  [pagination]="true"
+  [paginationParams]="paginationParams"
+></simple-ag-grid>
+
+<div class="action">
+  <div class="action-item">
+    <button class="btn btn-outline-success" (click)="openGenreModal(true)"><i class="fa-solid fa-plus"></i> Create</button>
+  </div>
+  <div class="action-item">
+    <button class="btn btn-outline-primary" (click)="openGenreModal(false)" [disabled]="!selectedRow"><i class="fa fa-edit"></i> Update</button>
+  </div>
+  <div class="action-item">
+    <button class="btn btn-outline-danger" (click)="deleteGenre()" [disabled]="!selectedRow"><i class="fa fa-trash"></i> Delete</button>
+  </div>
+</div>

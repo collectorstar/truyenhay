@@ -1,0 +1,23 @@
+<form autocomplete="off" (submit)="register()">
+    <h1>Register</h1>
+
+    <div class="form-control">
+        <label for="name">Name</label>
+        <input [(ngModel)]="registerDto.name" [ngModelOptions]="{standalone: true}" type="text" id="name">
+    </div>
+
+    <div class="form-control">
+        <label for="email">Email</label>
+        <input [(ngModel)]="registerDto.email" [ngModelOptions]="{standalone: true}" type="email" id="email">
+    </div>
+
+    <div class="form-control">
+        <label for="password">Password</label>
+        <input [(ngModel)]="registerDto.password" [ngModelOptions]="{standalone: true}" type="password" id="password">
+    </div>
+
+    <button type="submit">Register</button>
+
+    <a class="login" routerLink="/login">Has account? login now</a>
+
+</form>

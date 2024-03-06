@@ -1,7 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using API.Data;
+using API.Dtos;
+using API.Helpers;
+using API.Interfaces;
+using API.Repositories;
+using API.Services;
+using Microsoft.AspNetCore.Identity;
 
 namespace API.Extensions
 {
@@ -13,6 +16,21 @@ namespace API.Extensions
             services.AddSwaggerGen();
             services.AddCors();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddScoped<IGenreRepository, GenreRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<ISendEmailService, SendEmailService>();
+            services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
+            services.Configure<MailSettings>(config.GetSection("MailSettings"));
+            services.AddScoped<IPhotoService, PhotoService>();
+            services.AddScoped<IPhotoAvatarRepository, PhotoAvatarRepository>();
+            services.AddScoped<IRequestAuthorRepository, RequestAuthorRepository>();
+            services.AddScoped<IComicRepository, ComicRepository>();
+            services.AddScoped<IPhotoComicRepository, PhotoComicRepository>();
+            services.AddScoped<IChapterRepository, ChapterRepository>();
+            services.AddScoped<IChapterPhotoRepository, ChapterPhotoRepository>();
+            services.AddScoped<IComicGenreRepository, ComicGenreRepository>();
+            services.Configure<DataProtectionTokenProviderOptions>(opt => opt.TokenLifespan = TimeSpan.FromMinutes(5));
             return services;
         }
     }

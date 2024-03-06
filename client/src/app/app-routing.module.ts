@@ -1,10 +1,57 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { FollowComponent } from './follow/follow.component';
+import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from './register/register.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { NotFoundComponent } from './not-found/not-found.component';
+import { adminGuard } from './_guards/admin.guard';
+import { loginGuard } from './_guards/login.guard';
+import { UploadCommicComponent } from './upload-comic/upload-comic.component';
+import { AccountDetailComponent } from './account-detail/account-detail.component';
+import { ListChapterComponent } from './upload-comic/list-chapter/list-chapter.component';
 
-const routes: Routes = [];
+const routes: Routes = [
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent, pathMatch: 'full' },
+  { path: 'register', component: RegisterComponent, pathMatch: 'full' },
+  {
+    path: 'forgot-pass',
+    component: ForgotPasswordComponent,
+    pathMatch: 'full',
+  },
+  { path: 'dashboard', component: DashboardComponent },
+  {
+    path: 'admintruyenhay',
+    loadChildren: () =>
+      import('./admin/admin.module').then((m) => m.AdminModule),
+    canActivate: [loginGuard, adminGuard],
+  },
+  {
+    path: 'upload-comic',
+    component: UploadCommicComponent,
+    canActivate: [loginGuard],
+    pathMatch:'full'
+  },
+{
+  path:'upload-comic/:comicId',
+  component: ListChapterComponent,
+  canActivate: [loginGuard],
+},
+  { path: 'follow', component: FollowComponent },
+  {
+    path: 'account-detail',
+    component: AccountDetailComponent,
+    canActivate: [loginGuard],
+    pathMatch: 'full',
+  },
+  { path: 'not-found', component: NotFoundComponent, },
+  { path: '**', component: NotFoundComponent, pathMatch: 'full' },
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

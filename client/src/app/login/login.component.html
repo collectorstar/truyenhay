@@ -1,0 +1,33 @@
+<form autocomplete="off" (submit)="login()">
+  <h1>Login</h1>
+
+  <div class="form-control">
+    <label for="email">Email</label>
+    <input
+      autocomplete="off"
+      type="email"
+      [(ngModel)]="loginDto.email"
+      placeholder="Email"
+      [ngModelOptions]="{ standalone: true }"
+      id="email"
+    />
+  </div>
+
+  <div class="form-control">
+    <label for="password">Password</label>
+    <input
+      autocomplete="off"
+      type="password"
+      [(ngModel)]="loginDto.password"
+      [ngModelOptions]="{ standalone: true }"
+      placeholder="Password"
+      id="password"
+    />
+  </div>
+
+  <a class="fogot-pass" (click)="forgotPass()">Fogot password!</a>
+
+  <button type="submit">Login</button>
+
+  <a class="register" routerLink="/register">No Account? register now!</a>
+</form>

@@ -1,0 +1,39 @@
+<div class="sidenav">
+  <div class="scrollwrap scrollwrap_delayed">
+    <ul class="sidenav-nav">
+      <li
+        class="sidenav-nav-item"
+        *ngFor="let data of sidebarList"
+        (click)="data.onClick ? onItemSwitch(data.onClick) : null"
+      >
+        <a
+          class="sidenav-nav-link"
+          [routerLink]="[data.routeLink]"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          <i class="sidenav-link-icon" [class]="data.icon"></i>
+          <span
+            class="sidenav-link-text"
+            @fadeInOut
+            *ngIf="sidebarService.CurrentSidebar$ | async"
+            >{{ data.label }}</span
+          >
+        </a>
+      </li>
+      <li class="sidenav-nav-item" (click)="onItemSwitch('logout')" *ngIf="(accountService.currentUser$ | async)">
+        <a class="sidenav-nav-link">
+          <i
+            class="sidenav-link-icon fa-solid fa-arrow-right-from-bracket"
+          ></i>
+          <span
+            class="sidenav-link-text"
+            @fadeInOut
+            *ngIf="sidebarService.CurrentSidebar$ | async"
+            >Logout</span
+          >
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
