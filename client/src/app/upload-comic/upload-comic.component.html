@@ -23,13 +23,20 @@
       <span>Search:</span>
       <input type="text" [(ngModel)]="name" />
       <button class="btn btn-success" (click)="getAll()">Search</button>
-      <button class="btn btn-success" (click)="openComicModal(true)"><i class="fa fa-plus"></i> Create</button>
+      <button class="btn btn-success" (click)="openComicModal(true)">
+        <i class="fa fa-plus"></i> Create
+      </button>
     </div>
   </div>
   <div class="row">
     <div class="col-xl-2 col-md-3 col-6" *ngFor="let item of rowData">
       <div class="item-comic">
-        <img src="{{ item.mainImage || './assets/user.png'}}" onerror="this.src ='./assets/imageNotFound.png'" alt="" class="image-comic" />
+        <img
+          src="{{ item.mainImage || './assets/user.png' }}"
+          onerror="this.src ='./assets/imageNotFound.png'"
+          alt=""
+          class="image-comic"
+        />
         <span class="name-comic">{{ item.name }}</span>
         <div class="chapters-comic">
           <ul>
@@ -40,10 +47,25 @@
           </ul>
         </div>
       </div>
-      <div class="action d-flex justify-content-between">
-        <button class="btn btn-outline-success" (click)="openComicModal(false,item)">Edit</button>
-        <button class="btn btn-outline-danger" (click)="deleteComic(item.id ?? 0)">Delete</button>
-        <button class="btn btn-outline-info" routerLink="/upload-comic/{{item.id}}">Chapters</button>
+      <div class="action d-flex justify-content-between flex-wrap">
+        <button
+          class="btn btn-outline-success mt-1"
+          (click)="openComicModal(false, item)"
+        >
+          Edit
+        </button>
+        <button
+          class="btn btn-outline-danger mt-1"
+          (click)="deleteComic(item.id ?? 0)"
+        >
+          Delete
+        </button>
+        <button
+          class="btn btn-outline-info mt-1"
+          routerLink="/upload-comic/{{ item.id }}"
+        >
+          Chapters
+        </button>
       </div>
     </div>
   </div>
