@@ -70,7 +70,7 @@ import { CreateOrEditChapterComponent } from './upload-comic/list-chapter/create
     ModalModule.forRoot(),
     TabsModule.forRoot(),
     NgMultiSelectDropDownModule.forRoot(),
-    MultiselectDropdownComponent
+    MultiselectDropdownComponent,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

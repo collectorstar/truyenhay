@@ -1,13 +1,12 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { RequestAuthorDto } from '../_models/requestAuthorDto';
+import { UploadAuthorDto } from '../_models/uploadAuthorDto';
 import { GetAllUploadComicParam } from '../_models/getAllUploadComicParam';
 import { getPaginationHeader, getPaginationResult } from './paginationHelper';
 import { UploadComicDto } from '../_models/uploadComicDto';
 import { ChapterDto } from '../_models/chapterDto';
 import { ConfirmService } from './confirm.service';
-import { of } from 'rxjs';
 import { GenreForUploadComicDto } from '../_models/genreForUploadComicDto';
 import { ComicDetailDto } from '../_models/comicDetailDto';
 
@@ -23,7 +22,7 @@ export class UploadComicService {
   ) {}
 
   requestAuthor(content: string) {
-    let param: RequestAuthorDto = { content: content };
+    let param: UploadAuthorDto = { content: content };
     return this.http.post<any>(
       this.baseUrl + 'uploadComic/request-author',
       param

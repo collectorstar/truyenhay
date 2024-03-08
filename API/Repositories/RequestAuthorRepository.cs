@@ -22,5 +22,21 @@ namespace API.Repositories
         {
             return await _context.RequestAuthors.FirstOrDefaultAsync(x => x.UserId == userId && x.CreationTime.Date == DateTime.Now.Date);
         }
+
+        public void Delete(RequestAuthor requestAuthor)
+        {
+            _context.RequestAuthors.Remove(requestAuthor);
+        }
+
+        public void DeleteRange(List<RequestAuthor> requestAuthors)
+        {
+            _context.RemoveRange(requestAuthors);
+        }
+
+        public IQueryable<RequestAuthor> GetAll()
+        {
+            return _context.RequestAuthors.AsTracking();
+        }
+
     }
 }

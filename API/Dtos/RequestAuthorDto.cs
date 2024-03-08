@@ -1,14 +1,13 @@
 using API.Helpers;
 
-namespace API.Entities
+namespace API.Dtos
 {
-    public class RequestAuthor
+    public class RequestAuthorDto
     {
         public int Id { get; set; }
         public string Email { get; set; }
         public string Content { get; set; }
-        public DateTime CreationTime { get; set; } = DateTime.Now;
+        public DateTime CreationTime { get; set; }
         public StatusRequesAuthor Status { get; set; }
-        public int UserId { get; set; }
     }
 }

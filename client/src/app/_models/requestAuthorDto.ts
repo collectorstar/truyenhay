@@ -1,3 +1,7 @@
 export interface RequestAuthorDto {
-    content: string
+    id: number;
+    email: string;
+    content: string;
+    creationTime: Date;
+    status: number;
 }

@@ -1,3 +1,5 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 using API.Data;
 using API.Dtos;
@@ -8,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace API.Controllers
 {
@@ -28,6 +31,43 @@ namespace API.Controllers
             _config = config;
             _photoService = photoService;
             _uow = uow;
+        }
+
+        [HttpPost("callback-user")]
+        public async Task<ActionResult<UserDto>> RevalidateUser([FromForm] string token)
+        {
+            var tokenParams = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("TokenKey").Value)),
+                ValidateIssuer = false,
+                ValidateAudience = false
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenClaimsPrincipal = tokenHandler.ValidateToken(token, tokenParams, out var validatedToken);
+            var userId = 0;
+            try
+            {
+                userId = int.Parse(tokenClaimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            }
+            catch (Exception)
+            {
+                return Unauthorized("Please login again");
+            }
+
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            if (user == null) return Unauthorized("Please login again");
+
+            return new UserDto
+            {
+                Email = user.Email,
+                Name = user.Name,
+                Token = token,
+                PhotoUrl = user.PhotoUrl,
+                IsAuthor = user.IsAuthor
+            };
+
         }
 
         [HttpPost("register")]
@@ -108,11 +148,12 @@ namespace API.Controllers
                 return BadRequest("No image file uploaded");
             }
 
-            if(user.PhotoAvatarId != null) {
+            if (user.PhotoAvatarId != null)
+            {
                 var findAvatar = await _uow.PhotoAvatarRepository.GetAll().FirstOrDefaultAsync(x => x.UserId == user.Id);
-                if(findAvatar == null ) return BadRequest("Fail to find old Avatar");
+                if (findAvatar == null) return BadRequest("Fail to find old Avatar");
                 var dropResult = await _photoService.DeletePhotoAsync(findAvatar.PublicId);
-                if(dropResult.Error != null) return BadRequest("Fail to drop old Avatar");
+                if (dropResult.Error != null) return BadRequest("Fail to drop old Avatar");
                 _uow.PhotoAvatarRepository.DeletePhotoAvatar(findAvatar);
                 user.PhotoAvatarId = null;
                 user.PhotoUrl = "";

@@ -54,7 +54,7 @@ export class GenreComponent implements OnInit {
       headerName: 'Desc',
       field: 'desc',
       // flex: 3,
-      width: 300,
+      width: 800,
     },
     {
       headerName: 'IsFeatured',
@@ -90,7 +90,7 @@ export class GenreComponent implements OnInit {
         return this.dataFormatService.dateTimeFormat(params.data.creationTime);
       },
       // flex: 1,
-      width: 100,
+      width: 150,
     },
   ];
 

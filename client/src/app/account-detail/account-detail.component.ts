@@ -120,7 +120,7 @@ export class AccountDetailComponent implements OnInit {
         next: (res) => {
           if (res) {
             this.user.name = this.member.name;
-            this.accountService.setCurrentUser(this.user);
+            this.accountService.setCurrentUserNoCreateConnect(this.user);
             this.toastr.success(res.message);
           }
         },
@@ -156,7 +156,7 @@ export class AccountDetailComponent implements OnInit {
           next: (res) => {
             if (res) {
               this.user.photoUrl = res.url;
-              this.accountService.setCurrentUser(this.user);
+              this.accountService.setCurrentUserNoCreateConnect(this.user);
               this.member.photoUrl = res.url;
               this.toastr.success('Upload Success!');
             }

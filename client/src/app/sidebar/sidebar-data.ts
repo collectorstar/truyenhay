@@ -17,7 +17,7 @@ export const sidebarList: INavbarData[] = [
     routeLink: 'upload-comic',
     icon: 'fa-solid fa-upload',
     label: 'Upload commic',
-    roles: ['Member']
+    roles: ['Member'],
   },
   {
     routeLink: 'admintruyenhay/genre',
@@ -26,9 +26,15 @@ export const sidebarList: INavbarData[] = [
     roles: ['Admin'],
   },
   {
+    routeLink: 'admintruyenhay/request-author',
+    icon: 'fa-solid fa-pen-clip',
+    label: 'Request Author',
+    roles: ['Admin'],
+  },
+  {
     routeLink: 'account-detail',
     icon: 'fa-solid fa-user',
     label: 'Account detail',
-    roles: ['Member']
+    roles: ['Member'],
   },
 ];
