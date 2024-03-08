@@ -75,6 +75,7 @@ export class UploadCommicComponent implements OnInit {
   }
 
   getAll() {
+    if(!this.user.isAuthor) return;
     let uploadComicParam = new GetAllUploadComicParam();
     uploadComicParam.name = this.name;
     uploadComicParam.pageNumber = this.paginationParams.currentPage;
