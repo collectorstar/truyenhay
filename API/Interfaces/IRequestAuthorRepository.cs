@@ -6,5 +6,8 @@ namespace API.Interfaces
     {
         Task Create(RequestAuthor request);
         Task<RequestAuthor> GetRequestToDay(int userId);
+        void Delete(RequestAuthor requestAuthor);
+        void DeleteRange(List<RequestAuthor> requestAuthors);
+        IQueryable<RequestAuthor> GetAll();
     }
 }

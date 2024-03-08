@@ -4,6 +4,7 @@ using API.Helpers;
 using API.Interfaces;
 using API.Repositories;
 using API.Services;
+using API.SignalR;
 using Microsoft.AspNetCore.Identity;
 
 namespace API.Extensions
@@ -31,6 +32,8 @@ namespace API.Extensions
             services.AddScoped<IChapterPhotoRepository, ChapterPhotoRepository>();
             services.AddScoped<IComicGenreRepository, ComicGenreRepository>();
             services.Configure<DataProtectionTokenProviderOptions>(opt => opt.TokenLifespan = TimeSpan.FromMinutes(5));
+            services.AddSignalR();
+            services.AddSingleton<PresenceTracker>();
             return services;
         }
     }

@@ -48,6 +48,8 @@ namespace API.Controllers
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == User.GetUserId());
             if (user == null) return NotFound();
 
+            if (user.IsAuthor) return BadRequest("You already an author!");
+
             var find = await _uow.RequestAuthorRepository.GetRequestToDay(user.Id);
             if (find != null) return BadRequest("You sent today, please wait until tomorrow");
 
@@ -55,7 +57,8 @@ namespace API.Controllers
             {
                 Email = user.Email,
                 UserId = user.Id,
-                Content = dto.Content
+                Content = dto.Content,
+                Status = StatusRequesAuthor.SendRequest,
             };
 
             await _uow.RequestAuthorRepository.Create(request);
@@ -273,7 +276,7 @@ namespace API.Controllers
         [HttpGet("my-comics")]
         public async Task<ActionResult<PagedList<UploadComicDto>>> GetAll([FromQuery] GetAllUploadComicParam dto)
         {
-            var list = from x in _uow.ComicRepository.GetAll().Where(x => string.IsNullOrWhiteSpace(dto.Name) || x.Name.Contains(dto.Name))
+            var list = from x in _uow.ComicRepository.GetAll().Where(x =>x.AuthorId == User.GetUserId() && (string.IsNullOrWhiteSpace(dto.Name) || x.Name.Contains(dto.Name)) )
                        select new UploadComicDto
                        {
                            Id = x.Id,
