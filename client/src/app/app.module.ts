@@ -5,7 +5,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { BodyComponent } from './body/body.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { FollowComponent } from './follow/follow.component';
 import { LoginComponent } from './login/login.component';
@@ -22,7 +21,6 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { JwtInterceptor } from './_interceptors/jwt.interceptor';
 import { ErrorInterceptor } from './_interceptors/error.interceptor';
 import { NgxSpinnerModule } from 'ngx-spinner';
-import { SidebarComponent } from './sidebar/sidebar.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ConfirmDialogComponent } from './_model/_model/confirm-dialog/confirm-dialog.component';
 import { UploadCommicComponent } from './upload-comic/upload-comic.component';
@@ -33,10 +31,10 @@ import { ListChapterComponent } from './upload-comic/list-chapter/list-chapter.c
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { MultiselectDropdownComponent } from './_component/multiselect-dropdown/multiselect-dropdown.component';
 import { CreateOrEditChapterComponent } from './upload-comic/list-chapter/create-or-edit-chapter/create-or-edit-chapter.component';
+import { SubmenuComponent } from './navbar/submenu/submenu.component';
 @NgModule({
   declarations: [
     AppComponent,
-    BodyComponent,
     DashboardComponent,
     FollowComponent,
     LoginComponent,
@@ -44,13 +42,13 @@ import { CreateOrEditChapterComponent } from './upload-comic/list-chapter/create
     RegisterComponent,
     ForgotPasswordComponent,
     NotFoundComponent,
-    SidebarComponent,
     ConfirmDialogComponent,
     UploadCommicComponent,
     AccountDetailComponent,
     CreateOrEditComicComponent,
     ListChapterComponent,
     CreateOrEditChapterComponent,
+    SubmenuComponent,
   ],
   imports: [
     BrowserModule,

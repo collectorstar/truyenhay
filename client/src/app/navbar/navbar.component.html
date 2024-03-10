@@ -1,87 +1,83 @@
-<div class="nav-header nav-header-container">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
-    <i class="fa-solid fa-bars toggle-menu" (click)="clickToggleMenu()"></i>
+    <a
+      class="navbar-brand logo"
+      routerLink="/dashboard"
+      routerLinkActive="active"
+      >TH</a
+    >
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <div *ngFor="let data of sidebarList">
+          <li class="nav-item" *ngIf="!data.items">
+            <a
+              class="nav-link"
+              [routerLink]="data.routeLink"
+              routerLinkActive="active"
+              (click)="closeNav()"
+              >{{ data.label }}</a
+            >
+          </li>
 
-    <ul class="navheader">
-      <li class="navheader-item">
-        <a class="logo" routerLink="/">TH</a>
-      </li>
-      <li class="navheader-item">
-        <div class="search-box">
-          <i class="fa fa-search search-icon"></i>
-          <input
-            type="search"
-            class="search"
-            name=""
-            id=""
-            placeholder="Search..."
-          />
+          <li *ngIf="data.items" class="nav-item dropdown">
+            <div>
+              <a
+                class="nav-link dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown"
+                data-bs-auto-close="outside"
+                [ngClass]="{ active: router.url.startsWith('/admin') }"
+                >{{ data.label }}</a
+              >
+              <ul class="dropdown-menu">
+                <submenu [sidebarList]="data.items" (clickLink)="closeNav()"></submenu>
+              </ul>
+            </div>
+          </li>
         </div>
-      </li>
-      <li class="navheader-item" *ngIf="!(accountService.currentUser$ | async)">
-        <div class="no-account">
-          <a [routerLink]="['login']" class="login">Login</a>
-          <span style="color: #fff"> / </span>
-          <a [routerLink]="['register']" class="register">Register</a>
+      </ul>
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <div *ngIf="!(accountService.currentUser$ | async)">
+          <div class="no-account">
+            <a [routerLink]="['login']" class="login" (click)="closeNav()">Login</a>
+            <span style="color: #fff"> / </span>
+            <a [routerLink]="['register']" class="register" (click)="closeNav()">Register</a>
+          </div>
         </div>
-      </li>
-
-      <li class="navheader-item" *ngIf="!(accountService.currentUser$ | async)">
-        <div class="no-account-mobile">
-          <a [routerLink]="['login']" class="login">Login</a>
-          <span style="color: #fff"> / </span>
-          <a [routerLink]="['register']" class="register">Register</a>
-        </div>
-      </li>
-
-      <li
-        class="navheader-item"
-        *ngIf="accountService.currentUser$ | async as user"
-      >
-        <div class="has-account">
-          <div class="dropdown" dropdown>
+        <div
+          *ngIf="accountService.currentUser$ | async as user"
+          class="has-account dropdown"
+        >
+          <div
+            class="dropdown-toggle text-light"
+            data-bs-toggle="dropdown"
+            data-bs-auto-close="outside"
+          >
             <img
               src="{{ user.photoUrl || './assets/user.png' }}"
               alt="user photo"
             />
-            <a
-              class="dropdown-toggle text-light text-decoration-none ms-3"
-              dropdownToggle
-              >Wellcome
-            </a>
-            <div class="dropdown-menu" *dropdownMenu>
-              <a class="dropdown-item" routerLink="/account-detail">Edit Profile</a>
-              <a class="dropdown-item" (click)="logout()">Logout</a>
-            </div>
+            <span class="text-light ms-3">Wellcome </span>
           </div>
+          <ul class="dropdown-menu">
+            <li class="dropdown-item" routerLink="/account-detail" (click)="closeNav()">
+              <a>Edit Profile</a>
+            </li>
+            <li class="dropdown-item" (click)="logout()"><a>Logout</a></li>
+          </ul>
         </div>
-      </li>
-
-      <li
-        class="navheader-item"
-        *ngIf="accountService.currentUser$ | async as user"
-      >
-        <div class="has-account-mobile">
-          <div class="dropdown" dropdown>
-            <img 
-              routerLink="/account-detail"
-              src="{{ user.photoUrl || './assets/user.png' }}"
-              alt="user photo"
-            />
-            <!-- <a
-              class="dropdown-toggle text-light text-decoration-none ms-3"
-              dropdownToggle
-              >Wellcome
-            </a>
-            <div class="dropdown-menu" *dropdownMenu>
-              <a class="dropdown-item">Edit Profile</a>
-              <a class="dropdown-item" (click)="logout()">Logout</a>
-            </div> -->
-          </div>
-        </div>
-      </li>
-    </ul>
+      </ul>
+    </div>
   </div>
-</div>
-
-
+</nav>

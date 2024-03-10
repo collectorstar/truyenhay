@@ -13,7 +13,7 @@
 
     <div class="form-control">
         <label for="password">Password</label>
-        <input [(ngModel)]="registerDto.password" [ngModelOptions]="{standalone: true}" type="password" id="password">
+        <input [(ngModel)]="registerDto.password" autocomplete="off" [ngModelOptions]="{standalone: true}" type="password" id="password">
     </div>
 
     <button type="submit">Register</button>

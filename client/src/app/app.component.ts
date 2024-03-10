@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AccountService } from './_services/account.service';
-import { SidebarService } from './_services/sidebar.service';
 import { User } from './_models/user';
 import { finalize } from 'rxjs';
 import { BusyService } from './_services/busy.service';
@@ -13,7 +12,6 @@ import { BusyService } from './_services/busy.service';
 export class AppComponent implements OnInit {
   constructor(
     private accountService: AccountService,
-    public sidebarService: SidebarService,
     private busyService: BusyService
   ) {}
   ngOnInit(): void {
@@ -44,4 +42,5 @@ export class AppComponent implements OnInit {
         }
       });
   }
+
 }

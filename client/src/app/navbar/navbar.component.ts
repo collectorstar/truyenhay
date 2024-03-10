@@ -1,15 +1,8 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AccountService } from '../_services/account.service';
 import { Router } from '@angular/router';
-import {
-  animate,
-  keyframes,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
-import { SidebarService } from '../_services/sidebar.service';
+import { INavbarData } from '../_models/navbarData';
+import { sidebarList } from './navbar-data';
 
 @Component({
   selector: 'app-navbar',
@@ -17,20 +10,46 @@ import { SidebarService } from '../_services/sidebar.service';
   styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
+  sidebarList: INavbarData[] = [];
   toggleMenu: boolean = false;
   constructor(
     public accountService: AccountService,
-    private router: Router,
-    public sidebarService: SidebarService
+    public router: Router,
   ) {}
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.accountService.currentUser$.subscribe({
+      next: (user) => {
+        if (user) {
+          if (user.roles.includes('Admin')) {
+            this.sidebarList = sidebarList;
+          } else if (user.roles.includes('Member')) {
+            this.sidebarList = sidebarList.filter(
+              (x) => x.roles.length == 0 || x.roles.includes('Member')
+            );
+          } else {
+            this.sidebarList = sidebarList.filter((x) => x.roles.length == 0);
+          }
+        } else {
+          this.sidebarList = sidebarList.filter((x) => x.roles.length == 0);
+        }
 
-  clickToggleMenu() {
-    this.sidebarService.toggleSidebar();
+      },
+    });
   }
 
   logout() {
     this.accountService.logout();
     this.router.navigateByUrl('/');
+    const navCollapse = document.getElementById('navbarSupportedContent');
+    if (navCollapse) {
+      navCollapse.classList.remove('show');
+    }
+  }
+
+  closeNav() {
+    const navCollapse = document.getElementById('navbarSupportedContent');
+    if (navCollapse) {
+      navCollapse.classList.remove('show');
+    }
   }
 }
