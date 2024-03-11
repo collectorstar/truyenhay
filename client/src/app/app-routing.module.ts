@@ -13,7 +13,7 @@ import { AccountDetailComponent } from './account-detail/account-detail.componen
 import { ListChapterComponent } from './upload-comic/list-chapter/list-chapter.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'login', component: LoginComponent, pathMatch: 'full' },
   { path: 'register', component: RegisterComponent, pathMatch: 'full' },
   {
@@ -21,7 +21,7 @@ const routes: Routes = [
     component: ForgotPasswordComponent,
     pathMatch: 'full',
   },
-  { path: 'dashboard', component: DashboardComponent },
+  { path: 'home', component: DashboardComponent },
   {
     path: 'admintruyenhay',
     loadChildren: () =>

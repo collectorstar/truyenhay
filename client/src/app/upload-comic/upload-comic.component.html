@@ -21,53 +21,87 @@
   <div class="create-comic">
     <div class="boxsearch mt-1 mb-2">
       <span>Search:</span>
-      <input type="text" [(ngModel)]="name" />
+      <input type="text" [(ngModel)]="name" placeholder="Name comic" />
       <button class="btn btn-success" (click)="getAll()">Search</button>
       <button class="btn btn-success" (click)="openComicModal(true)">
         <i class="fa fa-plus"></i> Create
       </button>
     </div>
   </div>
-  <div class="row">
-    <div class="col-xl-2 col-md-3 col-6" *ngFor="let item of rowData">
-      <div class="item-comic">
-        <img
-          src="{{ item.mainImage || './assets/user.png' }}"
-          onerror="this.src ='./assets/imageNotFound.png'"
-          alt=""
-          class="image-comic"
-        />
-        <span class="name-comic">{{ item.name }}</span>
-        <div class="chapters-comic">
-          <ul>
-            <li *ngFor="let data of [1, 2, 3, 4, 5]">
-              <span><a class="chapter-name">chapter 1.1</a></span>
-              <span>3 hour ago</span>
-            </li>
-          </ul>
+  <h4>Total comic: {{ paginationParams.totalItems }}</h4>
+
+  <div
+    *ngFor="let item of rowData"
+    class="comic d-flex flex-md-nowrap flex-wrap"
+  >
+    <div
+      class="col-12 col-md-3 col-xl-3 flex-md-grow-0 flex-grow-1 flex-md-shrink-1 img-comic"
+    >
+      <img src="{{ item.mainImage || './assets/user.png' }}" alt="" />
+    </div>
+    <div
+      class="col-12 col-md-9 col-xl-9 flex-md-grow-1 flex-grow-0 flex-md-shrink-0 content-comic"
+    >
+      <h2 class="comic-name d-block">{{ item.name }}</h2>
+      <span class="comic-desc"
+        ><span class="fw-bold">Descreation: </span> {{ item.desc }}</span
+      >
+      <span class="d-block"
+        ><span class="fw-bold">Genres: </span>
+        <span *ngFor="let genre of item.selectedGenres"
+          >{{ genre.label }},
+        </span></span
+      >
+
+      <span class="d-block"
+        ><span class="fw-bold">Total chapters: </span
+        >{{ item.totalChapter }}</span
+      >
+
+      <span class="d-block"
+        ><span class="fw-bold">Newest Chapter: </span
+        >{{ item.newestChapter }}</span
+      >
+
+      <div class="action d-flex flex-wrap">
+        <div class="mt-1" style="margin-right: 10px">
+          <button
+            class="btn btn-outline-success"
+            (click)="openComicModal(false, item)"
+          >
+            Edit
+          </button>
         </div>
-      </div>
-      <div class="action d-flex justify-content-between flex-wrap">
-        <button
-          class="btn btn-outline-success mt-1"
-          (click)="openComicModal(false, item)"
-        >
-          Edit
-        </button>
-        <button
-          class="btn btn-outline-danger mt-1"
-          (click)="deleteComic(item.id ?? 0)"
-        >
-          Delete
-        </button>
-        <button
-          class="btn btn-outline-info mt-1"
-          routerLink="/upload-comic/{{ item.id }}"
-        >
-          Chapters
-        </button>
+        <div class="mt-1" style="margin-right: 10px">
+          <button
+            class="btn btn-outline-danger"
+            (click)="deleteComic(item.id ?? 0)"
+          >
+            Delete
+          </button>
+        </div>
+        <div class="mt-1">
+          <button
+            class="btn btn-outline-info"
+            routerLink="/upload-comic/{{ item.id }}"
+          >
+            Chapters
+          </button>
+        </div>
       </div>
     </div>
   </div>
-  <div class="paginate" *ngIf="paginationParams.totalPages > 1"></div>
+
+  <div class="paginate">
+    <p-paginator
+      locale="en-US"
+      (onPageChange)="paginationChange($event)"
+      [first]="
+        (paginationParams.currentPage - 1) * paginationParams.itemsPerPage
+      "
+      [rows]="paginationParams.itemsPerPage"
+      [totalRecords]="paginationParams.totalItems"
+      [showCurrentPageReport]="false"
+    ></p-paginator>
+  </div>
 </div>

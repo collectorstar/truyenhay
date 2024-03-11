@@ -9,5 +9,7 @@ export interface UploadComicDto {
   mainImage: string;
   rate: number;
   nOReviews: number;
+  totalChapter: number;
+  newestChapter: string;
   selectedGenres: GenreForUploadComicDto[];
 }

@@ -32,6 +32,7 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { MultiselectDropdownComponent } from './_component/multiselect-dropdown/multiselect-dropdown.component';
 import { CreateOrEditChapterComponent } from './upload-comic/list-chapter/create-or-edit-chapter/create-or-edit-chapter.component';
 import { SubmenuComponent } from './navbar/submenu/submenu.component';
+import { PaginatorModule } from 'primeng/paginator';
 @NgModule({
   declarations: [
     AppComponent,
@@ -69,6 +70,7 @@ import { SubmenuComponent } from './navbar/submenu/submenu.component';
     TabsModule.forRoot(),
     NgMultiSelectDropDownModule.forRoot(),
     MultiselectDropdownComponent,
+    PaginatorModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

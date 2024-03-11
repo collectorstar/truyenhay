@@ -10,6 +10,8 @@ namespace API.Dtos
         public string MainImage { get; set; }
         public int Rate { get; set; }
         public int NOReviews { get; set; }
+        public int TotalChapter { get; set; }
+        public string NewestChapter { get; set; }
         public List<GenreForUploadComicDto> SelectedGenres { get; set; }
     }
 }
