@@ -87,7 +87,7 @@ export class CreateOrEditComicComponent {
       return false;
     }
 
-    if (this.selectedGenres.length > 5) {
+    if (this.selectedGenres.length > 10) {
       this.toastr.error('Do not choose more than 5 genres!');
       return false;
     }

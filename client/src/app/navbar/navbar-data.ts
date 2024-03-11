@@ -2,8 +2,8 @@ import { INavbarData } from '../_models/navbarData';
 
 export const sidebarList: INavbarData[] = [
   {
-    routeLink: 'dashboard',
-    label: 'Dashboard',
+    routeLink: 'home',
+    label: 'Home',
     roles: [],
   },
   {

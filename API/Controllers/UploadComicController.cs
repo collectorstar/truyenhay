@@ -287,6 +287,8 @@ namespace API.Controllers
                            MainImage = x.MainImage,
                            Rate = x.Rate,
                            NOReviews = x.NOReviews,
+                           NewestChapter = _uow.ChapterRepository.GetAll().Where(z => z.ComicId == x.Id).OrderByDescending(x => x.Id).First().Name ?? "",
+                           TotalChapter = _uow.ChapterRepository.GetAll().Where(z => z.ComicId == x.Id).Count(),
                            SelectedGenres = (from y in _uow.ComicGenreRepository.GetAll().Where(y => y.ComicId == x.Id)
                                              join z in _uow.GenreRepository.GetAll().Where(x => x.Status == true) on y.GenreId equals z.Id
                                              select new GenreForUploadComicDto
@@ -321,7 +323,7 @@ namespace API.Controllers
                 NOReviews = comic.NOReviews,
                 CreationTime = comic.CreationTime,
                 AuthorId = comic.AuthorId,
-                Chapters = (from x in _uow.ChapterRepository.GetAll()
+                Chapters = (from x in _uow.ChapterRepository.GetAll().Where(x => x.ComicId == ComicId)
                             select new ChapterDto
                             {
                                 Id = x.Id,

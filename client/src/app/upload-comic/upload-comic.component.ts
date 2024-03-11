@@ -26,7 +26,7 @@ export class UploadCommicComponent implements OnInit {
     new BsModalRef<CreateOrEditComicComponent>();
   paginationParams: Pagination = {
     currentPage: 1,
-    itemsPerPage: 20,
+    itemsPerPage: 2,
     totalItems: 0,
     totalPages: 1,
   };
@@ -75,7 +75,7 @@ export class UploadCommicComponent implements OnInit {
   }
 
   getAll() {
-    if(!this.user.isAuthor) return;
+    if (!this.user.isAuthor) return;
     let uploadComicParam = new GetAllUploadComicParam();
     uploadComicParam.name = this.name;
     uploadComicParam.pageNumber = this.paginationParams.currentPage;
@@ -135,7 +135,7 @@ export class UploadCommicComponent implements OnInit {
       class: 'modal-dialog',
       initialState: {
         selectedRow: isCreate ? null : data,
-        selectedGenres : isCreate ? [] : data?.selectedGenres
+        selectedGenres: isCreate ? [] : data?.selectedGenres,
       },
     };
 
@@ -149,5 +149,12 @@ export class UploadCommicComponent implements OnInit {
         this.getAll();
       },
     });
+  }
+
+  paginationChange(event: any) {
+    this.paginationParams.currentPage = event.page + 1;
+    this.paginationParams.itemsPerPage = event.rows;
+    this.paginationParams.totalPages = event.pageCount;
+    this.getAll();
   }
 }
