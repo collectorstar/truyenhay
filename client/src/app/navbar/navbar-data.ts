@@ -17,11 +17,6 @@ export const sidebarList: INavbarData[] = [
     roles: ['Member'],
   },
   {
-    routeLink: 'account-detail',
-    label: 'Account detail',
-    roles: ['Member'],
-  },
-  {
     routeLink: '',
     label: 'Admin',
     roles: ['Admin'],
