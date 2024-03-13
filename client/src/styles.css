@@ -1,7 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
-@import '~@angular/cdk/overlay-prebuilt.css';
-
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap");
+@import "~@angular/cdk/overlay-prebuilt.css";
 
 * {
   margin: 0;
@@ -33,5 +32,38 @@ body {
 
   .card-body {
     padding: 1rem 1.5rem;
+  }
+}
+
+/* using for main board */
+#carousel {
+  .owl-nav {
+    position: absolute;
+    top:50%;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transform: translateY(-100%);
+    pointer-events: none;
+
+    .owl-next,
+    .owl-prev {
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      background-color: #333;
+      opacity: 0.8;
+      pointer-events: all;
+    }
+
+    .owl-next:hover,
+    .owl-prev:hover{
+      opacity: 1;
+    }
   }
 }

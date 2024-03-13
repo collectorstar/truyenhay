@@ -18,7 +18,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+      <ul class="navbar-nav ms-auto mb-3 mb-lg-0">
         <div *ngFor="let data of sidebarList">
           <li class="nav-item" *ngIf="!data.items">
             <a
@@ -40,7 +40,7 @@
                 [ngClass]="{ active: router.url.startsWith('/admin') }"
                 >{{ data.label }}</a
               >
-              <ul class="dropdown-menu">
+              <ul class="dropdown-menu mb-5">
                 <submenu [sidebarList]="data.items" (clickLink)="closeNav()"></submenu>
               </ul>
             </div>
@@ -55,14 +55,13 @@
             <a [routerLink]="['register']" class="register" (click)="closeNav()">Register</a>
           </div>
         </div>
-        <div
+        <a
           *ngIf="accountService.currentUser$ | async as user"
           class="has-account dropdown"
         >
           <div
             class="dropdown-toggle text-light"
             data-bs-toggle="dropdown"
-            data-bs-auto-close="outside"
           >
             <img
               src="{{ user.photoUrl || './assets/user.png' }}"
@@ -76,7 +75,7 @@
             </li>
             <li class="dropdown-item" (click)="logout()"><a>Logout</a></li>
           </ul>
-        </div>
+        </a>
       </ul>
     </div>
   </div>

@@ -89,6 +89,7 @@ namespace API.Controllers
                 find.Name = dto.Name;
                 find.Desc = dto.Desc;
                 find.Status = dto.Status;
+                find.UpdateTime = DateTime.Now;
 
                 if (dto.File != null)
                 {
@@ -276,7 +277,7 @@ namespace API.Controllers
         [HttpGet("my-comics")]
         public async Task<ActionResult<PagedList<UploadComicDto>>> GetAll([FromQuery] GetAllUploadComicParam dto)
         {
-            var list = from x in _uow.ComicRepository.GetAll().Where(x =>x.AuthorId == User.GetUserId() && (string.IsNullOrWhiteSpace(dto.Name) || x.Name.Contains(dto.Name)) )
+            var list = from x in _uow.ComicRepository.GetAll().Where(x =>x.AuthorId == User.GetUserId() && (string.IsNullOrWhiteSpace(dto.Name) || x.Name.Contains(dto.Name)) ).OrderByDescending(x => x.UpdateTime ?? x.CreationTime)
                        select new UploadComicDto
                        {
                            Id = x.Id,
@@ -351,6 +352,7 @@ namespace API.Controllers
 
             var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == dto.ComicId && x.AuthorId == User.GetUserId());
             if (comic == null) return BadRequest("Request invalid, please reload again");
+            comic.UpdateTime = DateTime.Now;
 
             if (dto.Id != null)
             {
@@ -479,6 +481,7 @@ namespace API.Controllers
             }
 
             _uow.ChapterRepository.Delete(chapter);
+            comic.UpdateTime = DateTime.Now;
             if (!await _uow.Complete()) return BadRequest("Fail to delete Chapter");
 
             return Ok(new { message = "Delete chapter success!" });

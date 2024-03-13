@@ -1,6 +1,36 @@
-<h1>Dashboard</h1>
-<div class="card">
-    <div class="card-head"> tieu de ne</div>
-    <div class="card-body">day la noi dung trang dashboard</div>
+<div style="height: auto; width: 100%; margin-bottom: 10px" *ngIf="carouselData.length > 0">
+  <h4 style="color: #2980b9; margin-bottom: 5px">Recommend ></h4>
+  <slider-home [datas]="carouselData"></slider-home>
 </div>
-<!-- <div class="" style="height: 500px;width: 500px;background-color: red;"></div> -->
+
+<div class="newest-update-comic" *ngIf="newestComics.length > 0">
+    <h4 style="color: #2980b9; margin-bottom: 5px">Newest Updated ></h4>
+    <div class="d-flex flex-wrap comic-container">
+        <div class="col-6 col-md-3 col-xl-2 comic-card" *ngFor="let comic of newestComics">
+            <div class="comic-img">
+                <img  [defaultImage]="'/assets/loading.gif'" [lazyLoad]="comic.mainImage" alt="{{comic.comicName}}" [loading]="true">
+                <span class="comic-hot" *ngIf="comic.isFeatured"></span>
+            </div>
+            <h5 class="comic-name">{{comic.comicName}}</h5>
+            <div class="comic-chapters">
+                <div class="chapter-info" *ngFor="let chapter of comic.chapters">
+                    <a class="chapter-name">{{chapter.name}}</a>
+                    <span class="chapter-update-time">{{chapter.updateTime | timeago}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="paginate-dashboard" *ngIf="paginationParams.totalPages > 1" style="margin-top: 20px;" >
+        <p-paginator
+          locale="en-US"
+          (onPageChange)="paginationChange($event)"
+          [first]="
+            (paginationParams.currentPage - 1) * paginationParams.itemsPerPage
+          "
+          [rows]="paginationParams.itemsPerPage"
+          [totalRecords]="paginationParams.totalItems"
+          [showCurrentPageReport]="false"
+        ></p-paginator>
+      </div>
+</div>

@@ -230,6 +230,9 @@ namespace API.Data.Migrations
                     b.Property<bool>("IsFeatured")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsRecommend")
+                        .HasColumnType("bit");
+
                     b.Property<string>("MainImage")
                         .HasColumnType("nvarchar(max)");
 
@@ -247,6 +250,9 @@ namespace API.Data.Migrations
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime?>("UpdateTime")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 

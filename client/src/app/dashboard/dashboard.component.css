@@ -1,3 +1,105 @@
-h1{
-    color: #495057;
+.comic-container {
+  margin: -5px;
+
+  .comic-card {
+    padding: 5px;
+    cursor: pointer;
+
+    .comic-img {
+      display: block;
+      width: 100%;
+      height: 200px;
+      position: relative;
+
+      img {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+      .comic-hot {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        height: 11px;
+        width: 28px;
+        display: inline-block;
+        background: url("/assets/icon-hot.gif") no-repeat;
+      }
+    }
+
+    .comic-name {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 5px;
+    }
+
+    .comic-chapters {
+      .chapter-info {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+
+        .chapter-name {
+          font-size: 14px;
+          color: #000;
+          text-decoration: none;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          flex: 1;
+        }
+
+        .chapter-update-time {
+          font-size: 14px;
+          color: #000;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          flex: 3;
+          flex-grow: 1;
+        }
+      }
+    }
+  }
+}
+
+
+@media only screen and (min-width: 320px) and (max-width: 767px){
+  .comic-chapters {
+    .chapter-info {
+
+      .chapter-name {
+        font-size: 10px;
+        flex: 1;
+      }
+
+      .chapter-update-time {
+        font-size: 10px;
+        flex: 2;
+      }
+    }
+  }
+}
+
+
+@media only screen and (min-width: 320px) and (max-width: 767px) {
+  :host ::ng-deep {
+    #paginate-dashboard {
+      .p-paginator .p-paginator-pages .p-paginator-page,
+      .p-paginator .p-paginator-next,
+      .p-paginator .p-paginator-last,
+      .p-paginator .p-paginator-prev,
+      .p-paginator .p-paginator-first {
+        min-width: 35px;
+      }
+    }
+  }
 }

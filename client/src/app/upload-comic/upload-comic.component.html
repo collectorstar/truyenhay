@@ -37,7 +37,12 @@
     <div
       class="col-12 col-md-3 col-xl-3 flex-md-grow-0 flex-grow-1 flex-md-shrink-1 img-comic"
     >
-      <img src="{{ item.mainImage || './assets/user.png' }}" alt="" />
+      <img
+        [defaultImage]="'/assets/loading.gif'"
+        [lazyLoad]="item.mainImage"
+        alt=""
+        style="display: block; min-width: 246px; min-height: 288px"
+      />
     </div>
     <div
       class="col-12 col-md-9 col-xl-9 flex-md-grow-1 flex-grow-0 flex-md-shrink-0 content-comic"
@@ -92,7 +97,7 @@
     </div>
   </div>
 
-  <div class="paginate">
+  <div id="paginate-uploadcommic" *ngIf="paginationParams.totalPages > 1">
     <p-paginator
       locale="en-US"
       (onPageChange)="paginationChange($event)"

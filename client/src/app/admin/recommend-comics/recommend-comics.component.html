@@ -1,0 +1,22 @@
+<h1>Recommend Comics</h1>
+
+<simple-ag-grid
+  [columnDefs]="columnDefs"
+  [rowData]="rowData"
+  [defaultColDef]="defaultColDef"
+  (callBackGrid)="onGridReady()"
+  (rowClicked)="selectedRowClicked($event)"
+></simple-ag-grid>
+
+<div class="action">
+  <div class="action-item">
+    <button class="btn btn-outline-info" (click)="getAll()">
+      <i class="fa fa-refresh"></i> Refesh
+    </button>
+  </div>
+  <div class="action-item">
+    <button class="btn btn-outline-success" (click)="openGenreModal()">
+      <i class="fa fa-edit"></i> Update
+    </button>
+  </div>
+</div>

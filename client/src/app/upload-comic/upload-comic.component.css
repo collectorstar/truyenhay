@@ -60,7 +60,7 @@
   }
 }
 
-.paginate {
+/* #paginate-uploadcommic {
   :host ::ng-deep {
     .p-paginator-rpp-options.p-dropdown.p-component {
       align-items: center;
@@ -80,7 +80,7 @@
       justify-content: center;
     }
   }
-}
+} */
 
 .boxsearch {
   margin: 10px 0;
@@ -140,6 +140,20 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: pre-line;
+    }
+  }
+}
+
+@media only screen and (min-width: 320px) and (max-width: 767px) {
+  :host ::ng-deep {
+    #paginate-uploadcommic {
+      .p-paginator .p-paginator-pages .p-paginator-page,
+      .p-paginator .p-paginator-next,
+      .p-paginator .p-paginator-last,
+      .p-paginator .p-paginator-prev,
+      .p-paginator .p-paginator-first {
+        min-width: 35px;
+      }
     }
   }
 }

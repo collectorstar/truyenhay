@@ -31,6 +31,11 @@ export const sidebarList: INavbarData[] = [
         label: 'Request Author',
         roles: ['Admin'],
       },
+      {
+        routeLink: 'admintruyenhay/recommend-comic',
+        label: 'Recommend Comics',
+        roles: ['Admin'],
+      },
     ],
   },
 ];

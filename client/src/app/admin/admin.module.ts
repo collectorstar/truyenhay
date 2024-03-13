@@ -8,6 +8,10 @@ import { FormsModule } from '@angular/forms';
 import { CreateOrEditGenreComponent } from './genre/create-or-edit-genre/create-or-edit-genre.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { RequestAuthorComponent } from './request-author/request-author.component';
+import { RecommendComicsComponent } from './recommend-comics/recommend-comics.component';
+import { UpdateRecommendComicsComponent } from './recommend-comics/update-recommend-comics/update-recommend-comics.component';
+import { MultiselectDropdownComponent } from '../_component/multiselect-dropdown/multiselect-dropdown.component';
+import { LazyLoadImageModule } from 'ng-lazyload-image';
 
 
 @NgModule({
@@ -15,6 +19,8 @@ import { RequestAuthorComponent } from './request-author/request-author.componen
     GenreComponent,
     CreateOrEditGenreComponent,
     RequestAuthorComponent,
+    RecommendComicsComponent,
+    UpdateRecommendComicsComponent,
   ],
   imports: [
     FormsModule,
@@ -22,6 +28,8 @@ import { RequestAuthorComponent } from './request-author/request-author.componen
     CommonModule,
     AdminRoutingModule,
     BsDropdownModule.forRoot(),
+    MultiselectDropdownComponent,
+    LazyLoadImageModule
   ]
 })
 export class AdminModule { }

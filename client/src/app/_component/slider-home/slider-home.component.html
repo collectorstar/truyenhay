@@ -1,0 +1,29 @@
+<div id="carousel">
+  <owl-carousel-o [options]="customOptions">
+    <ng-container *ngFor="let data of datas">
+      <ng-template carouselSlide>
+        <div class="content-carousel">
+          <a routerLink="/follow">
+            <img
+              style="max-height: 240px"
+              [defaultImage]="'/assets/loading.gif'"
+              [lazyLoad]="data.urlImage"
+              [alt]="data.comicName"
+              [title]="data.comicName"
+              (click)="clickImg(data)"
+            />
+          </a>
+          <div class="text-chapter">
+            <a class="comic-name">{{ data.comicName }}</a>
+            <div class="d-flex align-items-center justify-content-between">
+              <a class="comic-chapter-newest">{{ data.newestChapter }}</a>
+              <span class="comic-chapter-updatetime">{{
+                data.updateTime | timeago
+              }}</span>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </ng-container>
+  </owl-carousel-o>
+</div>

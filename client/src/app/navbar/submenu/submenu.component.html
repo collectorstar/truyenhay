@@ -9,13 +9,12 @@
   <div *ngIf="data.items">
     <div
       class="dropdown-item dropdown dropend dropdown-toggle"
-      id="hello"
       data-bs-toggle="dropdown"
       data-bs-auto-close="outside"
     >
       {{ data.label }}
     </div>
-    <ul class="dropdown-menu dropend" aria-labelledby="baba">
+    <ul class="dropdown-menu dropend" >
       <div class="">
         <submenu [sidebarList]="data.items" (clickLink)="clickRouteLink()"></submenu>
       </div>

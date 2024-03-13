@@ -1,0 +1,15 @@
+.action{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 10px;
+
+    .action-item{
+        margin: 0 5px;
+
+        /* button{
+            padding: 5px;
+            border-radius: 5px;
+        } */
+    }
+}

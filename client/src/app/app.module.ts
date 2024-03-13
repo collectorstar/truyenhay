@@ -33,6 +33,11 @@ import { MultiselectDropdownComponent } from './_component/multiselect-dropdown/
 import { CreateOrEditChapterComponent } from './upload-comic/list-chapter/create-or-edit-chapter/create-or-edit-chapter.component';
 import { SubmenuComponent } from './navbar/submenu/submenu.component';
 import { PaginatorModule } from 'primeng/paginator';
+import { SliderHomeComponent } from './_component/slider-home/slider-home.component';
+import { CarouselModule } from 'ngx-owl-carousel-o';
+import { TimeagoModule } from 'ngx-timeago';
+import { LazyLoadImageModule } from 'ng-lazyload-image';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -70,7 +75,11 @@ import { PaginatorModule } from 'primeng/paginator';
     TabsModule.forRoot(),
     NgMultiSelectDropDownModule.forRoot(),
     MultiselectDropdownComponent,
-    PaginatorModule
+    PaginatorModule,
+    CarouselModule,
+    SliderHomeComponent,
+    TimeagoModule.forRoot(),
+    LazyLoadImageModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

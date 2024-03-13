@@ -24,7 +24,6 @@ namespace API.Data
         public DbSet<RequestAuthor> RequestAuthors { get; set; }
         public DbSet<PhotoComic> PhotoComics { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

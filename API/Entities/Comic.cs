@@ -12,7 +12,9 @@ namespace API.Entities
         public int Rate { get; set; }
         public int NOReviews { get; set; }
         public DateTime CreationTime { get; set; }
+        public DateTime? UpdateTime { get; set; }
         public bool IsDeleted { get; set; }
+        public bool IsRecommend { get; set; }
 
         public int AuthorId { get; set; }
     }
