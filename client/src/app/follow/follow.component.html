@@ -1,9 +1,51 @@
-<h1>Follow</h1>
-<div class="card">
-    <div class="card-head"> tieu de ne</div>
-    <div class="card-body">day la noi dung trang follow 1</div>
+<h1>Comics Following</h1>
+
+<div class="no-comic" *ngIf="followComics.length == 0">
+    You haven't followed any comics yet
 </div>
-<div class="card">
-    <div class="card-head"> tieu de ne</div>
-    <div class="card-body">day la noi dung trang follow 2</div>
+
+<div class="follow-comic" *ngIf="followComics.length > 0">
+  <div class="d-flex flex-wrap comic-container">
+    <div
+      class="col-6 col-md-3 col-xl-2 comic-card"
+      *ngFor="let comic of followComics"
+    >
+      <div class="comic-img">
+        <img
+          [defaultImage]="'/assets/loading.gif'"
+          (click)="router.navigateByUrl('/comic-detail/' + comic.id)"
+          [lazyLoad]="comic.mainImage"
+          alt="{{ comic.comicName }}"
+          [loading]="true"
+        />
+        <span class="comic-hot" *ngIf="comic.isFeatured"></span>
+      </div>
+      <h5 class="comic-name">{{ comic.comicName }}</h5>
+      <div class="comic-chapters">
+        <div class="chapter-info" *ngFor="let chapter of comic.chapters">
+          <a class="chapter-name">{{ chapter.name }}</a>
+          <span class="chapter-update-time">{{
+            chapter.updateTime | timeago
+          }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    id="paginate-follow"
+    *ngIf="paginationParams.totalPages > 1"
+    style="margin-top: 20px"
+  >
+    <p-paginator
+      locale="en-US"
+      (onPageChange)="paginationChange($event)"
+      [first]="
+        (paginationParams.currentPage - 1) * paginationParams.itemsPerPage
+      "
+      [rows]="paginationParams.itemsPerPage"
+      [totalRecords]="paginationParams.totalItems"
+      [showCurrentPageReport]="false"
+    ></p-paginator>
+  </div>
 </div>

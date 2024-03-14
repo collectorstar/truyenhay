@@ -44,7 +44,7 @@ const routes: Routes = [
     path: 'comic-detail/:comicId',
     component: ComicDetailComponent,
   },
-  { path: 'follow', component: FollowComponent },
+  { path: 'follow', component: FollowComponent, canActivate: [loginGuard] },
   {
     path: 'account-detail',
     component: AccountDetailComponent,
