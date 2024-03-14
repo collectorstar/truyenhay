@@ -11,6 +11,7 @@ import { loginGuard } from './_guards/login.guard';
 import { UploadCommicComponent } from './upload-comic/upload-comic.component';
 import { AccountDetailComponent } from './account-detail/account-detail.component';
 import { ListChapterComponent } from './upload-comic/list-chapter/list-chapter.component';
+import { ComicDetailComponent } from './comic-detail/comic-detail.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -32,13 +33,17 @@ const routes: Routes = [
     path: 'upload-comic',
     component: UploadCommicComponent,
     canActivate: [loginGuard],
-    pathMatch:'full'
+    pathMatch: 'full',
   },
-{
-  path:'upload-comic/:comicId',
-  component: ListChapterComponent,
-  canActivate: [loginGuard],
-},
+  {
+    path: 'upload-comic/:comicId',
+    component: ListChapterComponent,
+    canActivate: [loginGuard],
+  },
+  {
+    path: 'comic-detail/:comicId',
+    component: ComicDetailComponent,
+  },
   { path: 'follow', component: FollowComponent },
   {
     path: 'account-detail',
@@ -46,7 +51,7 @@ const routes: Routes = [
     canActivate: [loginGuard],
     pathMatch: 'full',
   },
-  { path: 'not-found', component: NotFoundComponent, },
+  { path: 'not-found', component: NotFoundComponent },
   { path: '**', component: NotFoundComponent, pathMatch: 'full' },
 ];
 

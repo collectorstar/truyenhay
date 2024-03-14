@@ -10,6 +10,8 @@ namespace API.Interfaces
         IChapterRepository ChapterRepository { get; }
         IChapterPhotoRepository ChapterPhotoRepository { get; }
         IComicGenreRepository ComicGenreRepository { get; }
+        IRatingComicRepository RatingComicRepository { get; }
+        IComicFollowRepository ComicFollowRepository { get; }
 
         Task<bool> Complete();
         bool HasChanges();

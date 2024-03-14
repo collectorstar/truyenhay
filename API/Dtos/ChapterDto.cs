@@ -8,6 +8,5 @@ namespace API.Dtos
         public DateTime CreationTime { get; set; }
         public DateTime? UpdateTime { get; set; }
         public int View { get; set; }
-        public List<ChapterPhotoDto> ChapterPhotoDtos { get; set; }
     }
 }

@@ -8,6 +8,7 @@ import { DashboardService } from '../_services/dashboard.service';
 import { ComicNewestDto } from '../_models/comicNewestDto';
 import { Pagination } from '../_models/pagination';
 import { GetNewestComicParam } from '../_models/getNewestComicParam';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -28,7 +29,8 @@ export class DashboardComponent {
     private recomService: RecommendComicsService,
     private busyService: BusyService,
     private toastr: ToastrService,
-    private dashboardService: DashboardService
+    private dashboardService: DashboardService,
+    public router: Router,
   ) {
     this.getDataCarousel();
   }

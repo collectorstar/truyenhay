@@ -5,6 +5,7 @@
         <div class="content-carousel">
           <a routerLink="/follow">
             <img
+              (click)="router.navigateByUrl('/comic-detail/' + data.id)"
               style="max-height: 240px"
               [defaultImage]="'/assets/loading.gif'"
               [lazyLoad]="data.urlImage"
@@ -14,7 +15,7 @@
             />
           </a>
           <div class="text-chapter">
-            <a class="comic-name">{{ data.comicName }}</a>
+            <a class="comic-name" (click)="router.navigateByUrl('/comic-detail/' + data.id)">{{ data.comicName }}</a>
             <div class="d-flex align-items-center justify-content-between">
               <a class="comic-chapter-newest">{{ data.newestChapter }}</a>
               <span class="comic-chapter-updatetime">{{

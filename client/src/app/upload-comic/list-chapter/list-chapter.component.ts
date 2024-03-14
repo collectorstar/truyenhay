@@ -4,7 +4,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { finalize } from 'rxjs';
 import { ChapterDto } from 'src/app/_models/chapterDto';
-import { ComicDetailDto } from 'src/app/_models/comicDetailDto';
+import { ComicDetailDtoForListChapter } from 'src/app/_models/comicDetailDtoForListChapter';
 import { BusyService } from 'src/app/_services/busy.service';
 import { UploadComicService } from 'src/app/_services/upload-comic.service';
 import { CreateOrEditChapterComponent } from './create-or-edit-chapter/create-or-edit-chapter.component';
@@ -16,7 +16,7 @@ import { ConfirmService } from 'src/app/_services/confirm.service';
   styleUrls: ['./list-chapter.component.css'],
 })
 export class ListChapterComponent implements OnInit {
-  comic: ComicDetailDto = {} as ComicDetailDto;
+  comic: ComicDetailDtoForListChapter = {} as ComicDetailDtoForListChapter;
   listChapter: ChapterDto[] = [];
   bsModalRef: BsModalRef<CreateOrEditChapterComponent> =
     new BsModalRef<CreateOrEditChapterComponent>();

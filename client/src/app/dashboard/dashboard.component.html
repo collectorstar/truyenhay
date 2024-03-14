@@ -8,7 +8,7 @@
     <div class="d-flex flex-wrap comic-container">
         <div class="col-6 col-md-3 col-xl-2 comic-card" *ngFor="let comic of newestComics">
             <div class="comic-img">
-                <img  [defaultImage]="'/assets/loading.gif'" [lazyLoad]="comic.mainImage" alt="{{comic.comicName}}" [loading]="true">
+                <img  [defaultImage]="'/assets/loading.gif'" (click)="router.navigateByUrl('/comic-detail/'+comic.id)" [lazyLoad]="comic.mainImage" alt="{{comic.comicName}}" [loading]="true">
                 <span class="comic-hot" *ngIf="comic.isFeatured"></span>
             </div>
             <h5 class="comic-name">{{comic.comicName}}</h5>

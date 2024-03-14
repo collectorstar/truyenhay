@@ -1,14 +1,18 @@
-import { ChapterDto } from './chapterDto';
+import { ChapterForComicDetailDto } from './chapterForComicDetailDto';
+import { GenreForComicDetailDto } from './genreForComicDetailDto';
 
 export interface ComicDetailDto {
   id: number;
   name: string;
-  isFeatured: boolean;
   desc: string;
+  isFeatured: boolean;
   mainImage: string;
   rate: number;
-  nOReviews: number;
-  creationTime: Date;
+  noReviews: number;
+  noFollows: number;
   authorId: number;
-  chapters: ChapterDto[];
+  authorName: string;
+  isFollow: boolean;
+  genres: GenreForComicDetailDto[];
+  chapters: ChapterForComicDetailDto[];
 }

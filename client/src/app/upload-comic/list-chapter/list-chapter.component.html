@@ -26,7 +26,7 @@
           <a class="chapterInfo-name">{{ item.name }}</a>
         </div>
         <div class="col-4 text-center">
-          {{ item.updateTime ?? item.creationTime | date : "dd/MM/YYYY" }}
+          {{ item.updateTime ?? item.creationTime | timeago }}
         </div>
         <div class="col-3 text-center">{{ item.view }}</div>
       </div>

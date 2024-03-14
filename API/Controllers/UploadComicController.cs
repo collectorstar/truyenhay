@@ -305,7 +305,7 @@ namespace API.Controllers
         }
 
         [HttpGet("list-chapter")]
-        public async Task<ActionResult<ComicDetailDto>> GetListChapter([FromQuery] int ComicId)
+        public async Task<ActionResult<ComicDetailForListChapterDto>> GetListChapter([FromQuery] int ComicId)
         {
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == User.GetUserId());
             if (user == null) return Unauthorized("Not found User");
@@ -313,17 +313,10 @@ namespace API.Controllers
             var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.AuthorId == user.Id && x.Id == ComicId);
             if (comic == null) return NotFound();
 
-            var result = new ComicDetailDto()
+            var result = new ComicDetailForListChapterDto()
             {
                 Id = comic.Id,
                 Name = comic.Name,
-                IsFeatured = comic.IsFeatured,
-                Desc = comic.Desc,
-                MainImage = comic.MainImage,
-                Rate = comic.Rate,
-                NOReviews = comic.NOReviews,
-                CreationTime = comic.CreationTime,
-                AuthorId = comic.AuthorId,
                 Chapters = (from x in _uow.ChapterRepository.GetAll().Where(x => x.ComicId == ComicId)
                             select new ChapterDto
                             {
@@ -332,12 +325,6 @@ namespace API.Controllers
                                 CreationTime = x.CreationTime,
                                 UpdateTime = x.UpdateTime,
                                 Status = x.Status,
-                                ChapterPhotoDtos = (from y in _uow.ChapterPhotoRepository.GetAll().Where(z => z.ChapterId == x.Id).OrderBy(x => x.Rank)
-                                                    select new ChapterPhotoDto
-                                                    {
-                                                        Id = y.Id,
-                                                        Url = y.Url
-                                                    }).ToList(),
                             }).ToList(),
             };
 

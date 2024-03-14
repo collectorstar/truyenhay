@@ -1,10 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { finalize } from 'rxjs';
 import { IsNumericFileName } from 'src/app/_extensions/checkFileNameInteger';
 import { ChapterDto } from 'src/app/_models/chapterDto';
-import { ComicDetailDto } from 'src/app/_models/comicDetailDto';
+import { ComicDetailDtoForListChapter } from 'src/app/_models/comicDetailDtoForListChapter';
 import { BusyService } from 'src/app/_services/busy.service';
 import { UploadComicService } from 'src/app/_services/upload-comic.service';
 
@@ -14,7 +14,7 @@ import { UploadComicService } from 'src/app/_services/upload-comic.service';
   styleUrls: ['./create-or-edit-chapter.component.css'],
 })
 export class CreateOrEditChapterComponent implements OnInit {
-  comic: ComicDetailDto = {} as ComicDetailDto;
+  comic: ComicDetailDtoForListChapter = {} as ComicDetailDtoForListChapter;
   selectedRow: ChapterDto | null = null;
   textFile: string = ' Chưa chọn file';
   selectedFiles: File[] | null = null;

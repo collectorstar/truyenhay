@@ -1,0 +1,114 @@
+<h3 class="comic-name text-center text-uppercase">{{ comic.name }}</h3>
+<div class="comic-header">
+  <div class="col-12 col-md-3 comic-container-image">
+    <img
+      class="comic-image"
+      [alt]="comic.name"
+      [defaultImage]="'/assets/loading.gif'"
+      [lazyLoad]="comic.mainImage"
+    />
+  </div>
+  <div class="col-12 col-md-8 mt-2">
+    <div class="comic-content">
+      <div class="d-flex align-items-top gap-2 comic-author">
+        <p class="d-flex gap-2 pt-1">
+          <i class="fa-solid fa-user" style="line-height: 1"></i
+          ><span style="line-height: 1"> Author:</span>
+        </p>
+        <a class="text-decoration-none">{{ comic.authorName }}</a>
+      </div>
+      <div class="d-flex align-items-top gap-2 comic-genre">
+        <p class="d-flex gap-2 pt-1">
+          <i class="fa-solid fa-tag" style="line-height: 1"></i>
+          <span style="line-height: 1"> Genres:</span>
+        </p>
+        <p class="">
+          <a class="text-decoration-none" *ngFor="let genre of comic.genres"
+            >{{ genre.name }},
+          </a>
+        </p>
+      </div>
+      <div class="d-flex align-items-top gap-2 comic-watcher">
+        <p class="d-flex gap-2 pt-1">
+          <i style="line-height: 1" class="fa-solid fa-heart"></i
+          ><span style="line-height: 1"> Total Follow:</span>
+        </p>
+        <span class="text-decoration-none">{{
+          comic.noFollows
+        }}</span>
+      </div>
+      <div class="d-flex align-items-top gap-2 comic-watcher">
+        <p class="d-flex gap-2 pt-1">
+          <i style="line-height: 1" class="fa-solid fa-eye"></i
+          ><span style="line-height: 1"> Total Reivew:</span>
+        </p>
+        <span class="text-decoration-none">{{
+          comic.noReviews
+        }}</span>
+      </div>
+      <div class="d-flex align-items-top gap-2 comic-rate">
+        <p class="d-flex gap-2 pt-1">
+          <i style="line-height: 1" class="fa-solid fa-star"></i
+          ><span style="line-height: 1"> Rate:</span>
+        </p>
+        <span class="text-decoration-none"
+          ><p-rating
+            (onRate)="rating($event)"
+            id="rating-comic-detail"
+            [(ngModel)]="comic.rate"
+            [cancel]="false"
+          ></p-rating
+        ></span>
+      </div>
+      <div class="comic-follow mt-3" *ngIf="!comic.isFollow">
+        <button class="btn btn-success" (click)="follow()"><i class="fa-solid fa-heart"></i> Follow</button>
+      </div>
+      <div class="comic-unfollow mt-3" *ngIf="comic.isFollow">
+        <button class="btn btn-danger" (click)="unfollow()"><i class="fa-solid fa-xmark"></i> Unfollow</button>
+      </div>
+      <div class="comic-utility-action" *ngIf="comic.chapters && comic.chapters.length > 0">
+        <button class="first-button">First Chapter</button>
+        <button class="newest-button">Newest Chapter</button>
+        <button class="continue-button">Read Continute ></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="comic-desc">
+  <h3 class="list-title"><i class="fa fa-file-text-o"> </i> Nội dung</h3>
+  <p class="shortened" [ngClass]="isSortDesc ? 'sort-desc' : 'full-desc'">
+    {{ comic.desc }}
+  </p>
+  <a class="morelink" (click)="showMoreDesc()"
+    >Xem thêm <i class="fa fa-angle-right"></i
+  ></a>
+</div>
+
+<div class="comic-chapters-header">
+  <h3 class="list-title"><i class="fa fa-list"> </i> Chapters</h3>
+
+  <div class="d-flex">
+    <div class="col-5"><span>Số chương</span></div>
+    <div class="col-4 text-center"><span>Cập nhật</span></div>
+    <div class="col-3 text-center"><span>Xem</span></div>
+  </div>
+  <ul
+    class="comic-chapters-content"
+    *ngIf="comic.chapters && comic.chapters.length > 0"
+  >
+    <li class="chapter-item" *ngFor="let chapter of comic.chapters">
+      <div class="col-5 text-left">
+        <a class="text-decoration-none chapter-name">{{ chapter.name }}</a>
+      </div>
+      <div class="col-4 text-center">{{ chapter.updateTime | timeago }}</div>
+      <div class="col-3 text-center">{{ chapter.view }}</div>
+    </li>
+  </ul>
+  <p
+    *ngIf="comic.chapters && comic.chapters.length == 0"
+    style="margin: 5px; color: #666; font-size: 16px"
+  >
+    No chapters available!
+  </p>
+</div>

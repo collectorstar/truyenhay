@@ -34,6 +34,8 @@ namespace API.Extensions
             services.Configure<DataProtectionTokenProviderOptions>(opt => opt.TokenLifespan = TimeSpan.FromMinutes(5));
             services.AddSignalR();
             services.AddSingleton<PresenceTracker>();
+            services.AddScoped<IRatingComicRepository,RatingComicRepository>();
+            services.AddScoped<IComicFollowRepository,ComicFollowRepository>();
             return services;
         }
     }

@@ -37,6 +37,8 @@ import { SliderHomeComponent } from './_component/slider-home/slider-home.compon
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { TimeagoModule } from 'ngx-timeago';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
+import { ComicDetailComponent } from './comic-detail/comic-detail.component';
+import { RatingModule } from 'primeng/rating';
 
 @NgModule({
   declarations: [
@@ -55,6 +57,7 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
     ListChapterComponent,
     CreateOrEditChapterComponent,
     SubmenuComponent,
+    ComicDetailComponent,
   ],
   imports: [
     BrowserModule,
@@ -79,7 +82,8 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
     CarouselModule,
     SliderHomeComponent,
     TimeagoModule.forRoot(),
-    LazyLoadImageModule
+    LazyLoadImageModule,
+    RatingModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

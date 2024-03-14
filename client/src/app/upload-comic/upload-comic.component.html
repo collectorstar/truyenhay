@@ -38,6 +38,7 @@
       class="col-12 col-md-3 col-xl-3 flex-md-grow-0 flex-grow-1 flex-md-shrink-1 img-comic"
     >
       <img
+        (click)="router.navigateByUrl('/comic-detail/'+item.id)"
         [defaultImage]="'/assets/loading.gif'"
         [lazyLoad]="item.mainImage"
         alt=""
@@ -45,7 +46,7 @@
       />
     </div>
     <div
-      class="col-12 col-md-9 col-xl-9 flex-md-grow-1 flex-grow-0 flex-md-shrink-0 content-comic"
+      class="col-12 col-md-9 col-xl-9 flex-md-grow-1 flex-grow-0 flex-md-shrink-1 content-comic"
     >
       <h2 class="comic-name d-block">{{ item.name }}</h2>
       <span class="comic-desc"

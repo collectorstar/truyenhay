@@ -19,6 +19,8 @@ namespace API.Repositories
         public IChapterRepository ChapterRepository => new ChapterRepository(_context);
         public IChapterPhotoRepository ChapterPhotoRepository => new ChapterPhotoRepository(_context);
         public IComicGenreRepository ComicGenreRepository => new ComicGenreRepository(_context);
+        public IRatingComicRepository RatingComicRepository => new RatingComicRepository(_context);
+        public IComicFollowRepository ComicFollowRepository => new ComicFollowRepository(_context);
         public async Task<bool> Complete()
         {
             return await _context.SaveChangesAsync() > 0;

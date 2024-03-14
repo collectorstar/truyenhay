@@ -8,7 +8,7 @@ import { UploadComicDto } from '../_models/uploadComicDto';
 import { ChapterDto } from '../_models/chapterDto';
 import { ConfirmService } from './confirm.service';
 import { GenreForUploadComicDto } from '../_models/genreForUploadComicDto';
-import { ComicDetailDto } from '../_models/comicDetailDto';
+import { ComicDetailDtoForListChapter } from '../_models/comicDetailDtoForListChapter';
 
 @Injectable({
   providedIn: 'root',
@@ -43,7 +43,7 @@ export class UploadComicService {
   }
 
   getListChapter(comicId: number) {
-    return this.http.get<ComicDetailDto>(
+    return this.http.get<ComicDetailDtoForListChapter>(
       this.baseUrl + 'uploadComic/list-chapter?comicId=' + comicId
     );
   }

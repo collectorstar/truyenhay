@@ -23,6 +23,7 @@ namespace API.Data
         public DbSet<PhotoAvatar> PhotoAvatars { get; set; }
         public DbSet<RequestAuthor> RequestAuthors { get; set; }
         public DbSet<PhotoComic> PhotoComics { get; set; }
+        public DbSet<RatingComic> RatingComics { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

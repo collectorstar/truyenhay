@@ -11,6 +11,7 @@ import { Pagination } from '../_models/pagination';
 import { GetAllUploadComicParam } from '../_models/getAllUploadComicParam';
 import { UploadComicDto } from '../_models/uploadComicDto';
 import { ConfirmService } from '../_services/confirm.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-upload-commic',
@@ -38,7 +39,8 @@ export class UploadCommicComponent implements OnInit {
     private uploadService: UploadComicService,
     private modalService: BsModalService,
     private uploadComicService: UploadComicService,
-    private confirmService: ConfirmService
+    private confirmService: ConfirmService,
+    public router: Router
   ) {
     this.accountService.currentUser$.subscribe({
       next: (user) => {

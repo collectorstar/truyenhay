@@ -5,6 +5,7 @@ import {
   Input,
   ViewEncapsulation,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
 import { TimeagoModule } from 'ngx-timeago';
@@ -17,10 +18,12 @@ import { RecommendComicDto } from 'src/app/_models/recommendComicDto';
   templateUrl: './slider-home.component.html',
   styleUrls: ['./slider-home.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  imports: [CommonModule, CarouselModule,TimeagoModule,LazyLoadImageModule],
+  imports: [CommonModule, CarouselModule, TimeagoModule, LazyLoadImageModule],
   encapsulation: ViewEncapsulation.None,
 })
 export class SliderHomeComponent {
+  constructor(public router: Router) {}
+  
   @Input() datas: RecommendComicDto[] = [];
 
   customOptions: OwlOptions = {
@@ -43,7 +46,7 @@ export class SliderHomeComponent {
     responsive: {
       0: {
         items: 2,
-        margin:4
+        margin: 4,
       },
       768: {
         items: 3,
@@ -54,6 +57,5 @@ export class SliderHomeComponent {
     },
   };
 
-  clickImg(data : RecommendComicDto){
-  }
+  clickImg(data: RecommendComicDto) {}
 }
