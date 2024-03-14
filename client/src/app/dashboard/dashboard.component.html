@@ -10,6 +10,10 @@
             <div class="comic-img">
                 <img  [defaultImage]="'/assets/loading.gif'" (click)="router.navigateByUrl('/comic-detail/'+comic.id)" [lazyLoad]="comic.mainImage" alt="{{comic.comicName}}" [loading]="true">
                 <span class="comic-hot" *ngIf="comic.isFeatured"></span>
+                <div class="comic-more-info d-flex align-content-center justify-content-center gap-4">
+                  <span><i class="fa-solid fa-eye"></i>{{convertToK(comic.noReviews)}}</span>
+                  <span><i class="fa-solid fa-heart"></i>{{convertToK(comic.noFollows)}}</span>
+                </div>
             </div>
             <h5 class="comic-name">{{comic.comicName}}</h5>
             <div class="comic-chapters">

@@ -133,4 +133,9 @@ export class ComicDetailComponent implements OnInit, OnDestroy {
         },
       });
   }
+
+  convertToK(target: number): string {
+    if(target < 1000) return target + "";
+    return (target / 1000).toFixed(2) + "k"
+  }
 }

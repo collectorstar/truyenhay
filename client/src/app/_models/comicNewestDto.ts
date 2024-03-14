@@ -5,6 +5,7 @@ export interface ComicNewestDto{
     comicName: string;
     isFeatured:boolean;
     mainImage:string;
+    noFollows: number;
     rate:number;
     noReviews:number;
     chapters: ChapterForComicNewestDto[]

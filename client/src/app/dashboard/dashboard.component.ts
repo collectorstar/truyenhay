@@ -30,7 +30,7 @@ export class DashboardComponent {
     private busyService: BusyService,
     private toastr: ToastrService,
     private dashboardService: DashboardService,
-    public router: Router,
+    public router: Router
   ) {
     this.getDataCarousel();
   }
@@ -88,5 +88,10 @@ export class DashboardComponent {
     this.paginationParams.itemsPerPage = event.rows;
     this.paginationParams.totalPages = event.pageCount;
     this.getAll();
+  }
+
+  convertToK(target: number): string {
+    if(target < 1000) return target + "";
+    return (target / 1000).toFixed(2) + "k"
   }
 }
