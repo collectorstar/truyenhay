@@ -47,7 +47,8 @@ namespace API.Services
 
         public async Task<DelResResult> DeleteListPhotoAsync(List<string> publicIds)
         {
-            var deleteParams = new DelResParams(){
+            var deleteParams = new DelResParams()
+            {
                 PublicIds = publicIds
             };
             return await _cloudinary.DeleteResourcesAsync(deleteParams);
@@ -90,7 +91,7 @@ namespace API.Services
             }
 
             return uploadResult;
-        } 
+        }
 
     }
 }

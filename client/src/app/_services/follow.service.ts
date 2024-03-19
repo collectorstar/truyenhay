@@ -12,11 +12,12 @@ export class FollowService {
   baseUrl = environment.apiUrl;
   constructor(private http:HttpClient) { }
 
-  getComicsFollow(param : GetComicFollowParam){
+  getComicsFollow(param : GetComicFollowParam,email : string){
     let params = getPaginationHeader(
       param.pageNumber,
       param.pageSize
     );
+    params = params.append("email",email);
     return getPaginationResult<ComicFollowDto[]>(
       this.baseUrl + 'follow',
       params,

@@ -3,4 +3,5 @@ export interface ChapterForComicDetailDto {
   name: string;
   updateTime: Date;
   view: number;
+  hasRead:boolean
 }

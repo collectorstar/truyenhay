@@ -25,7 +25,7 @@ export class ComicDetailComponent implements OnInit, OnDestroy {
     private busyService: BusyService,
     private accountService: AccountService,
     private toastr: ToastrService,
-    private router: Router
+    public router: Router
   ) {
     this.accountService.currentUser$.subscribe({
       next: (res) => {
@@ -135,7 +135,38 @@ export class ComicDetailComponent implements OnInit, OnDestroy {
   }
 
   convertToK(target: number): string {
-    if(target < 1000) return target + "";
-    return (target / 1000).toFixed(2) + "k"
+    if (target < 1000) return target + '';
+    return (target / 1000).toFixed(2) + 'k';
+  }
+
+  readFirst() {
+    if (this.comic.chapters.length > 0) {
+      let chapterWant = this.comic.chapters[0];
+      this.router.navigateByUrl(
+        '/comic-detail/' +
+          this.comic.name.replaceAll(' ', '-') +
+          '/' +
+          this.comic.id +
+          '/' +
+          chapterWant.name.replaceAll(' ', '-') +
+          '/' +
+          chapterWant.id
+      );
+    }
+  }
+  readNewest() {
+    if (this.comic.chapters.length > 0) {
+      let chapterWant = this.comic.chapters[this.comic.chapters.length - 1];
+      this.router.navigateByUrl(
+        '/comic-detail/' +
+          this.comic.name.replaceAll(' ', '-') +
+          '/' +
+          this.comic.id +
+          '/' +
+          chapterWant.name.replaceAll(' ', '-') +
+          '/' +
+          chapterWant.id
+      );
+    }
   }
 }

@@ -1,113 +1,172 @@
-<h1>Your Comics</h1>
+<tabset>
+  <tab heading="Upload Comic">
+    <h1>Your Comics</h1>
 
-<div class="no-author" *ngIf="!user.isAuthor">
-  <button class="btn btn-success mb-3" (click)="sendRequest()">
-    <i class="fa-solid fa-upload"></i> Register to become an author
-  </button>
-  <div class="form-floating">
-    <textarea
-      [(ngModel)]="request"
-      class="form-control"
-      placeholder="Leave a request here"
-      style="height: 100px; max-height: 400px"
-    ></textarea>
-    <label for="floatingTextarea2" style="width: 100%; overflow: hidden"
-      >Write little about yourself, the genre of the story</label
-    >
-  </div>
-</div>
-
-<div class="main" *ngIf="user.isAuthor">
-  <div class="create-comic">
-    <div class="boxsearch mt-1 mb-2">
-      <span>Search:</span>
-      <input type="text" [(ngModel)]="name" placeholder="Name comic" />
-      <button class="btn btn-success" (click)="getAll()">Search</button>
-      <button class="btn btn-success" (click)="openComicModal(true)">
-        <i class="fa fa-plus"></i> Create
+    <div class="no-author" *ngIf="!user.isAuthor">
+      <button class="btn btn-success mb-3" (click)="sendRequest()">
+        <i class="fa-solid fa-upload"></i> Register to become an author
       </button>
+      <div class="form-floating">
+        <textarea
+          [(ngModel)]="request"
+          class="form-control"
+          placeholder="Leave a request here"
+          style="height: 100px; max-height: 400px"
+        ></textarea>
+        <label for="floatingTextarea2" style="width: 100%; overflow: hidden"
+          >Write little about yourself, the genre of the story</label
+        >
+      </div>
     </div>
-  </div>
-  <h4>Total comic: {{ paginationParams.totalItems }}</h4>
 
-  <div
-    *ngFor="let item of rowData"
-    class="comic d-flex flex-md-nowrap flex-wrap"
-  >
-    <div
-      class="col-12 col-md-3 col-xl-3 flex-md-grow-0 flex-grow-1 flex-md-shrink-1 img-comic"
-    >
-      <img
-        (click)="router.navigateByUrl('/comic-detail/'+item.id)"
-        [defaultImage]="'/assets/loading.gif'"
-        [lazyLoad]="item.mainImage"
-        alt=""
-        style="display: block; min-width: 246px; min-height: 288px"
-      />
-    </div>
-    <div
-      class="col-12 col-md-9 col-xl-9 flex-md-grow-1 flex-grow-0 flex-md-shrink-1 content-comic"
-    >
-      <h2 class="comic-name d-block">{{ item.name }}</h2>
-      <span class="comic-desc"
-        ><span class="fw-bold">Descreation: </span> {{ item.desc }}</span
-      >
-      <span class="d-block"
-        ><span class="fw-bold">Genres: </span>
-        <span *ngFor="let genre of item.selectedGenres"
-          >{{ genre.label }},
-        </span></span
-      >
-
-      <span class="d-block"
-        ><span class="fw-bold">Total chapters: </span
-        >{{ item.totalChapter }}</span
-      >
-
-      <span class="d-block"
-        ><span class="fw-bold">Newest Chapter: </span
-        >{{ item.newestChapter }}</span
-      >
-
-      <div class="action d-flex flex-wrap">
-        <div class="mt-1" style="margin-right: 10px">
-          <button
-            class="btn btn-outline-success"
-            (click)="openComicModal(false, item)"
-          >
-            Edit
-          </button>
-        </div>
-        <div class="mt-1" style="margin-right: 10px">
-          <button
-            class="btn btn-outline-danger"
-            (click)="deleteComic(item.id ?? 0)"
-          >
-            Delete
-          </button>
-        </div>
-        <div class="mt-1">
-          <button
-            class="btn btn-outline-info"
-            routerLink="/upload-comic/{{ item.id }}"
-          >
-            Chapters
+    <div class="main" *ngIf="user.isAuthor">
+      <div class="create-comic">
+        <div class="boxsearch mt-1 mb-2">
+          <span>Search:</span>
+          <input type="text" [(ngModel)]="name" placeholder="Name comic" />
+          <button class="btn btn-success" (click)="getAll()">Search</button>
+          <button class="btn btn-success" (click)="openComicModal(true)">
+            <i class="fa fa-plus"></i> Create
           </button>
         </div>
       </div>
-    </div>
-  </div>
+      <h4>Total comic: {{ paginationParams.totalItems }}</h4>
 
-  <div id="paginate-uploadcommic" *ngIf="paginationParams.totalPages > 1">
-    <p-paginator
-      locale="en-US"
-      (onPageChange)="paginationChange($event)"
-      [first]="
-        (paginationParams.currentPage - 1) * paginationParams.itemsPerPage
-      "
-      [rows]="paginationParams.itemsPerPage"
-      [totalRecords]="paginationParams.totalItems"
-      [showCurrentPageReport]="false"
-    ></p-paginator>
-  </div>
-</div>
+      <div
+        *ngFor="let item of rowData"
+        class="comic d-flex flex-md-nowrap flex-wrap"
+      >
+        <div
+          class="col-12 col-md-3 col-xl-3 flex-md-grow-0 flex-grow-1 flex-md-shrink-1 img-comic"
+        >
+          <img
+            (click)="
+              router.navigateByUrl(
+                '/comic-detail/' +
+                  item.name.replaceAll(' ', '-') +
+                  '/' +
+                  item.id
+              )
+            "
+            [defaultImage]="'/assets/loading.gif'"
+            [lazyLoad]="item.mainImage"
+            alt=""
+            style="display: block; min-width: 246px; min-height: 288px"
+          />
+        </div>
+        <div
+          class="col-12 col-md-9 col-xl-9 flex-md-grow-1 flex-grow-0 flex-md-shrink-1 content-comic"
+        >
+          <h2 class="comic-name d-block">{{ item.name }}</h2>
+          <span class="comic-desc"
+            ><span class="fw-bold">Descreation: </span> {{ item.desc }}</span
+          >
+          <span class="d-block"
+            ><span class="fw-bold">Genres: </span>
+            <span *ngFor="let genre of item.selectedGenres"
+              >{{ genre.label }},
+            </span></span
+          >
+
+          <span class="d-block"
+            ><span class="fw-bold">Total chapters: </span
+            >{{ item.totalChapter }}</span
+          >
+
+          <span class="d-block"
+            ><span class="fw-bold">Newest Chapter: </span
+            >{{ item.newestChapter }}</span
+          >
+
+          <div class="action d-flex flex-wrap">
+            <div class="mt-1" style="margin-right: 10px">
+              <button
+                class="btn btn-outline-success"
+                (click)="openComicModal(false, item)"
+              >
+                Edit
+              </button>
+            </div>
+            <div class="mt-1" style="margin-right: 10px">
+              <button
+                class="btn btn-outline-danger"
+                (click)="deleteComic(item.id ?? 0)"
+              >
+                Delete
+              </button>
+            </div>
+            <div class="mt-1">
+              <button
+                class="btn btn-outline-info"
+                routerLink="/upload-comic/{{ item.id }}"
+              >
+                Chapters
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="paginate-uploadcommic" *ngIf="paginationParams.totalPages > 1">
+        <p-paginator
+          locale="en-US"
+          (onPageChange)="paginationChange($event)"
+          [first]="
+            (paginationParams.currentPage - 1) * paginationParams.itemsPerPage
+          "
+          [rows]="paginationParams.itemsPerPage"
+          [totalRecords]="paginationParams.totalItems"
+          [showCurrentPageReport]="false"
+        ></p-paginator>
+      </div>
+    </div>
+  </tab>
+  <tab heading="Report error chapters">
+    <div id="report-error-chapters">
+      <h1>Report error chapters</h1>
+      <div class="boxsearch mt-1 mb-2">
+        <span>Search:</span>
+        <input
+          class="name-search"
+          type="text"
+          [(ngModel)]="nameError"
+          placeholder="Name comic"
+        />
+        <div class="form-check is-only-in-processing">
+          <input
+            class="form-check-input"
+            [(ngModel)]="isOnlyInProcessing"
+            type="checkbox"
+            id="flexCheckDefault"
+          />
+          <label class="form-check-label" for="flexCheckDefault">
+            Is Only In Processing
+          </label>
+        </div>
+
+        <button class="btn btn-success" (click)="getAllError()">Search</button>
+      </div>
+
+      <simple-ag-grid
+        [columnDefs]="columnDefsError"
+        [rowData]="rowDataError"
+        [defaultColDef]="defaultColDefError"
+        (callBackGrid)="onGridReady()"
+        (rowClicked)="selectedRowClicked($event)"
+        (changePage)="changePage($event)"
+        [pagination]="true"
+        [paginationParams]="paginationParamsError"
+      ></simple-ag-grid>
+
+      <div class="action">
+        <div class="action-item">
+          <button class="btn btn-outline-success" (click)="markDone()" [disabled]="!selectedRowError">
+            <i class="fa-solid fa-check"></i> Mark Done
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </tab>
+</tabset>

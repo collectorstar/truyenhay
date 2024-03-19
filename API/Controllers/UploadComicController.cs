@@ -72,41 +72,70 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateOrEditComic([FromForm] CreateOrEditComicDto dto)
         {
+            await _uow.BeginTransactionAsync();
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == User.GetUserId());
-            if (user == null) return Unauthorized("Not found user");
+            if (user == null)
+            {
+                _uow.RollbackTransaction();
+                return Unauthorized("Not found user");
+            }
 
-            if (!user.IsAuthor) return BadRequest("You are not the author");
+            if (!user.IsAuthor)
+            {
+                _uow.RollbackTransaction();
+                return BadRequest("You are not the author");
+            }
 
             List<GenreForUploadComicDto> listGenre = JsonConvert.DeserializeObject<List<GenreForUploadComicDto>>(dto.ListGenre);
 
             if (dto.Id != null)
             {
                 var find = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == dto.Id);
-                if (find == null) return BadRequest("Data not found");
+                if (find == null)
+                {
+                    _uow.RollbackTransaction();
+                    return BadRequest("Data not found");
+                }
                 var check = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id != dto.Id && x.Name == dto.Name);
-                if (check != null) return BadRequest("Name is exist");
+                if (check != null)
+                {
+                    _uow.RollbackTransaction();
+                    return BadRequest("Name is exist");
+                }
 
                 find.Name = dto.Name;
                 find.Desc = dto.Desc;
                 find.Status = dto.Status;
                 find.UpdateTime = DateTime.Now;
 
+                if (!await _uow.Complete())
+                {
+                    _uow.RollbackTransaction();
+                    return BadRequest("fail to update comic");
+                }
+
                 if (dto.File != null)
                 {
+                    //fin old image comic
                     var findPhotoComic = await _uow.PhotoComicRepository.GetAll().FirstOrDefaultAsync(x => x.CommicId == find.Id);
-                    if (findPhotoComic == null) return BadRequest("Fail to find old Image Comic");
+                    if (findPhotoComic == null)
+                    {
+                        _uow.RollbackTransaction();
+                        return BadRequest("Fail to find old Image Comic");
+                    }
+                    //save temp old image comic publicid
+                    var photoComicPublicId = findPhotoComic.PublicId;
 
-                    var deletePhotoComicOld = await _photoService.DeletePhotoAsync(findPhotoComic.PublicId);
-
-                    if (deletePhotoComicOld.Error != null) return BadRequest(deletePhotoComicOld.Error.Message);
-
-                    find.MainImage = "";
-                    find.PhotoComicId = 0;
-
+                    //upload new image comic
                     var resultUpload = await _photoService.UploadImageComic(dto.File);
 
-                    if (resultUpload.Error != null) return BadRequest(resultUpload.Error.Message);
+                    if (resultUpload.Error != null)
+                    {
+                        _uow.RollbackTransaction();
+                        return BadRequest(resultUpload.Error.Message);
+                    }
 
+                    //create new entity photocomic
                     var photoComicNew = new PhotoComic
                     {
                         Url = resultUpload.SecureUrl.AbsoluteUri,
@@ -114,11 +143,32 @@ namespace API.Controllers
                         CommicId = find.Id,
                     };
 
-                    _uow.PhotoComicRepository.Delete(findPhotoComic);
-
                     await _uow.PhotoComicRepository.Add(photoComicNew);
 
-                    if (!await _uow.Complete()) return BadRequest("Fail to Add new Image");
+                    if (!await _uow.Complete())
+                    {
+                        await _photoService.DeletePhotoAsync(photoComicNew.PublicId);
+                        _uow.RollbackTransaction();
+                        return BadRequest("Fail to Add new Image");
+                    }
+
+                    _uow.PhotoComicRepository.Delete(findPhotoComic);
+
+                    if (!await _uow.Complete())
+                    {
+                        _uow.RollbackTransaction();
+                        return BadRequest("fail to delete photoComic");
+                    }
+
+                    //delete old photo comic
+                    var deletePhotoComicOld = await _photoService.DeletePhotoAsync(photoComicPublicId);
+
+                    if (deletePhotoComicOld.Error != null)
+                    {
+                        await _photoService.DeletePhotoAsync(photoComicNew.PublicId);
+                        _uow.RollbackTransaction();
+                        return BadRequest(deletePhotoComicOld.Error.Message);
+                    }
 
                     find.PhotoComicId = photoComicNew.Id;
                     find.MainImage = photoComicNew.Url;
@@ -137,7 +187,11 @@ namespace API.Controllers
                     var findOld = _uow.ComicGenreRepository.GetAll().Where(x => itemsToRemoveGenreComic.Contains(x.GenreId) && x.ComicId == dto.Id).ToList();
                     _uow.ComicGenreRepository.DeleteRange(findOld);
                     oldGenreComic.RemoveAll(x => itemsToRemoveGenreComic.Contains(x));
-                    if (!await _uow.Complete()) return BadRequest("Fail remove old Genre");
+                    if (!await _uow.Complete())
+                    {
+                        _uow.RollbackTransaction();
+                        return BadRequest("Fail remove old Genre");
+                    }
 
                 }
 
@@ -152,24 +206,41 @@ namespace API.Controllers
                                        GenreId = x
                                    }).ToList();
                     await _uow.ComicGenreRepository.AddRange(findNew);
-                    if (!await _uow.Complete()) return BadRequest("Fail add new Genre");
+                    if (!await _uow.Complete())
+                    {
+                        _uow.RollbackTransaction();
+                        return BadRequest("Fail add new Genre");
+                    }
                 }
                 #endregion
 
+                _uow.CommitTransaction();
                 return Ok(new { message = "Update Commic Success" });
 
             }
             else
             {
-                if (dto.File == null || dto.File.Length == 0) return BadRequest("File image is empty");
+                if (dto.File == null || dto.File.Length == 0)
+                {
+                    _uow.RollbackTransaction();
+                    return BadRequest("File image is empty");
+                }
 
                 var check = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Name == dto.Name);
 
-                if (check != null) return BadRequest("Name is exist");
+                if (check != null)
+                {
+                    _uow.RollbackTransaction();
+                    return BadRequest("Name is exist");
+                }
 
                 var resultUpload = await _photoService.UploadImageComic(dto.File);
 
-                if (resultUpload.Error != null) return BadRequest(resultUpload.Error.Message);
+                if (resultUpload.Error != null)
+                {
+                    _uow.RollbackTransaction();
+                    return BadRequest(resultUpload.Error.Message);
+                }
 
                 var photoComicNew = new PhotoComic
                 {
@@ -179,7 +250,12 @@ namespace API.Controllers
 
                 await _uow.PhotoComicRepository.Add(photoComicNew);
 
-                if (!await _uow.Complete()) return BadRequest("Fail to add Image Comic");
+                if (!await _uow.Complete())
+                {
+                    await _photoService.DeletePhotoAsync(resultUpload.PublicId);
+                    _uow.RollbackTransaction();
+                    return BadRequest("Fail to add Image Comic");
+                }
 
                 var newComic = new Comic
                 {
@@ -194,7 +270,12 @@ namespace API.Controllers
 
                 await _uow.ComicRepository.Add(newComic);
 
-                if (!await _uow.Complete()) return BadRequest("Fail to add Comic");
+                if (!await _uow.Complete())
+                {
+                    await _photoService.DeletePhotoAsync(resultUpload.PublicId);
+                    _uow.RollbackTransaction();
+                    return BadRequest("Fail to add Comic");
+                }
 
                 photoComicNew.CommicId = newComic.Id;
 
@@ -207,10 +288,15 @@ namespace API.Controllers
                                             }).ToList();
                 await _uow.ComicGenreRepository.AddRange(listCreateGenreComic);
 
-                if (await _uow.Complete()) return Ok(new { message = "Add Commic Success" });
+                if (!await _uow.Complete())
+                {
+                    await _photoService.DeletePhotoAsync(resultUpload.PublicId);
+                    _uow.RollbackTransaction();
+                    return BadRequest("Add Commic fail");
+                }
 
-                return BadRequest("Something Wrongs");
-
+                _uow.CommitTransaction();
+                return Ok(new { message = "Add Commic Success" });
             }
         }
 
@@ -218,66 +304,164 @@ namespace API.Controllers
         [HttpDelete]
         public async Task<ActionResult> DeleteComic([FromQuery] int ComicId)
         {
+            await _uow.BeginTransactionAsync();
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == User.GetUserId());
-            if (user == null) return Unauthorized("Not found user");
+            if (user == null)
+            {
+                _uow.RollbackTransaction();
+                return Unauthorized("Not found user");
+            }
 
             var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == ComicId && x.AuthorId == user.Id);
-            if (comic == null) return NotFound("Not found Comic");
+            if (comic == null)
+            {
+                _uow.RollbackTransaction();
+                return NotFound("Not found Comic");
+            }
+
+            #region delete rating comic
+            var rates = _uow.RatingComicRepository.GetAll().Where(x => x.ComicId == comic.Id).ToList();
+            if (rates.Any())
+            {
+                _uow.RatingComicRepository.DeleteRange(rates);
+                if (!await _uow.Complete())
+                {
+                    _uow.RollbackTransaction();
+                    return BadRequest("fail to delete ratingcomic");
+                }
+            }
+            #endregion
 
             #region delete chapters
             var chapters = _uow.ChapterRepository.GetAll().Where(x => x.ComicId == comic.Id).ToList();
 
-            if (chapters.Count() > 0)
+            var photoPublicids = new List<string>();
+
+            if (chapters.Any())
             {
+                #region delete hasreaded comic
+                var hasReadeds = (from x in _uow.ChapterHasReadedRepository.GetAll()
+                                  join y in chapters on x.ChapterId equals y.Id
+                                  select x).ToList();
+                _uow.ChapterHasReadedRepository.DeleteRange(hasReadeds);
+                if (!await _uow.Complete())
+                {
+                    _uow.RollbackTransaction();
+                    return BadRequest("fail to delete chapterhasread");
+                }
+
+                #endregion
+
+                #region delete chapter photo comic
                 var chapterphotos = (from x in chapters
                                      join y in _uow.ChapterPhotoRepository.GetAll() on x.Id equals y.ChapterId
                                      select y).ToList();
+
                 if (chapterphotos.Any())
                 {
-                    var resultDeleteChapterPhotos = await _photoService.DeleteListPhotoAsync(chapterphotos.Select(x => x.PublicId).ToList());
-                    if (resultDeleteChapterPhotos.Error != null) return BadRequest(resultDeleteChapterPhotos.Error.Message);
+                    photoPublicids = chapterphotos.Select(x => x.PublicId).ToList();
+
                     _uow.ChapterPhotoRepository.DeleteRange(chapterphotos);
-                    if (!await _uow.Complete()) return BadRequest("Fail to delete images chapter");
+                    if (!await _uow.Complete())
+                    {
+                        _uow.RollbackTransaction();
+                        return BadRequest("Fail to delete images chapter");
+                    }
                 }
+                #endregion
 
                 _uow.ChapterRepository.DeleteRange(chapters);
-                if (!await _uow.Complete()) return BadRequest("Fail to delete chapters");
-
-
+                if (!await _uow.Complete())
+                {
+                    _uow.RollbackTransaction();
+                    return BadRequest("Fail to delete chapters");
+                }
             }
             #endregion
 
             #region delete image comic
             var imageComic = await _uow.PhotoComicRepository.GetAll().FirstOrDefaultAsync(x => x.CommicId == comic.Id);
-            if (imageComic == null) return BadRequest("Data Wrongs");
-
-            var resulDeleteMainImageComic = await _photoService.DeletePhotoAsync(imageComic.PublicId);
-
-            if (resulDeleteMainImageComic.Error != null) return BadRequest("Fail to delete image main comic");
+            if (imageComic == null)
+            {
+                _uow.RollbackTransaction();
+                return BadRequest("Data Wrongs");
+            }
+            var imageComicPublicId = imageComic.PublicId;
 
             _uow.PhotoComicRepository.Delete(imageComic);
-
+            if (!await _uow.Complete())
+            {
+                _uow.RollbackTransaction();
+                return BadRequest("fail to delete photo comic");
+            }
             #endregion
 
             #region delete comic genres
 
             var comicGenres = _uow.ComicGenreRepository.GetAll().Where(x => x.ComicId == comic.Id).ToList();
+            if (comicGenres.Any())
+            {
+                _uow.ComicGenreRepository.DeleteRange(comicGenres);
+                if (!await _uow.Complete())
+                {
+                    _uow.RollbackTransaction();
+                    return BadRequest("fail to delete comicgenre");
+                }
+            }
 
-            _uow.ComicGenreRepository.DeleteRange(comicGenres);
+            #endregion
 
+            #region delete comic follow
+            var comicFollows = _uow.ComicFollowRepository.GetAll().Where(x => x.ComicFollowedId == comic.Id).ToList();
+            if (comicFollows.Any())
+            {
+                _uow.ComicFollowRepository.DeleteRange(comicFollows);
+                if (!await _uow.Complete())
+                {
+                    _uow.RollbackTransaction();
+                    return BadRequest("fail to delete comicFollows");
+                }
+            }
+            #endregion
+
+            #region delete report chapter
+            var listReportChapter = _uow.ReportErrorChapterRepository.GetAll().Where(x => x.ComicId == comic.Id).ToList();
+            if (listReportChapter.Any())
+            {
+                _uow.ReportErrorChapterRepository.DeleteRange(listReportChapter);
+                if (!await _uow.Complete())
+                {
+                    _uow.RollbackTransaction();
+                    return BadRequest("fail to delete report error");
+                }
+            }
             #endregion
 
             _uow.ComicRepository.Delete(comic);
 
-            if (await _uow.Complete()) return Ok(new { message = "Delete Comic success!" });
+            if (!await _uow.Complete())
+            {
+                _uow.RollbackTransaction();
+                return BadRequest("fail to delete comic");
+            }
 
-            return BadRequest("Something Wrongs");
+            photoPublicids.Add(imageComicPublicId);
+            var resultDeleteChapterPhotos = await _photoService.DeleteListPhotoAsync(photoPublicids);
+            if (resultDeleteChapterPhotos.Error != null)
+            {
+                _uow.RollbackTransaction();
+                return BadRequest(resultDeleteChapterPhotos.Error.Message);
+            }
+
+            _uow.CommitTransaction();
+            return Ok(new { message = "Delete Comic success!" });
+
         }
 
         [HttpGet("my-comics")]
         public async Task<ActionResult<PagedList<UploadComicDto>>> GetAll([FromQuery] GetAllUploadComicParam dto)
         {
-            var list = from x in _uow.ComicRepository.GetAll().Where(x =>x.AuthorId == User.GetUserId() && (string.IsNullOrWhiteSpace(dto.Name) || x.Name.Contains(dto.Name)) ).OrderByDescending(x => x.UpdateTime ?? x.CreationTime)
+            var list = from x in _uow.ComicRepository.GetAll().Where(x => x.AuthorId == User.GetUserId() && (string.IsNullOrWhiteSpace(dto.Name) || x.Name.Contains(dto.Name))).OrderByDescending(x => x.UpdateTime ?? x.CreationTime)
                        select new UploadComicDto
                        {
                            Id = x.Id,
@@ -325,6 +509,7 @@ namespace API.Controllers
                                 CreationTime = x.CreationTime,
                                 UpdateTime = x.UpdateTime,
                                 Status = x.Status,
+                                View = _uow.ChapterHasReadedRepository.GetAll().Where(z => z.ChapterId == x.Id).Count()
                             }).ToList(),
             };
 
@@ -334,23 +519,40 @@ namespace API.Controllers
         [HttpPost("create-or-edit-chapter")]
         public async Task<ActionResult> CreateOrEditChapter([FromForm] COEChapterDto dto)
         {
+            await _uow.BeginTransactionAsync();
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == User.GetUserId());
-            if (user == null) return Unauthorized("Not found User");
+            if (user == null)
+            {
+                _uow.RollbackTransaction();
+                return Unauthorized("Not found User");
+            }
 
             var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == dto.ComicId && x.AuthorId == User.GetUserId());
-            if (comic == null) return BadRequest("Request invalid, please reload again");
+            if (comic == null)
+            {
+                _uow.RollbackTransaction();
+                return BadRequest("Request invalid, please reload again");
+            }
             comic.UpdateTime = DateTime.Now;
 
             if (dto.Id != null)
             {
                 var chapter = await _uow.ChapterRepository.GetAll().FirstOrDefaultAsync(x => x.Id == dto.Id);
-                if (chapter == null) return NotFound("Can't find this chapter");
+                if (chapter == null)
+                {
+                    _uow.RollbackTransaction();
+                    return NotFound("Can't find this chapter");
+                }
 
                 chapter.Name = dto.Name;
                 chapter.UpdateTime = DateTime.Now;
                 chapter.Status = dto.Status;
 
-                if (!await _uow.Complete()) return BadRequest("No changes happen");
+                if (!await _uow.Complete())
+                {
+                    _uow.RollbackTransaction();
+                    return BadRequest("No changes happen");
+                }
 
                 if (dto.Files != null && dto.Files.Any())
                 {
@@ -360,50 +562,71 @@ namespace API.Controllers
                         if (!int.TryParse(file.FileName.Split('.')[0], out rank)) return BadRequest("Filename is invalid");
                     }
 
-                    #region delete old images
+                    #region get old images need delete
                     var oldChapterPhotos = _uow.ChapterPhotoRepository.GetAll().Where(x => x.ChapterId == chapter.Id).Select(x => x).ToList();
+
+                    #endregion
+
+                    #region upload and save image chapter, then delete old images
+                    foreach (var file in dto.Files)
+                    {
+                        var rank = 0;
+                        if (!int.TryParse(file.FileName.Split('.')[0], out rank)) return BadRequest("Filename is invalid");
+                        var resultUpload = await _photoService.UploadImageChapter(file);
+                        if (resultUpload.Error != null)
+                        {
+                            _uow.RollbackTransaction();
+                            return BadRequest("Fail in upload image process!");
+                        }
+
+                        var chapterPhoto = new ChapterPhoto()
+                        {
+                            Url = resultUpload.SecureUrl.AbsoluteUri,
+                            PublicId = resultUpload.PublicId,
+                            ChapterId = chapter.Id,
+                            Rank = rank
+                        };
+
+                        await _uow.ChapterPhotoRepository.Add(chapterPhoto);
+                        if (!await _uow.Complete())
+                        {
+                            await _photoService.DeletePhotoAsync(chapterPhoto.PublicId);
+                            _uow.RollbackTransaction();
+                            return BadRequest("Fail to save image photo");
+                        }
+                    }
+
                     if (oldChapterPhotos.Any())
                     {
                         var oldImagePublicIds = oldChapterPhotos.Select(x => x.PublicId).ToList();
-                        var resultDeletes = await _photoService.DeleteListPhotoAsync(oldImagePublicIds);
-                        if (resultDeletes.Error != null) return BadRequest(resultDeletes.Error.Message);
                         _uow.ChapterPhotoRepository.DeleteRange(oldChapterPhotos);
-                        if (!await _uow.Complete()) return BadRequest("Fail to remove old image data");
-                    }
-                    #endregion
-
-                    #region upload and save image chapter
-                    if (dto.Files.Any())
-                    {
-                        foreach (var file in dto.Files)
+                        if (!await _uow.Complete())
                         {
-                            var rank = 0;
-                            if (!int.TryParse(file.FileName.Split('.')[0], out rank)) return BadRequest("Filename is invalid");
-                            var resultUpload = await _photoService.UploadImageChapter(file);
-                            if (resultUpload.Error != null) return BadRequest("Fail in upload image process!");
-
-                            var chapterPhoto = new ChapterPhoto()
-                            {
-                                Url = resultUpload.SecureUrl.AbsoluteUri,
-                                PublicId = resultUpload.PublicId,
-                                ChapterId = chapter.Id,
-                                Rank = rank
-                            };
-
-                            await _uow.ChapterPhotoRepository.Add(chapterPhoto);
-                            if (!await _uow.Complete()) return BadRequest("Fail to save image photo");
+                            _uow.RollbackTransaction();
+                            return BadRequest("Fail to remove old image data");
+                        }
+                        var resultDeletes = await _photoService.DeleteListPhotoAsync(oldImagePublicIds);
+                        if (resultDeletes.Error != null)
+                        {
+                            _uow.RollbackTransaction();
+                            return BadRequest(resultDeletes.Error.Message);
                         }
                     }
                     #endregion
 
                 }
 
+                _uow.CommitTransaction();
                 return Ok(new { message = "Update chapter success!" });
 
             }
             else
             {
-                if (!dto.Files.Any()) return BadRequest("Files empty!");
+                if (!dto.Files.Any())
+                {
+                    _uow.RollbackTransaction();
+                    return BadRequest("Files empty!");
+                }
 
                 var chapter = new Chapter()
                 {
@@ -414,15 +637,27 @@ namespace API.Controllers
                 };
                 await _uow.ChapterRepository.Add(chapter);
 
-                if (!await _uow.Complete()) return BadRequest("Fail to create chapter");
+                if (!await _uow.Complete())
+                {
+                    _uow.RollbackTransaction();
+                    return BadRequest("Fail to create chapter");
+                }
 
                 #region upload image and save
                 foreach (var file in dto.Files)
                 {
                     var rank = 0;
-                    if (!int.TryParse(file.FileName.Split('.')[0], out rank)) return BadRequest("Filename is invalid");
+                    if (!int.TryParse(file.FileName.Split('.')[0], out rank))
+                    {
+                        _uow.RollbackTransaction();
+                        return BadRequest("Filename is invalid");
+                    }
                     var resultUpload = await _photoService.UploadImageChapter(file);
-                    if (resultUpload.Error != null) return BadRequest("Fail in upload image process!");
+                    if (resultUpload.Error != null)
+                    {
+                        _uow.RollbackTransaction();
+                        return BadRequest("Fail in upload image process!");
+                    }
 
                     var chapterPhoto = new ChapterPhoto()
                     {
@@ -433,10 +668,15 @@ namespace API.Controllers
                     };
 
                     await _uow.ChapterPhotoRepository.Add(chapterPhoto);
-                    if (!await _uow.Complete()) return BadRequest("Fail to save image photo");
+                    if (!await _uow.Complete())
+                    {
+                        var resultDeleteTemp = await _photoService.DeletePhotoAsync(chapterPhoto.PublicId);
+                        _uow.RollbackTransaction();
+                        return BadRequest("Fail to save image photo");
+                    }
                 }
                 #endregion
-
+                _uow.CommitTransaction();
                 return Ok(new { message = "Create Chapter success!" });
 
             }
@@ -446,6 +686,7 @@ namespace API.Controllers
         [HttpDelete("delete-chapter/{comicId}")]
         public async Task<ActionResult> DeleteChapter(int comicId, [FromQuery] int ChapterId)
         {
+            await _uow.BeginTransactionAsync();
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == User.GetUserId());
             if (user == null) return Unauthorized("Not found User");
 
@@ -455,24 +696,93 @@ namespace API.Controllers
             var chapter = await _uow.ChapterRepository.GetAll().FirstOrDefaultAsync(x => x.Id == ChapterId);
             if (chapter == null) return BadRequest("Invalid Chapter");
 
+            #region delete hasreaded
+            var hasReadeds = _uow.ChapterHasReadedRepository.GetAll().Where(x => x.ChapterId == chapter.Id).ToList();
+            if (hasReadeds.Any())
+            {
+                _uow.ChapterHasReadedRepository.DeleteRange(hasReadeds);
+                if (!await _uow.Complete())
+                {
+                    _uow.RollbackTransaction();
+                    return BadRequest("Fail to delete has readed");
+                }
+            }
+            #endregion
+
+            #region delete chapterPhoto
             var chapterPhotos = await _uow.ChapterPhotoRepository.GetAll().Where(x => x.ChapterId == chapter.Id).ToListAsync();
 
             if (chapterPhotos.Any())
             {
-                var resultDeletePhotos = await _photoService.DeleteListPhotoAsync(chapterPhotos.Select(x => x.PublicId).ToList());
-                if (resultDeletePhotos.Error != null) return BadRequest("Fail to delete Image from Source");
-
+                var listid = chapterPhotos.Select(x => x.PublicId).ToList();
                 _uow.ChapterPhotoRepository.DeleteRange(chapterPhotos);
+                if (!await _uow.Complete())
+                {
+                    _uow.RollbackTransaction();
+                    return BadRequest("Fail to delete image data");
+                }
 
-                if (!await _uow.Complete()) return BadRequest("Fail to delete image data");
+                var resultDeletePhotos = await _photoService.DeleteListPhotoAsync(listid);
+                if (resultDeletePhotos.Error != null)
+                {
+                    _uow.RollbackTransaction();
+                    return BadRequest("Fail to delete Image from Source");
+                }
+            }
+
+            #endregion
+
+            comic.UpdateTime = DateTime.Now;
+            if (!await _uow.Complete())
+            {
+                _uow.RollbackTransaction();
+                return BadRequest("fail to update time comic");
             }
 
             _uow.ChapterRepository.Delete(chapter);
-            comic.UpdateTime = DateTime.Now;
-            if (!await _uow.Complete()) return BadRequest("Fail to delete Chapter");
-
+            if (!await _uow.Complete())
+            {
+                _uow.RollbackTransaction();
+                return BadRequest("Fail to delete chapter");
+            }
             return Ok(new { message = "Delete chapter success!" });
+        }
 
+        [HttpGet("get-all-report-chapters")]
+        public async Task<ActionResult<PagedList<ReportErrorChapterForAuthorDto>>> GetAllReportChapter([FromQuery] ReportChapterParam dto)
+        {
+            var list = from x in _uow.ReportErrorChapterRepository.GetAll().Where(rec => (dto.IsOnlyInprocessing && !rec.Status) || !dto.IsOnlyInprocessing)
+                       join y in _uow.ComicRepository.GetAll().Where(comic => comic.AuthorId == User.GetUserId()) on x.ComicId equals y.Id
+                       join z in _uow.ChapterRepository.GetAll() on new { comicId = y.Id, chapterId = x.ChapterId } equals new { comicId = z.ComicId, chapterId = z.Id }
+                       select new ReportErrorChapterForAuthorDto
+                       {
+                           Id = x.Id,
+                           UserId = x.UserId,
+                           ComicId = x.ComicId,
+                           ComicName = y.Name,
+                           ChapterId = x.ChapterId,
+                           ChapterName = z.Name,
+                           CreationTime = x.CreationTime,
+                           ErrorCode = x.ErrorCode,
+                           Desc = x.Desc,
+                           Status = x.Status,
+                       };
+
+            var result = await PagedList<ReportErrorChapterForAuthorDto>.CreateAsync(list, dto.PageNumber, dto.PageSize);
+            Response.AddPaginationHeader(new PaginationHeader(result.CurrentPage, result.PageSize, result.TotalCount, result.TotalPages));
+            return Ok(result);
+        }
+
+        [HttpPost("mark-done-report-error-chapter")]
+        public async Task<ActionResult> MarkDoneReportErrorChapter(ReportErrorChapterForAuthorDto dto)
+        {
+            var reportChapter = await _uow.ReportErrorChapterRepository.GetAll().FirstOrDefaultAsync(x => x.Id == dto.Id);
+            if (reportChapter == null) return NotFound("not found report error");
+
+            var listReportChapter = await _uow.ReportErrorChapterRepository.GetAll().Where(x => x.ComicId == dto.ComicId && x.ChapterId == dto.ChapterId && x.Status == false).ToListAsync();
+            listReportChapter.ForEach(x => x.Status = true);
+            if (!await _uow.Complete()) return BadRequest("fail to mark done this report error!");
+            return Ok();
         }
     }
 }

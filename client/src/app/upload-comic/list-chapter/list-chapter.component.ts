@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { finalize } from 'rxjs';
@@ -26,7 +26,8 @@ export class ListChapterComponent implements OnInit {
     private toastr: ToastrService,
     private busyService: BusyService,
     private modalService: BsModalService,
-    private confirmService: ConfirmService
+    private confirmService: ConfirmService,
+    public router: Router
   ) {
     this.getAll();
   }

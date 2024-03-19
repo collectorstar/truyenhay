@@ -9,7 +9,6 @@ import {
   SelectionChangedEvent,
 } from 'ag-grid-community';
 import { PaginatorModule } from 'primeng/paginator';
-import { DropdownModule } from 'primeng/dropdown';
 import { Pagination } from 'src/app/_models/pagination';
 
 @Component({
@@ -21,7 +20,6 @@ import { Pagination } from 'src/app/_models/pagination';
     CommonModule,
     AgGridAngular,
     PaginatorModule,
-    // DropdownModule,
   ],
 })
 export class SimpleAgGridComponent implements OnInit {

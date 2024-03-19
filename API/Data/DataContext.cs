@@ -24,6 +24,8 @@ namespace API.Data
         public DbSet<RequestAuthor> RequestAuthors { get; set; }
         public DbSet<PhotoComic> PhotoComics { get; set; }
         public DbSet<RatingComic> RatingComics { get; set; }
+        public DbSet<ChapterHasReaded> ChapterHasReadeds { get; set; }
+        public DbSet<ReportErrorChapter> ReportErrorChapters { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -31,6 +33,9 @@ namespace API.Data
 
             builder.Entity<ComicFollow>()
                 .HasKey(k => new { k.UserFollowedId, k.ComicFollowedId });
+
+            builder.Entity<ChapterHasReaded>()
+                .HasKey(k => new { k.UserId, k.ChapterId });
 
             builder.Entity<ComicGenre>()
                 .HasKey(k => new { k.GenreId, k.ComicId });

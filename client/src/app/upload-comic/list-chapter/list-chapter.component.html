@@ -23,7 +23,22 @@
     <li *ngFor="let item of listChapter" class="listChapter-item">
       <div class="row chapterInfo">
         <div class="col-5">
-          <a class="chapterInfo-name">{{ item.name }}</a>
+          <a
+            class="chapterInfo-name"
+            (click)="
+              router.navigateByUrl(
+                'comic-detail/' +
+                  comic.name.replaceAll(' ', '-') +
+                  '/' +
+                  comic.id +
+                  '/' +
+                  item.name.replaceAll(' ', '-') +
+                  '/' +
+                  item.id
+              )
+            "
+            >{{ item.name }}</a
+          >
         </div>
         <div class="col-4 text-center">
           {{ item.updateTime ?? item.creationTime | timeago }}
@@ -36,7 +51,13 @@
           <button class="btn btn-info" (click)="openModal(false, item)">
             Edit
           </button>
-          <button class="btn btn-danger" *ngIf="item.id" (click)="deleteChapter(item.id)">Delete</button>
+          <button
+            class="btn btn-danger"
+            *ngIf="item.id"
+            (click)="deleteChapter(item.id)"
+          >
+            Delete
+          </button>
         </div>
       </div>
     </li>

@@ -182,6 +182,22 @@ namespace API.Data.Migrations
                     b.ToTable("Chapters");
                 });
 
+            modelBuilder.Entity("API.Entities.ChapterHasReaded", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ChapterId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DatetimeRead")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("UserId", "ChapterId");
+
+                    b.ToTable("ChapterHasReadeds");
+                });
+
             modelBuilder.Entity("API.Entities.ChapterPhoto", b =>
                 {
                     b.Property<int>("Id")
@@ -414,6 +430,40 @@ namespace API.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("RatingComics");
+                });
+
+            modelBuilder.Entity("API.Entities.ReportErrorChapter", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ChapterId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ComicId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Desc")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ErrorCode")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ReportErrorChapters");
                 });
 
             modelBuilder.Entity("API.Entities.RequestAuthor", b =>

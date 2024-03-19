@@ -3,5 +3,6 @@ export interface RecommendComicDto {
   urlImage: string;
   comicName: string;
   newestChapter: string;
+  newestChapterId:number;
   updateTime: Date | null;
 }

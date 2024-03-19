@@ -1,0 +1,105 @@
+<div class="comic-chapter-name" *ngIf="comic.id && chapter.id">
+  <h1 class="comic-chapter-info-name">
+    <a
+      class="comic-name"
+      (click)="
+        router.navigateByUrl(
+          '/comic-detail/' + comic.name.replaceAll(' ', '-') + '/' + comic.id
+        )
+      "
+      >{{ comic.name }}</a
+    ><span class="chapter-name"> - {{ chapter.name }}</span>
+  </h1>
+  <i class="comic-chapter-update-time"
+    >[update at {{ chapter.updateTime | date : "hh:mm dd/MM/YYYY" }}]</i
+  >
+</div>
+<div class="comic-report mt-2 mb-2">
+  <h6 class="text-center">
+    If images chapter error, click this button below to report
+  </h6>
+  <div class="comic-report-btn">
+    <button class="btn btn-warning" (click)="openModelReportChapter()">
+      <i class="fa-solid fa-triangle-exclamation"></i> Report
+    </button>
+  </div>
+</div>
+<div class="comic-remind">
+  <span
+    ><i class="fa-solid fa-circle-info"></i> Using left arrow (←) or right arrow
+    (→) to switch chapter</span
+  >
+</div>
+
+<div class="comic-action">
+  <a class="comic-icon" (click)="router.navigateByUrl('/')"
+    ><i class="fa-solid fa-house-chimney"></i
+  ></a>
+  <a
+    class="comic-icon"
+    (click)="
+      router.navigateByUrl(
+        '/comic-detail/' + comic.name.replaceAll(' ', '-') + '/' + comic.id
+      )
+    "
+    ><i class="fa-solid fa-list-ul"></i
+  ></a>
+
+  <a
+    class="nav-left"
+    (keydown)="eventKeyDown($event)"
+    (click)="navPrev()"
+    [ngClass]="isChapterFirst ? 'nav-disabled' : ''"
+    ><i class="fa-solid fa-chevron-left"></i
+  ></a>
+  <select class="chapter-selected" (click)="openModelChapter()">
+    <option selected value="{{ chapter.id }}">{{ chapter.name }}</option>
+  </select>
+  <a
+    class="nav-right"
+    (keydown)="eventKeyDown($event)"
+    (click)="navNext()"
+    [ngClass]="isChapterLast ? 'nav-disabled' : ''"
+    ><i class="fa-solid fa-chevron-right"></i
+  ></a>
+  <button class="btn btn-success" (click)="follow()" *ngIf="!comic.isFollow">
+    <i class="fa-solid fa-heart"></i> <span class="comic-follow"> Follow</span>
+  </button>
+  <button class="btn btn-danger" (click)="unfollow()" *ngIf="comic.isFollow">
+    <i class="fa-solid fa-xmark"></i> <span class="comic-follow"> Unfollow</span>
+  </button>
+</div>
+
+<div class="image-container" id="image-container">
+  <div
+    *ngFor="let image of images"
+    class="d-flex justify-content-center align-items-center"
+    style="background-color: black"
+  >
+    <img
+      style="max-width: 100%"
+      [defaultImage]="'/assets/loading.gif'"
+      [lazyLoad]="image"
+      alt=""
+    />
+  </div>
+</div>
+
+<div class="comic-action">
+  <button
+    class="btn btn-danger"
+    (keydown)="eventKeyDown($event)"
+    (click)="navPrev()"
+    [ngClass]="isChapterFirst ? 'nav-disabled' : ''"
+  >
+    <i class="fa-solid fa-chevron-left"></i> Prev chapter
+  </button>
+  <button
+    class="btn btn-danger"
+    (keydown)="eventKeyDown($event)"
+    (click)="navNext()"
+    [ngClass]="isChapterLast ? 'nav-disabled' : ''"
+  >
+    Next chapter <i class="fa-solid fa-chevron-right"></i>
+  </button>
+</div>

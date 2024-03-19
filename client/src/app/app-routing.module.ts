@@ -12,6 +12,7 @@ import { UploadCommicComponent } from './upload-comic/upload-comic.component';
 import { AccountDetailComponent } from './account-detail/account-detail.component';
 import { ListChapterComponent } from './upload-comic/list-chapter/list-chapter.component';
 import { ComicDetailComponent } from './comic-detail/comic-detail.component';
+import { ComicChapterComponent } from './comic-chapter/comic-chapter.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -41,8 +42,12 @@ const routes: Routes = [
     canActivate: [loginGuard],
   },
   {
-    path: 'comic-detail/:comicId',
+    path: 'comic-detail/:comicName/:comicId',
     component: ComicDetailComponent,
+  },
+  {
+    path: 'comic-detail/:comicName/:comicId/:chapterName/:chapterId',
+    component: ComicChapterComponent,
   },
   { path: 'follow', component: FollowComponent, canActivate: [loginGuard] },
   {
