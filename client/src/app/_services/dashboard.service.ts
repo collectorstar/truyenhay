@@ -6,18 +6,16 @@ import { GetNewestComicParam } from '../_models/getNewestComicParam';
 import { getPaginationHeader, getPaginationResult } from './paginationHelper';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DashboardService {
   baseUrl = environment.apiUrl;
 
-  constructor(private http:HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  getListComicNewest(param: GetNewestComicParam){
-    let params = getPaginationHeader(
-      param.pageNumber,
-      param.pageSize
-    );
+  getListComicNewest(param: GetNewestComicParam, email: string) {
+    let params = getPaginationHeader(param.pageNumber, param.pageSize);
+    params = params.append('email', email);
     return getPaginationResult<ComicNewestDto[]>(
       this.baseUrl + 'dashboard',
       params,

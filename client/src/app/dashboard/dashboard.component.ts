@@ -9,6 +9,8 @@ import { ComicNewestDto } from '../_models/comicNewestDto';
 import { Pagination } from '../_models/pagination';
 import { GetNewestComicParam } from '../_models/getNewestComicParam';
 import { Router } from '@angular/router';
+import { AccountService } from '../_services/account.service';
+import { User } from '../_models/user';
 
 @Component({
   selector: 'app-dashboard',
@@ -24,14 +26,23 @@ export class DashboardComponent {
   };
   carouselData: RecommendComicDto[] = [];
   newestComics: ComicNewestDto[] = [];
+  user: User | null = null;
 
   constructor(
     private recomService: RecommendComicsService,
     private busyService: BusyService,
     private toastr: ToastrService,
     private dashboardService: DashboardService,
-    public router: Router
+    public router: Router,
+    private accountService: AccountService
   ) {
+    this.accountService.currentUser$.subscribe({
+      next: (res) => {
+        if (res) {
+          this.user = res;
+        }
+      },
+    });
     this.getDataCarousel();
   }
 
@@ -43,7 +54,10 @@ export class DashboardComponent {
     param.pageSize = this.paginationParams.itemsPerPage;
 
     const dataForCarousel = this.recomService.getDataForCarousel();
-    const newestUpdate = this.dashboardService.getListComicNewest(param);
+    const newestUpdate = this.dashboardService.getListComicNewest(
+      param,
+      this.user?.email ?? ''
+    );
 
     forkJoin([dataForCarousel, newestUpdate])
       .pipe(
@@ -67,7 +81,7 @@ export class DashboardComponent {
     param.pageNumber = this.paginationParams.currentPage;
     param.pageSize = this.paginationParams.itemsPerPage;
     this.dashboardService
-      .getListComicNewest(param)
+      .getListComicNewest(param, this.user?.email ?? '')
       .pipe(
         finalize(() => {
           this.busyService.idle();
@@ -91,7 +105,7 @@ export class DashboardComponent {
   }
 
   convertToK(target: number): string {
-    if(target < 1000) return target + "";
-    return (target / 1000).toFixed(2) + "k"
+    if (target < 1000) return target + '';
+    return (target / 1000).toFixed(2) + 'k';
   }
 }

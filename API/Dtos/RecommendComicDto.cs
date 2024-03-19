@@ -6,6 +6,7 @@ namespace API.Dtos
         public string UrlImage { get; set; }
         public string ComicName { get; set; }
         public string NewestChapter { get; set; }
+        public int NewestChapterId { get; set; }
         public DateTime? UpdateTime { get; set; }
     }
 }

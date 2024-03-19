@@ -1,5 +1,4 @@
 using API.Data;
-using API.Dtos;
 using API.Helpers;
 using API.Interfaces;
 using API.Repositories;
@@ -36,6 +35,8 @@ namespace API.Extensions
             services.AddSingleton<PresenceTracker>();
             services.AddScoped<IRatingComicRepository,RatingComicRepository>();
             services.AddScoped<IComicFollowRepository,ComicFollowRepository>();
+            services.AddScoped<IChapterHasReadedRepository,ChapterHasReadedRepository>();
+            services.AddScoped<IReportErrorChapterRepository,ReportErrorChapterRepository>();
             return services;
         }
     }

@@ -48,11 +48,11 @@ export class SliderHomeComponent {
         items: 2,
         margin: 4,
       },
-      768: {
-        items: 3,
+      696: {
+        items: 4,
       },
-      1024: {
-        items: 5,
+      1116: {
+        items: 6,
       },
     },
   };

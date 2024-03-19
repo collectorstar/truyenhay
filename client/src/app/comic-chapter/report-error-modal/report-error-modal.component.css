@@ -1,0 +1,24 @@
+:host ::ng-deep{
+    #report-error-modal-selector{
+        select{
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            outline: 1px solid blue;
+        }
+    }
+}
+
+.error-question-desc{
+    color: rgba(255, 0, 0,0.8);
+    font-size: 14px;
+}
+
+.error-desc{
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: none;
+    outline: 1px solid red;
+}

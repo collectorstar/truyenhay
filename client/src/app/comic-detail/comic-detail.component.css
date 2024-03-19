@@ -80,6 +80,12 @@
     .chapter-name {
       margin-left: 5px;
       cursor: pointer;
+      text-decoration: none;
+      color: #000;
+    }
+
+    .chapter-name.has-read{
+      opacity: 0.6;
     }
   }
 }

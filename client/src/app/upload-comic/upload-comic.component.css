@@ -2,7 +2,21 @@
   min-height: 500px;
   margin: 0 auto;
   padding: 10px 10px;
-  /* background-color: blue; */
+
+  .boxsearch {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    input {
+      width: 300px;
+      margin: 0 10px;
+      padding: 5px;
+      border-radius: 10px;
+    }
+  }
 
   .item-comic {
     .image-comic {
@@ -58,88 +72,82 @@
       }
     }
   }
-}
 
-/* #paginate-uploadcommic {
-  :host ::ng-deep {
-    .p-paginator-rpp-options.p-dropdown.p-component {
+  .comic {
+    width: 100%;
+    padding: 20px;
+    margin: 10px 0;
+    border-radius: 20px;
+    background-color: #fff;
+    border: 1px solid #666;
+    gap: 20px;
+
+    .img-comic {
+      display: flex;
       align-items: center;
-      text-align: left;
-      padding-left: 10px;
-    }
-    .p-dropdown-items.ng-star-inserted {
-      padding: 0;
-      margin-left: 10px;
-    }
-    .p-paginator-current.ng-star-inserted {
-      float: left;
-      text-align: left;
-    }
-
-    .ag-header-cell-label {
       justify-content: center;
+      width: auto;
+      img {
+        width: 90%;
+        height: 90%;
+      }
     }
-  }
-} */
 
-.boxsearch {
-  margin: 10px 0;
+    .content-comic {
+      .comic-name {
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 1.5;
+        padding: 10px 0;
 
-  input {
-    width: 300px;
-    margin: 0 10px;
-    padding: 5px;
-    border-radius: 10px;
-    margin-bottom: 10px;
-  }
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: pre-line;
+      }
 
-  button {
-    margin-right: 10px;
+      .comic-desc {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: pre-line;
+      }
+    }
   }
 }
 
-.comic {
-  width: 100%;
-  padding: 20px;
-  margin: 10px 0;
-  border-radius: 20px;
-  background-color: #fff;
-  border: 1px solid #666;
-  gap: 20px;
-
-  .img-comic {
+#report-error-chapters {
+  .boxsearch {
+    margin: 10px 0;
     display: flex;
     align-items: center;
-    justify-content: center;
-    width: auto;
-    img {
-      width: 90%;
-      height: 90%;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    .name-search {
+      width: 300px;
+      margin: 0 10px;
+      padding: 5px;
+      border-radius: 10px;
+    }
+
+    .is-only-in-processing {
+      width: 300px;
+      margin: 0 10px;
     }
   }
+  .action {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 10px;
 
-  .content-comic {
-    .comic-name {
-      font-size: 24px;
-      font-weight: 600;
-      line-height: 1.5;
-      padding: 10px 0;
-
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: pre-line;
-    }
-
-    .comic-desc {
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: pre-line;
+    .action-item {
+      margin: 0 5px;
     }
   }
 }

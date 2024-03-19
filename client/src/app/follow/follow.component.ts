@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 import { GetComicFollowParam } from '../_models/getComicFollowParam';
 import { finalize } from 'rxjs';
 import { ComicFollowDto } from '../_models/comicFollowDto';
+import { AccountService } from '../_services/account.service';
+import { User } from '../_models/user';
 
 @Component({
   selector: 'app-follow',
@@ -14,20 +16,27 @@ import { ComicFollowDto } from '../_models/comicFollowDto';
   styleUrls: ['./follow.component.css'],
 })
 export class FollowComponent implements OnInit {
-  followComics : ComicFollowDto[] = [];
+  followComics: ComicFollowDto[] = [];
   paginationParams: Pagination = {
     currentPage: 1,
     itemsPerPage: 36,
     totalItems: 0,
     totalPages: 1,
   };
+  user: User | null = null;
+
   constructor(
     private toastr: ToastrService,
     private busyService: BusyService,
     private followService: FollowService,
-    public router: Router
+    public router: Router,
+    private accountService: AccountService
   ) {
-
+    this.accountService.currentUser$.subscribe({
+      next: (res) => {
+        this.user = res;
+      },
+    });
   }
   ngOnInit(): void {
     this.getAll();
@@ -38,7 +47,7 @@ export class FollowComponent implements OnInit {
     param.pageNumber = this.paginationParams.currentPage;
     param.pageSize = this.paginationParams.itemsPerPage;
     this.followService
-      .getComicsFollow(param)
+      .getComicsFollow(param, this.user?.email ?? '')
       .pipe(
         finalize(() => {
           this.busyService.idle();

@@ -6,5 +6,6 @@
         public string Name { get; set; }
         public DateTime UpdateTime { get; set; }
         public int View { get; set; }
+        public bool HasRead { get; set; }
     }
 }

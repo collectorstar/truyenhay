@@ -12,8 +12,13 @@ namespace API.Interfaces
         IComicGenreRepository ComicGenreRepository { get; }
         IRatingComicRepository RatingComicRepository { get; }
         IComicFollowRepository ComicFollowRepository { get; }
+        IChapterHasReadedRepository ChapterHasReadedRepository { get; }
+        IReportErrorChapterRepository ReportErrorChapterRepository { get; }
 
         Task<bool> Complete();
         bool HasChanges();
+        Task BeginTransactionAsync();
+        void CommitTransaction();
+        void RollbackTransaction();
     }
 }

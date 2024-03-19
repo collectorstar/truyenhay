@@ -24,14 +24,15 @@ namespace API.Controllers
         [HttpGet]
         public async Task<List<RecommendComicDto>> GetAll()
         {
-            var result = await (from x in _uow.ComicRepository.GetAll().Where(x => x.IsRecommend == true)
+            var result = await (from x in _uow.ComicRepository.GetAll().Where(x => x.IsRecommend && x.Status)
                                 select new RecommendComicDto
                                 {
                                     Id = x.Id,
                                     UrlImage = x.MainImage,
                                     ComicName = x.Name,
-                                    NewestChapter = _uow.ChapterRepository.GetAll().Where(y => y.ComicId == x.Id).OrderByDescending(x => x.Id).Any() ? _uow.ChapterRepository.GetAll().Where(y => y.ComicId == x.Id).OrderByDescending(x => x.Id).First().Name : "",
-                                    UpdateTime = _uow.ChapterRepository.GetAll().Where(y => y.ComicId == x.Id).OrderByDescending(x => x.Id).FirstOrDefault() != null ? _uow.ChapterRepository.GetAll().Where(y => y.ComicId == x.Id).OrderByDescending(x => x.Id).First().UpdateTime ?? _uow.ChapterRepository.GetAll().Where(y => y.ComicId == x.Id).OrderByDescending(x => x.Id).First().CreationTime : null
+                                    NewestChapter = _uow.ChapterRepository.GetAll().Where(y => y.ComicId == x.Id && y.Status).OrderByDescending(x => x.Id).Any() ? _uow.ChapterRepository.GetAll().Where(y => y.ComicId == x.Id && y.Status).OrderByDescending(x => x.Id).First().Name : "",
+                                    NewestChapterId = _uow.ChapterRepository.GetAll().Where(y => y.ComicId == x.Id && y.Status).OrderByDescending(x => x.Id).Any() ? _uow.ChapterRepository.GetAll().Where(y => y.ComicId == x.Id && y.Status).OrderByDescending(x => x.Id).First().Id : 0,
+                                    UpdateTime = _uow.ChapterRepository.GetAll().Where(y => y.ComicId == x.Id && y.Status).OrderByDescending(x => x.Id).FirstOrDefault() != null ? _uow.ChapterRepository.GetAll().Where(y => y.ComicId == x.Id && y.Status).OrderByDescending(x => x.Id).First().UpdateTime ?? _uow.ChapterRepository.GetAll().Where(y => y.ComicId == x.Id && y.Status).OrderByDescending(x => x.Id).First().CreationTime : null
                                 }).ToListAsync();
             return result;
         }
@@ -69,7 +70,7 @@ namespace API.Controllers
         [HttpGet("list-comic")]
         public async Task<List<ComicForIsRecommend>> ListComic()
         {
-            var result = await (from x in _uow.ComicRepository.GetAll()
+            var result = await (from x in _uow.ComicRepository.GetAll().Where(x => x.Status)
                                 select new ComicForIsRecommend
                                 {
                                     Value = x.Id,
@@ -82,7 +83,7 @@ namespace API.Controllers
         [HttpGet("list-commic-recommend")]
         public async Task<List<ComicForIsRecommend>> ListCommicRecommend()
         {
-            var result = await (from x in _uow.ComicRepository.GetAll().Where(x => x.IsRecommend)
+            var result = await (from x in _uow.ComicRepository.GetAll().Where(x => x.IsRecommend && x.Status)
                                 select new ComicForIsRecommend
                                 {
                                     Value = x.Id,
@@ -94,14 +95,15 @@ namespace API.Controllers
         [HttpGet("get-data")]
         public async Task<List<RecommendComicDto>> GetListForCarousel()
         {
-            var result = await (from x in _uow.ComicRepository.GetAll().Where(x => x.IsRecommend == true)
+            var result = await (from x in _uow.ComicRepository.GetAll().Where(x => x.IsRecommend == true && x.Status)
                                 select new RecommendComicDto
                                 {
                                     Id = x.Id,
                                     UrlImage = x.MainImage,
                                     ComicName = x.Name,
-                                    NewestChapter = _uow.ChapterRepository.GetAll().Where(y => y.ComicId == x.Id).OrderByDescending(x => x.Id).Any() ? _uow.ChapterRepository.GetAll().Where(y => y.ComicId == x.Id).OrderByDescending(x => x.Id).First().Name : "",
-                                    UpdateTime = _uow.ChapterRepository.GetAll().Where(y => y.ComicId == x.Id).OrderByDescending(x => x.Id).FirstOrDefault() != null ? _uow.ChapterRepository.GetAll().Where(y => y.ComicId == x.Id).OrderByDescending(x => x.Id).First().UpdateTime ?? _uow.ChapterRepository.GetAll().Where(y => y.ComicId == x.Id).OrderByDescending(x => x.Id).First().CreationTime : null
+                                    NewestChapter = _uow.ChapterRepository.GetAll().Where(y => y.ComicId == x.Id && y.Status).OrderByDescending(x => x.Id).Any() ? _uow.ChapterRepository.GetAll().Where(y => y.ComicId == x.Id && y.Status).OrderByDescending(x => x.Id).First().Name : "",
+                                    NewestChapterId = _uow.ChapterRepository.GetAll().Where(y => y.ComicId == x.Id && y.Status).OrderByDescending(x => x.Id).Any() ? _uow.ChapterRepository.GetAll().Where(y => y.ComicId == x.Id && y.Status).OrderByDescending(x => x.Id).First().Id : 0,
+                                    UpdateTime = _uow.ChapterRepository.GetAll().Where(y => y.ComicId == x.Id && y.Status).OrderByDescending(x => x.Id).FirstOrDefault() != null ? _uow.ChapterRepository.GetAll().Where(y => y.ComicId == x.Id && y.Status).OrderByDescending(x => x.Id).First().UpdateTime ?? _uow.ChapterRepository.GetAll().Where(y => y.ComicId == x.Id && y.Status).OrderByDescending(x => x.Id).First().CreationTime : null
                                 }).ToListAsync();
             return result;
         }

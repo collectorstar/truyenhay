@@ -1,0 +1,48 @@
+<div>
+  <div class="modal-header">
+    <h4>Report Chapter</h4>
+    <button
+      type="button"
+      class="btn-close close pull-right"
+      aria-label="Close"
+      (click)="bsModalRef.hide()"
+    >
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>
+      Thank you for your support in reporting errors, the chapter will be fixed
+      as soon as possible!
+    </p>
+    <div id="report-error-modal-selector">
+      <selector
+        [options]="errorOptions"
+        [valueFirst]="errorOptionSelected"
+        (valueSelected)="errorOptionSelected = $event"
+      ></selector>
+    </div>
+    <p
+      class="error-question-desc"
+      *ngIf="errorOptionSelected.questionHelper != ''"
+    >
+      {{ errorOptionSelected.questionHelper }}
+    </p>
+    <div class="form-floating">
+      <textarea
+        [(ngModel)]="desc"
+        class="form-control error-desc"
+        placeholder="Describe errors in detail to fix them faster"
+        id="floatingTextarea2"
+        style="height: 100px"
+      ></textarea>
+      <label for="floatingTextarea2"
+        >Describe errors in detail to fix them faster</label
+      >
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-success" (click)="report()">Report</button>
+    <button class="btn btn-danger" (click)="bsModalRef.hide()">Cancel</button>
+  </div>
+</div>

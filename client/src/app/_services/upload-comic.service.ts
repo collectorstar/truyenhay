@@ -9,6 +9,8 @@ import { ChapterDto } from '../_models/chapterDto';
 import { ConfirmService } from './confirm.service';
 import { GenreForUploadComicDto } from '../_models/genreForUploadComicDto';
 import { ComicDetailDtoForListChapter } from '../_models/comicDetailDtoForListChapter';
+import { ReportChapterParam } from '../_models/reportChapterParam';
+import { ReportErrorChapterForAuthorDto } from '../_models/reportErrorChapterForAuthorDto';
 
 @Injectable({
   providedIn: 'root',
@@ -108,6 +110,24 @@ export class UploadComicService {
         comicId +
         '?chapterId=' +
         chapterId
+    );
+  }
+
+  getAllErrorReportChapter(param: ReportChapterParam) {
+    let params = getPaginationHeader(param.pageNumber, param.pageSize);
+    params = params.append('comicName', param.comicName);
+    params = params.append('isOnlyInprocessing', param.isOnlyInprocessing);
+    return getPaginationResult<ReportErrorChapterForAuthorDto[]>(
+      this.baseUrl + 'uploadComic/get-all-report-chapters',
+      params,
+      this.http
+    );
+  }
+
+  markDoneReportErrorChapter(dto: ReportErrorChapterForAuthorDto) {
+    return this.http.post(
+      this.baseUrl + 'uploadComic/mark-done-report-error-chapter',
+      dto
     );
   }
 }

@@ -5,7 +5,11 @@
         <div class="content-carousel">
           <a routerLink="/follow">
             <img
-              (click)="router.navigateByUrl('/comic-detail/' + data.id)"
+              (click)="
+                router.navigateByUrl(
+                  '/comic-detail/' + data.comicName + '/' + data.id
+                )
+              "
               style="max-height: 240px"
               [defaultImage]="'/assets/loading.gif'"
               [lazyLoad]="data.urlImage"
@@ -15,9 +19,38 @@
             />
           </a>
           <div class="text-chapter">
-            <a class="comic-name" (click)="router.navigateByUrl('/comic-detail/' + data.id)">{{ data.comicName }}</a>
-            <div class="d-flex align-items-center justify-content-between">
-              <a class="comic-chapter-newest">{{ data.newestChapter }}</a>
+            <a
+              class="comic-name"
+              (click)="
+                router.navigateByUrl(
+                  '/comic-detail/' +
+                    data.comicName.replaceAll(' ', '-') +
+                    '/' +
+                    data.id
+                )
+              "
+              >{{ data.comicName }}</a
+            >
+            <div
+              class="d-flex align-items-center justify-content-between"
+              *ngIf="data.newestChapter != ''"
+            >
+              <a
+                class="comic-chapter-newest"
+                (click)="
+                  router.navigateByUrl(
+                    '/comic-detail/' +
+                      data.comicName.replaceAll(' ', '-') +
+                      '/' +
+                      data.id +
+                      '/' +
+                      data.newestChapter.replaceAll(' ', '-') +
+                      '/' +
+                      data.newestChapterId
+                  )
+                "
+                >{{ data.newestChapter }}</a
+              >
               <span class="comic-chapter-updatetime">{{
                 data.updateTime | timeago
               }}</span>

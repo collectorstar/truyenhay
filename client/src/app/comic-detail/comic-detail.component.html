@@ -61,14 +61,21 @@
         ></span>
       </div>
       <div class="comic-follow mt-3" *ngIf="!comic.isFollow">
-        <button class="btn btn-success" (click)="follow()"><i class="fa-solid fa-heart"></i> Follow</button>
+        <button class="btn btn-success" (click)="follow()">
+          <i class="fa-solid fa-heart"></i> Follow
+        </button>
       </div>
       <div class="comic-unfollow mt-3" *ngIf="comic.isFollow">
-        <button class="btn btn-danger" (click)="unfollow()"><i class="fa-solid fa-xmark"></i> Unfollow</button>
+        <button class="btn btn-danger" (click)="unfollow()">
+          <i class="fa-solid fa-xmark"></i> Unfollow
+        </button>
       </div>
-      <div class="comic-utility-action" *ngIf="comic.chapters && comic.chapters.length > 0">
-        <button class="first-button">First Chapter</button>
-        <button class="newest-button">Newest Chapter</button>
+      <div
+        class="comic-utility-action"
+        *ngIf="comic.chapters && comic.chapters.length > 0"
+      >
+        <button class="first-button" (click)="readFirst()">First Chapter</button>
+        <button class="newest-button" (click)="readNewest()">Newest Chapter</button>
         <button class="continue-button">Read Continute ></button>
       </div>
     </div>
@@ -99,7 +106,22 @@
   >
     <li class="chapter-item" *ngFor="let chapter of comic.chapters">
       <div class="col-5 text-left">
-        <a class="text-decoration-none chapter-name">{{ chapter.name }}</a>
+        <a
+          class="chapter-name" [ngClass]="chapter.hasRead ? 'has-read' : ''"
+          (click)="
+            router.navigateByUrl(
+              '/comic-detail/' +
+                comic.name.replaceAll(' ', '-') +
+                '/' +
+                comic.id +
+                '/' +
+                chapter.name.replaceAll(' ', '-') +
+                '/' +
+                chapter.id
+            )
+          "
+          >{{ chapter.name }}</a
+        >
       </div>
       <div class="col-4 text-center">{{ chapter.updateTime | timeago }}</div>
       <div class="col-3 text-center">{{ chapter.view }}</div>

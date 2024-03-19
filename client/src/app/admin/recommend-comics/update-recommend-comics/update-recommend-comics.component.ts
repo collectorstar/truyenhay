@@ -78,8 +78,8 @@ export class UpdateRecommendComicsComponent {
   }
 
   validate(): boolean {
-    if (this.selectedComics.length < 5 || this.selectedComics.length > 12) {
-      this.toastrService.error('Choose from 5 to 12 items!');
+    if (this.selectedComics.length < 7 || this.selectedComics.length > 12) {
+      this.toastrService.error('Choose from 7 to 12 items!');
       return false;
     }
     return true;

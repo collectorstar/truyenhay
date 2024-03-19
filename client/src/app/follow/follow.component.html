@@ -1,7 +1,7 @@
 <h1>Comics Following</h1>
 
 <div class="no-comic" *ngIf="followComics.length == 0">
-    You haven't followed any comics yet
+  You haven't followed any comics yet
 </div>
 
 <div class="follow-comic" *ngIf="followComics.length > 0">
@@ -13,17 +13,52 @@
       <div class="comic-img">
         <img
           [defaultImage]="'/assets/loading.gif'"
-          (click)="router.navigateByUrl('/comic-detail/' + comic.id)"
+          (click)="
+            router.navigateByUrl(
+              '/comic-detail/' +
+                comic.comicName.replaceAll(' ', '-') +
+                '/' +
+                comic.id
+            )
+          "
           [lazyLoad]="comic.mainImage"
           alt="{{ comic.comicName }}"
           [loading]="true"
         />
         <span class="comic-hot" *ngIf="comic.isFeatured"></span>
       </div>
-      <h5 class="comic-name">{{ comic.comicName }}</h5>
+      <h5
+        class="comic-name"
+        (click)="
+          router.navigateByUrl(
+            '/comic-detail/' +
+              comic.comicName.replaceAll(' ', '-') +
+              '/' +
+              comic.id
+          )
+        "
+      >
+        {{ comic.comicName }}
+      </h5>
       <div class="comic-chapters">
         <div class="chapter-info" *ngFor="let chapter of comic.chapters">
-          <a class="chapter-name">{{ chapter.name }}</a>
+          <a
+            class="chapter-name"
+            [ngClass]="chapter.hasRead ? 'has-read' : ''"
+            (click)="
+              router.navigateByUrl(
+                '/comic-detail/' +
+                  comic.comicName.replaceAll(' ', '-') +
+                  '/' +
+                  comic.id +
+                  '/' +
+                  chapter.name.replaceAll(' ', '-') +
+                  '/' +
+                  chapter.id
+              )
+            "
+            >{{ chapter.name }}</a
+          >
           <span class="chapter-update-time">{{
             chapter.updateTime | timeago
           }}</span>

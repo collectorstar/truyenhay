@@ -7,6 +7,7 @@ namespace API.Interfaces
         Task Add(RatingComic ratingComic);
         void Update(RatingComic ratingComic);
         void Delete(RatingComic ratingComic);
+        void DeleteRange(List<RatingComic> ratingComics);
         IQueryable<RatingComic> GetAll();
     }
 }

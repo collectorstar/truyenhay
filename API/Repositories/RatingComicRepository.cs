@@ -24,6 +24,11 @@ namespace API.Repositories
             _context.RatingComics.Remove(ratingComic);
         }
 
+        public void DeleteRange(List<RatingComic> ratingComics)
+        {
+            _context.RatingComics.RemoveRange(ratingComics);
+        }
+
         public IQueryable<RatingComic> GetAll()
         {
             return _context.RatingComics.AsTracking();

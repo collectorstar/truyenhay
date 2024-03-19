@@ -12,6 +12,11 @@ import { GetAllUploadComicParam } from '../_models/getAllUploadComicParam';
 import { UploadComicDto } from '../_models/uploadComicDto';
 import { ConfirmService } from '../_services/confirm.service';
 import { Router } from '@angular/router';
+import { ColDef } from 'ag-grid-community';
+import { DataFormatServiceService } from '../_services/data-format-service.service';
+import { ReportErrorChapterForAuthorDto } from '../_models/reportErrorChapterForAuthorDto';
+import { ReportErrorCode } from '../_extensions/enumHelper';
+import { ReportChapterParam } from '../_models/reportChapterParam';
 
 @Component({
   selector: 'app-upload-commic',
@@ -32,15 +37,99 @@ export class UploadCommicComponent implements OnInit {
     totalPages: 1,
   };
 
+  //report error
+  paginationParamsError: Pagination = {
+    currentPage: 1,
+    itemsPerPage: 20,
+    totalItems: 0,
+    totalPages: 1,
+  };
+  rowDataError: ReportErrorChapterForAuthorDto[] = [];
+  defaultColDefError = { autoHeight: true, wrapText: false };
+  selectedRowError: ReportErrorChapterForAuthorDto | null = null;
+  columnDefsError: ColDef[] = [
+    {
+      headerName: 'stt',
+      field: 'stt',
+      cellRenderer: (params: any) => {
+        if (params && params.node && typeof params.node.rowIndex == 'number')
+          return params.node.rowIndex + 1;
+        return '';
+      },
+      width: 60,
+    },
+    {
+      headerName: 'Comic Name',
+      field: 'comicName',
+      filter: 'agTextColumnFilter',
+      width: 200,
+    },
+    {
+      headerName: 'Chapter Name',
+      field: 'chapterName',
+      filter: 'agTextColumnFilter',
+      width: 200,
+    },
+    {
+      headerName: 'Type error',
+      field: 'errorCode',
+      cellRenderer: (params: any) => {
+        if (params && params.data && typeof params.data.errorCode == 'number') {
+          switch (params.data.errorCode) {
+            case ReportErrorCode.ImageError:
+              return 'Image Error';
+            case ReportErrorCode.DublicateChapter:
+              return 'Dublicate Chapter';
+            case ReportErrorCode.WrongComicUpload:
+              return 'Wrong upload comic';
+            case ReportErrorCode.Other:
+              return 'Other';
+            default:
+              return '';
+          }
+        }
+        return '';
+      },
+      width: 200,
+    },
+    {
+      headerName: 'Status',
+      field: 'status',
+      cellRenderer: (params: any) => {
+        if (params) {
+          if (params.data.status) return '✅ Done';
+          else return '❌ In Processing';
+        } else return '';
+      },
+      cellClass: ['text-center'],
+      width: 150,
+    },
+    {
+      headerName: 'Time send',
+      field: 'creationTime',
+      valueFormatter: (params: any) => {
+        return this.dataFormatService.dateTimeFormat(params.data.creationTime);
+      },
+      width: 150,
+    },
+    {
+      headerName: 'Desc',
+      field: 'desc',
+      width: 800,
+    },
+  ];
+  nameError: string = '';
+  isOnlyInProcessing: boolean = true;
+
   constructor(
     public accountService: AccountService,
     private toastr: ToastrService,
     private busyService: BusyService,
-    private uploadService: UploadComicService,
     private modalService: BsModalService,
     private uploadComicService: UploadComicService,
     private confirmService: ConfirmService,
-    public router: Router
+    public router: Router,
+    private dataFormatService: DataFormatServiceService
   ) {
     this.accountService.currentUser$.subscribe({
       next: (user) => {
@@ -60,7 +149,7 @@ export class UploadCommicComponent implements OnInit {
       return;
     }
     this.busyService.busy();
-    this.uploadService
+    this.uploadComicService
       .requestAuthor(this.request)
       .pipe(
         finalize(() => {
@@ -158,5 +247,62 @@ export class UploadCommicComponent implements OnInit {
     this.paginationParams.itemsPerPage = event.rows;
     this.paginationParams.totalPages = event.pageCount;
     this.getAll();
+  }
+
+  //report errors
+  onGridReady() {
+    this.getAllError();
+  }
+
+  selectedRowClicked(event: any) {
+    this.selectedRowError = event;
+  }
+
+  changePage(event: any) {
+    this.paginationParamsError = event;
+    this.getAllError();
+  }
+  getAllError() {
+    var searchErrorParam = new ReportChapterParam();
+    searchErrorParam.pageNumber = this.paginationParamsError.currentPage;
+    searchErrorParam.pageSize = this.paginationParamsError.itemsPerPage;
+    searchErrorParam.comicName = this.nameError;
+    searchErrorParam.isOnlyInprocessing = this.isOnlyInProcessing;
+    this.busyService.busy();
+    this.uploadComicService
+      .getAllErrorReportChapter(searchErrorParam)
+      .pipe(
+        finalize(() => {
+          this.busyService.idle();
+        })
+      )
+      .subscribe({
+        next: (res) => {
+          if (res && res.result && res.pagination) {
+            this.rowDataError = res.result;
+            this.paginationParamsError = res.pagination;
+            this.selectedRowError = null;
+          }
+        },
+      });
+  }
+
+  markDone() {
+    if (this.selectedRowError) {
+      this.busyService.busy();
+      this.uploadComicService
+        .markDoneReportErrorChapter(this.selectedRowError)
+        .pipe(
+          finalize(() => {
+            this.busyService.idle();
+            this.getAllError();
+          })
+        )
+        .subscribe({
+          next: () => {
+            this.toastr.success('Done report error!');
+          },
+        });
+    }
   }
 }

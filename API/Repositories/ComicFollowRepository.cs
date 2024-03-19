@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using API.Data;
 using API.Entities;
 using API.Interfaces;
@@ -26,6 +22,11 @@ namespace API.Repositories
         public void Delete(ComicFollow comicFollow)
         {
             _context.ComicFollows.Remove(comicFollow);
+        }
+
+        public void DeleteRange(List<ComicFollow> comicFollows)
+        {
+            _context.ComicFollows.RemoveRange(comicFollows);
         }
 
         public IQueryable<ComicFollow> GetAll()

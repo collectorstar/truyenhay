@@ -23,7 +23,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<ComicDetailDto>> GetDetailComic([FromQuery] int comicId, [FromQuery] string email)
         {
-            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == comicId && x.Status == true);
+            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == comicId && x.Status);
             if (comic == null) return NotFound("Comic is not found or blocked");
 
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == email);
@@ -51,12 +51,15 @@ namespace API.Controllers
                               Id = z.Id,
                               Name = z.Name
                           }).ToList(),
-                Chapters = (from x in _uow.ChapterRepository.GetAll().Where(x => x.ComicId == comic.Id)
+                Chapters = (from x in _uow.ChapterRepository.GetAll().Where(x => x.ComicId == comic.Id && x.Status).OrderByDescending(x=> x.Id)
                             select new ChapterForComicDetailDto
                             {
                                 Id = x.Id,
                                 Name = x.Name,
                                 UpdateTime = x.UpdateTime ?? x.CreationTime,
+                                HasRead = user != null ? _uow.ChapterHasReadedRepository.GetAll().Any(z => z.UserId == user.Id && z.ChapterId == x.Id) : false,
+                                View = _uow.ChapterHasReadedRepository.GetAll().Where(z => z.ChapterId == x.Id).Count(),
+
                             }).ToList(),
             };
 
@@ -128,7 +131,7 @@ namespace API.Controllers
 
             var comicFollow = await _uow.ComicFollowRepository.GetAll().FirstOrDefaultAsync(x => x.ComicFollowedId == comic.Id && x.UserFollowedId == user.Id);
             if (comicFollow == null) return BadRequest("You are already unfollow comic");
-            
+
             _uow.ComicFollowRepository.Delete(comicFollow);
 
             if (!await _uow.Complete()) return BadRequest("fail to unfollow comic");

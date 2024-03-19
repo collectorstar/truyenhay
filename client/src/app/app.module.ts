@@ -39,6 +39,11 @@ import { TimeagoModule } from 'ngx-timeago';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { ComicDetailComponent } from './comic-detail/comic-detail.component';
 import { RatingModule } from 'primeng/rating';
+import { ComicChapterComponent } from './comic-chapter/comic-chapter.component';
+import { ChaptersModalComponent } from './comic-chapter/chapters-modal/chapters-modal.component';
+import { ReportErrorModalComponent } from './comic-chapter/report-error-modal/report-error-modal.component';
+import { SelectorComponent } from './_component/selector/selector.component';
+import { SimpleAgGridComponent } from './_component/simple-ag-grid/simple-ag-grid.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +63,9 @@ import { RatingModule } from 'primeng/rating';
     CreateOrEditChapterComponent,
     SubmenuComponent,
     ComicDetailComponent,
+    ComicChapterComponent,
+    ChaptersModalComponent,
+    ReportErrorModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -83,7 +91,9 @@ import { RatingModule } from 'primeng/rating';
     SliderHomeComponent,
     TimeagoModule.forRoot(),
     LazyLoadImageModule,
-    RatingModule
+    RatingModule,
+    SelectorComponent,
+    SimpleAgGridComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
