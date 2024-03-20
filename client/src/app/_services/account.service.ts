@@ -139,7 +139,7 @@ export class AccountService {
       if (message) {
         this.toastr.success(message);
         user.isAuthor = true;
-        this.setCurrentUser(user);
+        this.setCurrentUserNoCreateConnect(user);
       }
     });
   }
