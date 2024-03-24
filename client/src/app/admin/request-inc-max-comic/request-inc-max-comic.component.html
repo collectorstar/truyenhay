@@ -1,0 +1,56 @@
+<h1>Increase Max Comic Request List</h1>
+
+<div class="boxsearch mt-1 mb-2">
+  <span>Search:</span>
+  <input
+    class="name-search"
+    type="text"
+    [(ngModel)]="emailSearch"
+    placeholder="Name comic"
+  />
+  <div class="form-check is-only-waiting-request">
+    <input
+      class="form-check-input"
+      [(ngModel)]="isShowWattingReq"
+      type="checkbox"
+      id="flexCheckDefault"
+    />
+    <label class="form-check-label" for="flexCheckDefault">
+      Is Only Waiting Request
+    </label>
+  </div>
+
+  <button class="btn btn-success" (click)="getAll()">Search</button>
+</div>
+
+<simple-ag-grid
+  [columnDefs]="columnDefs"
+  [rowData]="rowData"
+  [defaultColDef]="defaultColDef"
+  (callBackGrid)="onGridReady()"
+  (rowClicked)="selectedRowClicked($event)"
+  (changePage)="changePage($event)"
+  [pagination]="true"
+  [paginationParams]="paginationParams"
+></simple-ag-grid>
+
+<div class="action">
+  <div class="action-item">
+    <button
+      class="btn btn-outline-success"
+      (click)="accept()"
+      [disabled]="!selectedRow || (selectedRow && selectedRow.status != 0)"
+    >
+      <i class="fa-solid fa-check"></i> Accept
+    </button>
+  </div>
+  <div class="action-item">
+    <button
+      class="btn btn-outline-danger"
+      (click)="deny()"
+      [disabled]="!selectedRow || (selectedRow && selectedRow.status != 0)"
+    >
+      <i class="fa fa-xmark"></i> Deny
+    </button>
+  </div>
+</div>

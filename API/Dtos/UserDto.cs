@@ -7,5 +7,6 @@ namespace API.Dtos
         public string PhotoUrl { get; set; }
         public string Email { get; set; }
         public bool IsAuthor { get; set; }
+        public int MaxComic { get; set; }
     }
 }

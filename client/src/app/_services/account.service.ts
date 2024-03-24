@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map } from 'rxjs';
+import { BehaviorSubject, map, max } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { User } from '../_models/user';
 import { LoginDto } from '../_models/loginDto';
@@ -139,6 +139,14 @@ export class AccountService {
       if (message) {
         this.toastr.success(message);
         user.isAuthor = true;
+        user.maxComic = 1;
+        this.setCurrentUserNoCreateConnect(user);
+      }
+    });
+
+    this.hubConnection.on('AcceptReqIncComic', (maxComic) => {
+      if (maxComic > user.maxComic) {
+        user.maxComic = maxComic;
         this.setCurrentUserNoCreateConnect(user);
       }
     });

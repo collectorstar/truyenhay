@@ -1,0 +1,12 @@
+.image-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    background-color: black;
+    max-height: 70vh;
+    overflow-y: scroll;
+    .image-chapter{
+        max-width: 100%;
+    }
+}

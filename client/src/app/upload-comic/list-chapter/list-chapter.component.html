@@ -2,7 +2,7 @@
   <i class="fa-solid fa-chevron-left"></i> Back
 </button>
 <h3 class="mt-2 mb-2">Chapter list of {{ comic.name }}</h3>
-<button class="btn btn-success mb-3" (click)="openModal(true)">
+<button class="btn btn-success mb-3" (click)="checkValidCreateChapter()">
   <i class="fa-solid fa-plus"></i> Add chapter
 </button>
 <button class="btn btn-info mb-3" style="margin-left: 10px" (click)="getAll()">
@@ -59,6 +59,12 @@
             Delete
           </button>
         </div>
+      </div>
+      <div class="status-watting" *ngIf="item.approvalStatus == 0">
+        <img src="../assets/wattingforapproval.gif" alt="">
+      </div>
+      <div class="status-deny" *ngIf="item.approvalStatus == 2">
+        <img src="../assets/denyforapprov.gif" alt="">
       </div>
     </li>
   </ul>

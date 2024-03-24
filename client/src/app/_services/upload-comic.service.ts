@@ -11,6 +11,7 @@ import { GenreForUploadComicDto } from '../_models/genreForUploadComicDto';
 import { ComicDetailDtoForListChapter } from '../_models/comicDetailDtoForListChapter';
 import { ReportChapterParam } from '../_models/reportChapterParam';
 import { ReportErrorChapterForAuthorDto } from '../_models/reportErrorChapterForAuthorDto';
+import { CreateRequestIncMaxComicDto } from '../_models/createRequestIncMaxComicDto';
 
 @Injectable({
   providedIn: 'root',
@@ -113,6 +114,10 @@ export class UploadComicService {
     );
   }
 
+  checkValidCreateComic() {
+    return this.http.get(this.baseUrl + 'uploadComic/check-valid-create-comic');
+  }
+
   getAllErrorReportChapter(param: ReportChapterParam) {
     let params = getPaginationHeader(param.pageNumber, param.pageSize);
     params = params.append('comicName', param.comicName);
@@ -128,6 +133,25 @@ export class UploadComicService {
     return this.http.post(
       this.baseUrl + 'uploadComic/mark-done-report-error-chapter',
       dto
+    );
+  }
+
+  checkValidReqIncComic() {
+    return this.http.get(
+      this.baseUrl + 'uploadComic/check-valid-req-inc-comic'
+    );
+  }
+
+  requestIncMaxComic(dto: CreateRequestIncMaxComicDto) {
+    return this.http.post(
+      this.baseUrl + 'uploadComic/request-inc-max-comic',
+      dto
+    );
+  }
+
+  checkValidCreateChapter(comicId: number) {
+    return this.http.get(
+      this.baseUrl + 'uploadComic/check-valid-create-chapter?comicId=' + comicId
     );
   }
 }

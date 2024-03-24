@@ -1,0 +1,29 @@
+<div *ngIf="images.length > 0">
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Images Chapter</h4>
+    <button
+      type="button"
+      class="btn-close close pull-right"
+      aria-label="Close"
+      (click)="bsModalRef.hide()"
+    >
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="image-container">
+        <img
+        class="image-chapter"
+          *ngFor="let image of images"
+          [defaultImage]="'/assets/loading.gif'"
+          [lazyLoad]="image"
+          alt="{{ image }}"
+          [loading]="true"
+        />
+    </div>
+    
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-danger" (click)="bsModalRef.hide()">Close</button>
+  </div>
+</div>

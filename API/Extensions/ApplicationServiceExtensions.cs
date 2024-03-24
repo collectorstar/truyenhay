@@ -37,6 +37,7 @@ namespace API.Extensions
             services.AddScoped<IComicFollowRepository,ComicFollowRepository>();
             services.AddScoped<IChapterHasReadedRepository,ChapterHasReadedRepository>();
             services.AddScoped<IReportErrorChapterRepository,ReportErrorChapterRepository>();
+            services.AddScoped<IRequestIncMaxComicRepository,RequestIncMaxComicRepository>();
             return services;
         }
     }

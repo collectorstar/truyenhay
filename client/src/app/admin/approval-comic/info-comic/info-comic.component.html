@@ -1,0 +1,41 @@
+<div *ngIf="selectedRow">
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Info Comic</h4>
+    <button
+      type="button"
+      class="btn-close close pull-right"
+      aria-label="Close"
+      (click)="bsModalRef.hide()"
+    >
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <tabset>
+      <tab heading="Info">
+        <div class="container comic-container">
+          <div class="comic-item">
+            <span class="fw-bold">Name: </span>
+            <span>{{ selectedRow.name }}</span>
+          </div>
+          <div class="comic-item">
+            <span class="fw-bold">Genres: </span
+            ><span>{{ selectedRow.genres }}</span>
+          </div>
+          <div class="comic-item">
+            <span class="fw-bold">Desc: </span
+            ><span>{{ selectedRow.desc }}</span>
+          </div>
+        </div>
+      </tab>
+      <tab heading="Main Image">
+        <div class="comic-image">
+            <img  [defaultImage]="'/assets/loading.gif'" [lazyLoad]="selectedRow.mainImage">
+        </div>
+      </tab>
+    </tabset>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-danger" (click)="bsModalRef.hide()">Close</button>
+  </div>
+</div>

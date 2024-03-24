@@ -11,6 +11,34 @@
     overflow: hidden;
     padding: 6px 0;
     margin: 0;
+    position: relative;
+
+    .status-watting{
+      position: absolute;
+      background-color: rgba(255, 255, 255,0.6);
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      border-radius: 20px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .status-deny{
+      position: absolute;
+      background-color: rgba(255, 255, 255,0.6);
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      border-radius: 20px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
     .chapterInfo {
       .chapterInfo-name {

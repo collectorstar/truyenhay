@@ -1,3 +1,4 @@
+import { ApprovalStatusComic } from '../_extensions/enumHelper';
 import { GenreForUploadComicDto } from './genreForUploadComicDto';
 
 export interface UploadComicDto {
@@ -11,5 +12,6 @@ export interface UploadComicDto {
   nOReviews: number;
   totalChapter: number;
   newestChapter: string;
+  approvalStatus: ApprovalStatusComic;
   selectedGenres: GenreForUploadComicDto[];
 }

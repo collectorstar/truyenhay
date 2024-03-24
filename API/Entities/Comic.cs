@@ -1,3 +1,5 @@
+using API.Helpers;
+
 namespace API.Entities
 {
     public class Comic
@@ -15,7 +17,7 @@ namespace API.Entities
         public DateTime? UpdateTime { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsRecommend { get; set; }
-
+        public ApprovalStatusComic ApprovalStatus { get; set; }
         public int AuthorId { get; set; }
     }
 }

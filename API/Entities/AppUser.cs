@@ -9,6 +9,7 @@ namespace API.Entities
         public DateTime CreationTime { get; set; } = DateTime.Now;
         public string PhotoUrl { get; set; }
         public int? PhotoAvatarId { get; set; }
+        public int MaxComic { get; set; }
         public List<AppUserRole> UserRoles { get; set; }
     }
 }

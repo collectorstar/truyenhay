@@ -1,3 +1,5 @@
+using API.Helpers;
+
 namespace API.Dtos
 {
     public class UploadComicDto
@@ -12,6 +14,7 @@ namespace API.Dtos
         public int NOReviews { get; set; }
         public int TotalChapter { get; set; }
         public string NewestChapter { get; set; }
+        public ApprovalStatusComic ApprovalStatus { get; set; }
         public List<GenreForUploadComicDto> SelectedGenres { get; set; }
     }
 }

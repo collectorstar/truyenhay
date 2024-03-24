@@ -23,7 +23,13 @@ namespace API.Repositories
             _context.Comics.Remove(comic);
         }
 
-        public IQueryable<Comic> GetAll(){
+        public void DeleteRange(List<Comic> comics)
+        {
+            _context.Comics.RemoveRange(comics);
+        }
+
+        public IQueryable<Comic> GetAll()
+        {
             return _context.Comics.AsTracking();
         }
 

@@ -23,6 +23,11 @@ namespace API.Repositories
             _context.PhotoComics.Remove(photoComic);
         }
 
+        public void DeleteRange(List<PhotoComic> photoComics)
+        {
+            _context.PhotoComics.RemoveRange(photoComics);
+        }
+
         public IQueryable<PhotoComic> GetAll()
         {
             return _context.PhotoComics.AsTracking();

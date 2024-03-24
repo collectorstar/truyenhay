@@ -1,6 +1,7 @@
 using API.Dtos;
 using API.Entities;
 using API.Extensions;
+using API.Helpers;
 using API.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -23,7 +24,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<ComicDetailDto>> GetDetailComic([FromQuery] int comicId, [FromQuery] string email)
         {
-            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == comicId && x.Status);
+            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == comicId && x.Status && x.ApprovalStatus == ApprovalStatusComic.Accept);
             if (comic == null) return NotFound("Comic is not found or blocked");
 
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == email);
@@ -51,7 +52,7 @@ namespace API.Controllers
                               Id = z.Id,
                               Name = z.Name
                           }).ToList(),
-                Chapters = (from x in _uow.ChapterRepository.GetAll().Where(x => x.ComicId == comic.Id && x.Status).OrderByDescending(x=> x.Id)
+                Chapters = (from x in _uow.ChapterRepository.GetAll().Where(x => x.ComicId == comic.Id && x.Status && x.ApprovalStatus == ApprovalStatusChapter.Accept).OrderByDescending(x => x.Id)
                             select new ChapterForComicDetailDto
                             {
                                 Id = x.Id,
@@ -70,7 +71,7 @@ namespace API.Controllers
         [HttpPost("rating/{comicId}")]
         public async Task<ActionResult> RatingComic(int comicId, [FromBody] int rate)
         {
-            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == comicId && x.Status == true);
+            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == comicId && x.Status && x.ApprovalStatus == ApprovalStatusComic.Accept);
             if (comic == null) return NotFound("not found comic");
 
             var ratingComics = _uow.RatingComicRepository.GetAll().Where(x => x.ComicId == comic.Id).ToList();
@@ -99,7 +100,7 @@ namespace API.Controllers
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == User.GetUserId());
             if (user == null) return Unauthorized("you need login");
 
-            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == comicId);
+            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == comicId && x.ApprovalStatus == ApprovalStatusComic.Accept);
             if (comic == null) return NotFound("not found comic");
 
             var check = await _uow.ComicFollowRepository.GetAll().FirstOrDefaultAsync(x => x.ComicFollowedId == comic.Id && x.UserFollowedId == user.Id);
@@ -126,7 +127,7 @@ namespace API.Controllers
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == User.GetUserId());
             if (user == null) return Unauthorized("you need login");
 
-            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == comicId);
+            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == comicId && x.ApprovalStatus == ApprovalStatusComic.Accept);
             if (comic == null) return NotFound("not found comic");
 
             var comicFollow = await _uow.ComicFollowRepository.GetAll().FirstOrDefaultAsync(x => x.ComicFollowedId == comic.Id && x.UserFollowedId == user.Id);

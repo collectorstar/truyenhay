@@ -1,11 +1,9 @@
-using System.Globalization;
 using API.Data;
 using API.Dtos;
 using API.Entities;
 using API.Extensions;
 using API.Helpers;
 using API.Interfaces;
-using API.Services;
 using API.SignalR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -105,6 +103,7 @@ namespace API.Controllers
             if (author == null) return BadRequest("Not found author");
 
             author.IsAuthor = true;
+            author.MaxComic = 1;
 
             if (!await _uow.Complete()) return BadRequest("Fail to update data");
 

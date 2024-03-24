@@ -17,6 +17,7 @@ import { DataFormatServiceService } from '../_services/data-format-service.servi
 import { ReportErrorChapterForAuthorDto } from '../_models/reportErrorChapterForAuthorDto';
 import { ReportErrorCode } from '../_extensions/enumHelper';
 import { ReportChapterParam } from '../_models/reportChapterParam';
+import { RequestIncreaseMaxComicCreateComponent } from './request-increase-max-comic-create/request-increase-max-comic-create.component';
 
 @Component({
   selector: 'app-upload-commic',
@@ -30,6 +31,8 @@ export class UploadCommicComponent implements OnInit {
   rowData: UploadComicDto[] = [];
   bsModalRef: BsModalRef<CreateOrEditComicComponent> =
     new BsModalRef<CreateOrEditComicComponent>();
+  bsModalRefRequestIncreaseMaxComicCreate: BsModalRef<RequestIncreaseMaxComicCreateComponent> =
+    new BsModalRef<RequestIncreaseMaxComicCreateComponent>();
   paginationParams: Pagination = {
     currentPage: 1,
     itemsPerPage: 2,
@@ -219,6 +222,51 @@ export class UploadCommicComponent implements OnInit {
           }
         },
       });
+  }
+
+  checkValidCreateComic() {
+    this.busyService.busy();
+    this.uploadComicService
+      .checkValidCreateComic()
+      .pipe(
+        finalize(() => {
+          this.busyService.idle();
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.openComicModal(true);
+        },
+      });
+  }
+
+  checkValidReqIncComic() {
+    this.busyService.busy();
+    this.uploadComicService
+      .checkValidReqIncComic()
+      .pipe(
+        finalize(() => {
+          this.busyService.idle();
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.requestIncreaseMaxComic();
+        },
+      });
+  }
+
+  requestIncreaseMaxComic() {
+    if (!this.user || (this.user && !this.user.isAuthor)) return;
+    this.bsModalRefRequestIncreaseMaxComicCreate = this.modalService.show(
+      RequestIncreaseMaxComicCreateComponent
+    );
+
+    this.bsModalRefRequestIncreaseMaxComicCreate.onHide?.subscribe({
+      next: () => {
+        this.getAll();
+      },
+    });
   }
 
   openComicModal(isCreate: boolean, data?: UploadComicDto) {

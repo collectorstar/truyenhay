@@ -25,7 +25,7 @@ namespace API.Controllers
         {
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == email);
 
-            var list = from x in _uow.ComicRepository.GetAll().Where(x => x.Status == true).OrderByDescending(x => x.UpdateTime ?? x.CreationTime)
+            var list = from x in _uow.ComicRepository.GetAll().Where(x => x.Status && x.ApprovalStatus == ApprovalStatusComic.Accept).OrderByDescending(x => x.UpdateTime ?? x.CreationTime)
                        select new ComicNewestDto
                        {
                            Id = x.Id,
@@ -35,7 +35,7 @@ namespace API.Controllers
                            Rate = x.Rate,
                            NOFollows = _uow.ComicFollowRepository.GetAll().Where(y => y.ComicFollowedId == x.Id).Count(),
                            NOReviews = x.NOReviews,
-                           Chapters = (from y in _uow.ChapterRepository.GetAll().Where(z => z.ComicId == x.Id && z.Status == true).OrderByDescending(x => x.Id).Take(3)
+                           Chapters = (from y in _uow.ChapterRepository.GetAll().Where(z => z.ComicId == x.Id && z.Status && z.ApprovalStatus == ApprovalStatusChapter.Accept).OrderByDescending(x => x.Id).Take(3)
                                        select new ChapterForComicNewestDto
                                        {
                                            Id = y.Id,

@@ -65,7 +65,8 @@ namespace API.Controllers
                 Name = user.Name,
                 Token = token,
                 PhotoUrl = user.PhotoUrl,
-                IsAuthor = user.IsAuthor
+                IsAuthor = user.IsAuthor,
+                MaxComic = user.MaxComic
             };
 
         }
@@ -94,7 +95,8 @@ namespace API.Controllers
                 Name = user.Name,
                 Token = await _tokenService.CreateToken(user),
                 PhotoUrl = user.PhotoUrl,
-                IsAuthor = user.IsAuthor
+                IsAuthor = user.IsAuthor,
+                MaxComic = user.MaxComic,
             };
 
         }
@@ -117,6 +119,7 @@ namespace API.Controllers
                 Name = user.Name,
                 Email = user.Email,
                 IsAuthor = user.IsAuthor,
+                MaxComic = user.MaxComic,
             };
         }
 
@@ -140,28 +143,47 @@ namespace API.Controllers
         [HttpPost("upload-avatar")]
         public async Task<ActionResult> UpdateAvatar(IFormFile image)
         {
+            await _uow.BeginTransactionAsync();
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == User.GetUserId());
-            if (user == null) return Unauthorized("Not found User");
+            if (user == null)
+            {
+                _uow.RollbackTransaction();
+                return Unauthorized("Not found User");
+            }
 
             if (image == null || image.Length == 0)
             {
+                _uow.RollbackTransaction();
                 return BadRequest("No image file uploaded");
             }
+
+            var oldImage = "";
 
             if (user.PhotoAvatarId != null)
             {
                 var findAvatar = await _uow.PhotoAvatarRepository.GetAll().FirstOrDefaultAsync(x => x.UserId == user.Id);
-                if (findAvatar == null) return BadRequest("Fail to find old Avatar");
-                var dropResult = await _photoService.DeletePhotoAsync(findAvatar.PublicId);
-                if (dropResult.Error != null) return BadRequest("Fail to drop old Avatar");
+                if (findAvatar == null)
+                {
+                    _uow.RollbackTransaction();
+                    return BadRequest("Fail to find old Avatar");
+                }
+                oldImage = findAvatar.PublicId;
+
                 _uow.PhotoAvatarRepository.DeletePhotoAvatar(findAvatar);
-                user.PhotoAvatarId = null;
-                user.PhotoUrl = "";
+                if (!await _uow.Complete())
+                {
+                    _uow.RollbackTransaction();
+                    return BadRequest("fail to delete old avatar");
+                }
             }
 
             var result = await _photoService.UploadAvatar(image);
 
-            if (result.Error != null) return BadRequest(result.Error.Message);
+            if (result.Error != null)
+            {
+                _uow.RollbackTransaction();
+                return BadRequest(result.Error.Message);
+            }
 
             var photoAvatar = new PhotoAvatar
             {
@@ -172,14 +194,28 @@ namespace API.Controllers
 
             await _uow.PhotoAvatarRepository.Add(photoAvatar);
 
-            if (!await _uow.Complete()) return BadRequest("Add photo fail");
+            if (!await _uow.Complete())
+            {
+                await _photoService.DeletePhotoAsync(result.PublicId);
+                _uow.RollbackTransaction();
+                return BadRequest("Add photo fail");
+            }
 
             user.PhotoUrl = photoAvatar.Url;
             user.PhotoAvatarId = photoAvatar.Id;
 
-            if (await _uow.Complete()) return Ok(new { url = photoAvatar.Url });
-
-            return BadRequest("Something wrongs");
+            if (!await _uow.Complete())
+            {
+                await _photoService.DeletePhotoAsync(result.PublicId);
+                _uow.RollbackTransaction();
+                return BadRequest("update user photo fail");
+            }
+            if (!string.IsNullOrEmpty(oldImage))
+            {
+                await _photoService.DeletePhotoAsync(oldImage);
+            }
+            _uow.CommitTransaction();
+            return Ok(new { url = photoAvatar.Url });
         }
 
         [Authorize(Policy = "RequireMemberRole")]
@@ -266,6 +302,7 @@ namespace API.Controllers
                 Token = await _tokenService.CreateToken(check),
                 PhotoUrl = check.PhotoUrl,
                 IsAuthor = check.IsAuthor,
+                MaxComic = check.MaxComic,
             };
         }
 

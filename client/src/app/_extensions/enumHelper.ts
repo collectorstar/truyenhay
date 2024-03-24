@@ -11,3 +11,21 @@ export enum ReportErrorCode {
   WrongComicUpload = 3,
   Other = 4,
 }
+
+export enum ApprovalStatusComic {
+  Waiting = 0,
+  Accept = 1,
+  Deny = 2,
+}
+
+export enum RequestIncMaxComicStatus {
+  Waiting = 0,
+  Accept = 1,
+  Deny = 2,
+}
+
+export enum ApprovalStatusChapter {
+  Waiting = 0,
+  Accept = 1,
+  Deny = 2,
+}

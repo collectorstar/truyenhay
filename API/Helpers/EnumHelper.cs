@@ -14,4 +14,26 @@ namespace API.Helpers
         DublicateChapter = 2,
         WrongComicUpload = 3,
     }
+
+    public enum ApprovalStatusComic
+    {
+        Waiting = 0,
+        Accept = 1,
+        Deny = 2,
+    }
+
+    public enum RequestIncMaxComicStatus
+    {
+        Waiting = 0,
+        Accept = 1,
+        Deny = 2,
+    }
+
+    public enum ApprovalStatusChapter
+    {
+        Waiting = 0,
+        Accept = 1,
+        Deny = 2,
+    }
+
 }

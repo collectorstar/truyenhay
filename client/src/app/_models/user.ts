@@ -4,6 +4,7 @@ export interface User {
   token: string;
   photoUrl: string;
   isAuthor: boolean;
+  maxComic: number;
   roles: string[];
 }
 

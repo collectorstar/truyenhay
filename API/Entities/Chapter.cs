@@ -1,3 +1,5 @@
+using API.Helpers;
+
 namespace API.Entities
 {
     public class Chapter
@@ -8,5 +10,6 @@ namespace API.Entities
         public DateTime CreationTime { get; set; }
         public DateTime? UpdateTime { get; set; }
         public int ComicId { get; set; }
+        public ApprovalStatusChapter ApprovalStatus { get; set; }
     }
 }

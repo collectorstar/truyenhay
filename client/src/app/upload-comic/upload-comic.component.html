@@ -25,17 +25,27 @@
           <span>Search:</span>
           <input type="text" [(ngModel)]="name" placeholder="Name comic" />
           <button class="btn btn-success" (click)="getAll()">Search</button>
-          <button class="btn btn-success" (click)="openComicModal(true)">
+          <button class="btn btn-success" (click)="checkValidCreateComic()">
             <i class="fa fa-plus"></i> Create
+          </button>
+          <button class="btn btn-success" (click)="checkValidReqIncComic()">
+            <i class="fas fa-arrow-alt-circle-up"></i> Increase Max Comic Create
           </button>
         </div>
       </div>
+      <p>Max Comic Create.: {{ user.maxComic }}</p>
       <h4>Total comic: {{ paginationParams.totalItems }}</h4>
 
       <div
         *ngFor="let item of rowData"
         class="comic d-flex flex-md-nowrap flex-wrap"
       >
+        <div class="status-watting" *ngIf="item.approvalStatus == 0">
+          <img src="../assets/wattingforapproval.gif" alt="" />
+        </div>
+        <div class="status-deny" *ngIf="item.approvalStatus == 2">
+          <img src="../assets/denyforapprov.gif" alt="" />
+        </div>
         <div
           class="col-12 col-md-3 col-xl-3 flex-md-grow-0 flex-grow-1 flex-md-shrink-1 img-comic"
         >
@@ -121,7 +131,7 @@
       </div>
     </div>
   </tab>
-  <tab heading="Report error chapters">
+  <tab heading="Report error chapters" *ngIf="user.isAuthor">
     <div id="report-error-chapters">
       <h1>Report error chapters</h1>
       <div class="boxsearch mt-1 mb-2">
@@ -160,13 +170,15 @@
 
       <div class="action">
         <div class="action-item">
-          <button class="btn btn-outline-success" (click)="markDone()" [disabled]="!selectedRowError">
+          <button
+            class="btn btn-outline-success"
+            (click)="markDone()"
+            [disabled]="!selectedRowError"
+          >
             <i class="fa-solid fa-check"></i> Mark Done
           </button>
         </div>
-
       </div>
-
     </div>
   </tab>
 </tabset>

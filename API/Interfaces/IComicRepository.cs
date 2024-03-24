@@ -7,6 +7,7 @@ namespace API.Interfaces
         Task Add(Comic comic);
         void Update(Comic comic);
         void Delete(Comic comic);
+        void DeleteRange(List<Comic> comics);
         IQueryable<Comic> GetAll();
     }
 }

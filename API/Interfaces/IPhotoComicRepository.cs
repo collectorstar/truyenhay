@@ -6,6 +6,7 @@ namespace API.Interfaces
     {
         Task Add(PhotoComic photoComic);
         void Delete(PhotoComic photoComic);
+        void DeleteRange(List<PhotoComic> photoComics);
         IQueryable<PhotoComic> GetAll();
     }
 }

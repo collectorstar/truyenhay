@@ -14,6 +14,7 @@ namespace API.Interfaces
         IComicFollowRepository ComicFollowRepository { get; }
         IChapterHasReadedRepository ChapterHasReadedRepository { get; }
         IReportErrorChapterRepository ReportErrorChapterRepository { get; }
+        IRequestIncMaxComicRepository RequestIncMaxComicRepository { get; }
 
         Task<bool> Complete();
         bool HasChanges();

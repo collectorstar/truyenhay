@@ -44,6 +44,7 @@ import { ChaptersModalComponent } from './comic-chapter/chapters-modal/chapters-
 import { ReportErrorModalComponent } from './comic-chapter/report-error-modal/report-error-modal.component';
 import { SelectorComponent } from './_component/selector/selector.component';
 import { SimpleAgGridComponent } from './_component/simple-ag-grid/simple-ag-grid.component';
+import { RequestIncreaseMaxComicCreateComponent } from './upload-comic/request-increase-max-comic-create/request-increase-max-comic-create.component';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { SimpleAgGridComponent } from './_component/simple-ag-grid/simple-ag-gri
     ComicChapterComponent,
     ChaptersModalComponent,
     ReportErrorModalComponent,
+    RequestIncreaseMaxComicCreateComponent,
   ],
   imports: [
     BrowserModule,

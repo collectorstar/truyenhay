@@ -12,6 +12,12 @@ import { RecommendComicsComponent } from './recommend-comics/recommend-comics.co
 import { UpdateRecommendComicsComponent } from './recommend-comics/update-recommend-comics/update-recommend-comics.component';
 import { MultiselectDropdownComponent } from '../_component/multiselect-dropdown/multiselect-dropdown.component';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
+import { ApprovalComicComponent } from './approval-comic/approval-comic.component';
+import { InfoComicComponent } from './approval-comic/info-comic/info-comic.component';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+import { RequestIncMaxComicComponent } from './request-inc-max-comic/request-inc-max-comic.component';
+import { ApprovalChapterComponent } from './approval-chapter/approval-chapter.component';
+import { InfoChapterComponent } from './approval-chapter/info-chapter/info-chapter.component';
 
 
 @NgModule({
@@ -21,6 +27,11 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
     RequestAuthorComponent,
     RecommendComicsComponent,
     UpdateRecommendComicsComponent,
+    ApprovalComicComponent,
+    InfoComicComponent,
+    RequestIncMaxComicComponent,
+    ApprovalChapterComponent,
+    InfoChapterComponent,
   ],
   imports: [
     FormsModule,
@@ -29,7 +40,8 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
     AdminRoutingModule,
     BsDropdownModule.forRoot(),
     MultiselectDropdownComponent,
-    LazyLoadImageModule
+    LazyLoadImageModule,
+    TabsModule.forRoot(),
   ]
 })
 export class AdminModule { }

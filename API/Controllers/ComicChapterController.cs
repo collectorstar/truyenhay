@@ -1,6 +1,7 @@
 using API.Dtos;
 using API.Entities;
 using API.Extensions;
+using API.Helpers;
 using API.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -23,10 +24,10 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<string>>> GetChapterImages([FromQuery] int comicId, [FromQuery] int chapterId)
         {
-            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == comicId && x.Status);
+            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == comicId && x.Status && x.ApprovalStatus == ApprovalStatusComic.Accept);
             if (comic == null) return NotFound("not found comic");
 
-            var chapter = await _uow.ChapterRepository.GetAll().FirstOrDefaultAsync(x => x.ComicId == comic.Id && x.Id == chapterId && x.Status);
+            var chapter = await _uow.ChapterRepository.GetAll().FirstOrDefaultAsync(x => x.ComicId == comic.Id && x.Id == chapterId && x.Status && x.ApprovalStatus == ApprovalStatusChapter.Accept);
             if (chapter == null) return NotFound("not found chapter comic");
 
             var images = _uow.ChapterPhotoRepository.GetAll().Where(x => x.ChapterId == chapter.Id).OrderBy(x => x.Rank).Select(x => x.Url).ToList();
@@ -38,7 +39,7 @@ namespace API.Controllers
         [HttpGet("comic-info")]
         public async Task<ActionResult<ComicInfoForComicChapterDto>> GetComicInfo([FromQuery] int comicId, [FromQuery] string email)
         {
-            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == comicId && x.Status);
+            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == comicId && x.Status && x.ApprovalStatus == ApprovalStatusComic.Accept);
             if (comic == null) return NotFound("not found comic");
 
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == email);
@@ -57,10 +58,10 @@ namespace API.Controllers
         [HttpGet("chapter-info")]
         public async Task<ActionResult<ChapterInfoForComicChapterDto>> GetChapterInfo([FromQuery] int comicId, [FromQuery] int chapterId, [FromQuery] string email)
         {
-            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == comicId && x.Status);
+            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == comicId && x.Status && x.ApprovalStatus == ApprovalStatusComic.Accept);
             if (comic == null) return NotFound("not found comic");
 
-            var chapter = await _uow.ChapterRepository.GetAll().FirstOrDefaultAsync(x => x.ComicId == comic.Id && x.Id == chapterId && x.Status);
+            var chapter = await _uow.ChapterRepository.GetAll().FirstOrDefaultAsync(x => x.ComicId == comic.Id && x.Id == chapterId && x.Status && x.ApprovalStatus == ApprovalStatusChapter.Accept);
             if (chapter == null) return NotFound("not found chapter comic");
 
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == email);
@@ -77,12 +78,12 @@ namespace API.Controllers
         [HttpGet("list-chapter-comic")]
         public async Task<ActionResult<List<ChapterInfoForComicChapterDto>>> GetListChapterComic([FromQuery] int comicId, [FromQuery] string email)
         {
-            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == comicId && x.Status);
+            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == comicId && x.Status && x.ApprovalStatus == ApprovalStatusComic.Accept);
             if (comic == null) return NotFound("not found comic");
 
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == email);
 
-            var result = (from x in _uow.ChapterRepository.GetAll().Where(y => y.ComicId == comic.Id && y.Status)
+            var result = (from x in _uow.ChapterRepository.GetAll().Where(y => y.ComicId == comic.Id && y.Status && y.ApprovalStatus == ApprovalStatusChapter.Accept)
                           select new ChapterInfoForComicChapterDto
                           {
                               Id = x.Id,
@@ -101,10 +102,10 @@ namespace API.Controllers
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == User.GetUserId());
             if (user == null) return Unauthorized("not found user");
 
-            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == comicId && x.Status);
+            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == comicId && x.Status && x.ApprovalStatus == ApprovalStatusComic.Accept);
             if (comic == null) return NotFound("not found comic");
 
-            var chapter = await _uow.ChapterRepository.GetAll().FirstOrDefaultAsync(x => x.Id == chapterId && x.Status && x.ComicId == comic.Id);
+            var chapter = await _uow.ChapterRepository.GetAll().FirstOrDefaultAsync(x => x.Id == chapterId && x.Status && x.ComicId == comic.Id && x.ApprovalStatus == ApprovalStatusChapter.Accept);
             if (chapter == null) return NotFound("not found chapter");
 
             var find = await _uow.ChapterHasReadedRepository.GetAll().FirstOrDefaultAsync(x => x.UserId == user.Id && x.ChapterId == chapter.Id);
@@ -131,7 +132,7 @@ namespace API.Controllers
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == User.GetUserId());
             if (user == null) return Unauthorized("you need login");
 
-            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == comicId);
+            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == comicId && x.ApprovalStatus == ApprovalStatusComic.Accept);
             if (comic == null) return NotFound("not found comic");
 
             var check = await _uow.ComicFollowRepository.GetAll().FirstOrDefaultAsync(x => x.ComicFollowedId == comic.Id && x.UserFollowedId == user.Id);
@@ -158,7 +159,7 @@ namespace API.Controllers
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == User.GetUserId());
             if (user == null) return Unauthorized("you need login");
 
-            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == comicId);
+            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == comicId && x.ApprovalStatus == ApprovalStatusComic.Accept);
             if (comic == null) return NotFound("not found comic");
 
             var comicFollow = await _uow.ComicFollowRepository.GetAll().FirstOrDefaultAsync(x => x.ComicFollowedId == comic.Id && x.UserFollowedId == user.Id);
@@ -175,10 +176,10 @@ namespace API.Controllers
         [HttpPost("report-error-chapter")]
         public async Task<ActionResult> GetReportError(ReportErrorChapterDto dto)
         {
-            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == dto.ComicId && x.Status);
+            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == dto.ComicId && x.Status && x.ApprovalStatus == ApprovalStatusComic.Accept);
             if (comic == null) return NotFound("Not found comic");
 
-            var chapter = await _uow.ChapterRepository.GetAll().FirstOrDefaultAsync(x => x.Id == dto.ChapterId && x.ComicId == comic.Id && x.Status);
+            var chapter = await _uow.ChapterRepository.GetAll().FirstOrDefaultAsync(x => x.Id == dto.ChapterId && x.ComicId == comic.Id && x.Status && x.ApprovalStatus == ApprovalStatusChapter.Accept);
             if (chapter == null) return NotFound("Not found comic");
 
             ReportErrorChapter newReport = new ReportErrorChapter()

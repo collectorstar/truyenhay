@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MimeKit.Encodings;
 using Newtonsoft.Json;
 
 namespace API.Controllers
@@ -90,13 +91,13 @@ namespace API.Controllers
 
             if (dto.Id != null)
             {
-                var find = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == dto.Id);
+                var find = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == dto.Id && x.ApprovalStatus == ApprovalStatusComic.Accept);
                 if (find == null)
                 {
                     _uow.RollbackTransaction();
                     return BadRequest("Data not found");
                 }
-                var check = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id != dto.Id && x.Name == dto.Name);
+                var check = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id != dto.Id && x.Name == dto.Name && x.ApprovalStatus == ApprovalStatusComic.Accept);
                 if (check != null)
                 {
                     _uow.RollbackTransaction();
@@ -112,69 +113,6 @@ namespace API.Controllers
                 {
                     _uow.RollbackTransaction();
                     return BadRequest("fail to update comic");
-                }
-
-                if (dto.File != null)
-                {
-                    //fin old image comic
-                    var findPhotoComic = await _uow.PhotoComicRepository.GetAll().FirstOrDefaultAsync(x => x.CommicId == find.Id);
-                    if (findPhotoComic == null)
-                    {
-                        _uow.RollbackTransaction();
-                        return BadRequest("Fail to find old Image Comic");
-                    }
-                    //save temp old image comic publicid
-                    var photoComicPublicId = findPhotoComic.PublicId;
-
-                    //upload new image comic
-                    var resultUpload = await _photoService.UploadImageComic(dto.File);
-
-                    if (resultUpload.Error != null)
-                    {
-                        _uow.RollbackTransaction();
-                        return BadRequest(resultUpload.Error.Message);
-                    }
-
-                    //create new entity photocomic
-                    var photoComicNew = new PhotoComic
-                    {
-                        Url = resultUpload.SecureUrl.AbsoluteUri,
-                        PublicId = resultUpload.PublicId,
-                        CommicId = find.Id,
-                    };
-
-                    await _uow.PhotoComicRepository.Add(photoComicNew);
-
-                    if (!await _uow.Complete())
-                    {
-                        await _photoService.DeletePhotoAsync(photoComicNew.PublicId);
-                        _uow.RollbackTransaction();
-                        return BadRequest("Fail to Add new Image");
-                    }
-
-                    _uow.PhotoComicRepository.Delete(findPhotoComic);
-
-                    if (!await _uow.Complete())
-                    {
-                        _uow.RollbackTransaction();
-                        return BadRequest("fail to delete photoComic");
-                    }
-
-                    //delete old photo comic
-                    var deletePhotoComicOld = await _photoService.DeletePhotoAsync(photoComicPublicId);
-
-                    if (deletePhotoComicOld.Error != null)
-                    {
-                        await _photoService.DeletePhotoAsync(photoComicNew.PublicId);
-                        _uow.RollbackTransaction();
-                        return BadRequest(deletePhotoComicOld.Error.Message);
-                    }
-
-                    find.PhotoComicId = photoComicNew.Id;
-                    find.MainImage = photoComicNew.Url;
-
-                    if (!await _uow.Complete()) return BadRequest("Fail to update image");
-
                 }
 
                 #region update genrecomic
@@ -214,6 +152,70 @@ namespace API.Controllers
                 }
                 #endregion
 
+                if (dto.File != null)
+                {
+                    //fin old image comic
+                    var findPhotoComic = await _uow.PhotoComicRepository.GetAll().FirstOrDefaultAsync(x => x.ComicId == find.Id);
+                    if (findPhotoComic == null)
+                    {
+                        _uow.RollbackTransaction();
+                        return BadRequest("Fail to find old Image Comic");
+                    }
+                    //save temp old image comic publicid
+                    var photoComicPublicId = findPhotoComic.PublicId;
+
+                    //upload new image comic
+                    var resultUpload = await _photoService.UploadImageComic(dto.File);
+
+                    if (resultUpload.Error != null)
+                    {
+                        _uow.RollbackTransaction();
+                        return BadRequest(resultUpload.Error.Message);
+                    }
+
+                    //create new entity photocomic
+                    var photoComicNew = new PhotoComic
+                    {
+                        Url = resultUpload.SecureUrl.AbsoluteUri,
+                        PublicId = resultUpload.PublicId,
+                        ComicId = find.Id,
+                    };
+
+                    await _uow.PhotoComicRepository.Add(photoComicNew);
+
+                    if (!await _uow.Complete())
+                    {
+                        await _photoService.DeletePhotoAsync(photoComicNew.PublicId);
+                        _uow.RollbackTransaction();
+                        return BadRequest("Fail to Add new Image");
+                    }
+
+                    _uow.PhotoComicRepository.Delete(findPhotoComic);
+
+                    if (!await _uow.Complete())
+                    {
+                        await _photoService.DeletePhotoAsync(photoComicNew.PublicId);
+                        _uow.RollbackTransaction();
+                        return BadRequest("fail to delete photoComic");
+                    }
+
+                    //delete old photo comic
+                    var deletePhotoComicOld = await _photoService.DeletePhotoAsync(photoComicPublicId);
+
+                    if (deletePhotoComicOld.Error != null)
+                    {
+                        await _photoService.DeletePhotoAsync(photoComicNew.PublicId);
+                        _uow.RollbackTransaction();
+                        return BadRequest(deletePhotoComicOld.Error.Message);
+                    }
+
+                    find.PhotoComicId = photoComicNew.Id;
+                    find.MainImage = photoComicNew.Url;
+
+                    if (!await _uow.Complete()) return BadRequest("Fail to update image");
+
+                }
+
                 _uow.CommitTransaction();
                 return Ok(new { message = "Update Commic Success" });
 
@@ -226,7 +228,7 @@ namespace API.Controllers
                     return BadRequest("File image is empty");
                 }
 
-                var check = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Name == dto.Name);
+                var check = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Name == dto.Name && x.ApprovalStatus == ApprovalStatusComic.Accept);
 
                 if (check != null)
                 {
@@ -265,7 +267,8 @@ namespace API.Controllers
                     MainImage = photoComicNew.Url,
                     PhotoComicId = photoComicNew.Id,
                     AuthorId = user.Id,
-                    CreationTime = DateTime.Now
+                    CreationTime = DateTime.Now,
+                    ApprovalStatus = ApprovalStatusComic.Waiting
                 };
 
                 await _uow.ComicRepository.Add(newComic);
@@ -277,7 +280,7 @@ namespace API.Controllers
                     return BadRequest("Fail to add Comic");
                 }
 
-                photoComicNew.CommicId = newComic.Id;
+                photoComicNew.ComicId = newComic.Id;
 
                 var listCreateGenreComic = (from x in listGenre
                                             select new ComicGenre
@@ -300,7 +303,6 @@ namespace API.Controllers
             }
         }
 
-
         [HttpDelete]
         public async Task<ActionResult> DeleteComic([FromQuery] int ComicId)
         {
@@ -312,7 +314,7 @@ namespace API.Controllers
                 return Unauthorized("Not found user");
             }
 
-            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == ComicId && x.AuthorId == user.Id);
+            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == ComicId && x.AuthorId == user.Id && x.ApprovalStatus == ApprovalStatusComic.Accept);
             if (comic == null)
             {
                 _uow.RollbackTransaction();
@@ -340,8 +342,8 @@ namespace API.Controllers
             if (chapters.Any())
             {
                 #region delete hasreaded comic
-                var hasReadeds = (from x in _uow.ChapterHasReadedRepository.GetAll()
-                                  join y in chapters on x.ChapterId equals y.Id
+                var hasReadeds = (from y in chapters
+                                  join x in _uow.ChapterHasReadedRepository.GetAll() on y.Id equals x.ChapterId
                                   select x).ToList();
                 _uow.ChapterHasReadedRepository.DeleteRange(hasReadeds);
                 if (!await _uow.Complete())
@@ -380,7 +382,7 @@ namespace API.Controllers
             #endregion
 
             #region delete image comic
-            var imageComic = await _uow.PhotoComicRepository.GetAll().FirstOrDefaultAsync(x => x.CommicId == comic.Id);
+            var imageComic = await _uow.PhotoComicRepository.GetAll().FirstOrDefaultAsync(x => x.ComicId == comic.Id);
             if (imageComic == null)
             {
                 _uow.RollbackTransaction();
@@ -446,11 +448,10 @@ namespace API.Controllers
             }
 
             photoPublicids.Add(imageComicPublicId);
-            var resultDeleteChapterPhotos = await _photoService.DeleteListPhotoAsync(photoPublicids);
-            if (resultDeleteChapterPhotos.Error != null)
+            for (var i = 0; i < photoPublicids.Count; i += 100)
             {
-                _uow.RollbackTransaction();
-                return BadRequest(resultDeleteChapterPhotos.Error.Message);
+                var batch = photoPublicids.Skip(i).Take(100).ToList();
+                var resultDelete = await _photoService.DeleteListPhotoAsync(batch);
             }
 
             _uow.CommitTransaction();
@@ -472,6 +473,7 @@ namespace API.Controllers
                            MainImage = x.MainImage,
                            Rate = x.Rate,
                            NOReviews = x.NOReviews,
+                           ApprovalStatus = x.ApprovalStatus,
                            NewestChapter = _uow.ChapterRepository.GetAll().Where(z => z.ComicId == x.Id).OrderByDescending(x => x.Id).First().Name ?? "",
                            TotalChapter = _uow.ChapterRepository.GetAll().Where(z => z.ComicId == x.Id).Count(),
                            SelectedGenres = (from y in _uow.ComicGenreRepository.GetAll().Where(y => y.ComicId == x.Id)
@@ -494,7 +496,7 @@ namespace API.Controllers
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == User.GetUserId());
             if (user == null) return Unauthorized("Not found User");
 
-            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.AuthorId == user.Id && x.Id == ComicId);
+            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.AuthorId == user.Id && x.Id == ComicId && x.ApprovalStatus == ApprovalStatusComic.Accept);
             if (comic == null) return NotFound();
 
             var result = new ComicDetailForListChapterDto()
@@ -509,6 +511,7 @@ namespace API.Controllers
                                 CreationTime = x.CreationTime,
                                 UpdateTime = x.UpdateTime,
                                 Status = x.Status,
+                                ApprovalStatus = x.ApprovalStatus,
                                 View = _uow.ChapterHasReadedRepository.GetAll().Where(z => z.ChapterId == x.Id).Count()
                             }).ToList(),
             };
@@ -527,7 +530,7 @@ namespace API.Controllers
                 return Unauthorized("Not found User");
             }
 
-            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == dto.ComicId && x.AuthorId == User.GetUserId());
+            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == dto.ComicId && x.AuthorId == User.GetUserId() && x.ApprovalStatus == ApprovalStatusComic.Accept);
             if (comic == null)
             {
                 _uow.RollbackTransaction();
@@ -537,11 +540,11 @@ namespace API.Controllers
 
             if (dto.Id != null)
             {
-                var chapter = await _uow.ChapterRepository.GetAll().FirstOrDefaultAsync(x => x.Id == dto.Id);
+                var chapter = await _uow.ChapterRepository.GetAll().FirstOrDefaultAsync(x => x.Id == dto.Id && x.ApprovalStatus == ApprovalStatusChapter.Accept);
                 if (chapter == null)
                 {
                     _uow.RollbackTransaction();
-                    return NotFound("Can't find this chapter");
+                    return BadRequest("Can't find this chapter");
                 }
 
                 chapter.Name = dto.Name;
@@ -556,10 +559,26 @@ namespace API.Controllers
 
                 if (dto.Files != null && dto.Files.Any())
                 {
+                    if (dto.Files.Count > 120)
+                    {
+                        _uow.RollbackTransaction();
+                        return BadRequest("Max 120 photos");
+                    }
                     foreach (var file in dto.Files)
                     {
                         var rank = 0;
-                        if (!int.TryParse(file.FileName.Split('.')[0], out rank)) return BadRequest("Filename is invalid");
+                        if (!int.TryParse(file.FileName.Split('.')[0], out rank))
+                        {
+                            _uow.RollbackTransaction();
+                            return BadRequest("Filename is invalid");
+                        }
+                    }
+
+                    chapter.ApprovalStatus = ApprovalStatusChapter.Waiting;
+                    if (!await _uow.Complete())
+                    {
+                        _uow.RollbackTransaction();
+                        return BadRequest("fail to set approval status");
                     }
 
                     #region get old images need delete
@@ -568,10 +587,15 @@ namespace API.Controllers
                     #endregion
 
                     #region upload and save image chapter, then delete old images
+                    var newImageFile = new List<string>();
                     foreach (var file in dto.Files)
                     {
                         var rank = 0;
-                        if (!int.TryParse(file.FileName.Split('.')[0], out rank)) return BadRequest("Filename is invalid");
+                        if (!int.TryParse(file.FileName.Split('.')[0], out rank))
+                        {
+                            _uow.RollbackTransaction();
+                            return BadRequest("Filename is invalid");
+                        }
                         var resultUpload = await _photoService.UploadImageChapter(file);
                         if (resultUpload.Error != null)
                         {
@@ -587,10 +611,16 @@ namespace API.Controllers
                             Rank = rank
                         };
 
+                        newImageFile.Add(resultUpload.PublicId);
+
                         await _uow.ChapterPhotoRepository.Add(chapterPhoto);
                         if (!await _uow.Complete())
                         {
-                            await _photoService.DeletePhotoAsync(chapterPhoto.PublicId);
+                            for (var i = 0; i < newImageFile.Count; i += 100)
+                            {
+                                var batch = newImageFile.Skip(i).Take(100).ToList();
+                                var resultDelete = await _photoService.DeleteListPhotoAsync(batch);
+                            }
                             _uow.RollbackTransaction();
                             return BadRequest("Fail to save image photo");
                         }
@@ -602,14 +632,18 @@ namespace API.Controllers
                         _uow.ChapterPhotoRepository.DeleteRange(oldChapterPhotos);
                         if (!await _uow.Complete())
                         {
+                            for (var i = 0; i < newImageFile.Count; i += 100)
+                            {
+                                var batch = newImageFile.Skip(i).Take(100).ToList();
+                                var resultDelete = await _photoService.DeleteListPhotoAsync(batch);
+                            }
                             _uow.RollbackTransaction();
                             return BadRequest("Fail to remove old image data");
                         }
-                        var resultDeletes = await _photoService.DeleteListPhotoAsync(oldImagePublicIds);
-                        if (resultDeletes.Error != null)
+                        for (var i = 0; i < oldImagePublicIds.Count; i += 100)
                         {
-                            _uow.RollbackTransaction();
-                            return BadRequest(resultDeletes.Error.Message);
+                            var batch = oldImagePublicIds.Skip(i).Take(100).ToList();
+                            var resultDelete = await _photoService.DeleteListPhotoAsync(batch);
                         }
                     }
                     #endregion
@@ -628,6 +662,12 @@ namespace API.Controllers
                     return BadRequest("Files empty!");
                 }
 
+                if (dto.Files.Count > 120)
+                {
+                    _uow.RollbackTransaction();
+                    return BadRequest("Max 120 photos");
+                }
+
                 var chapter = new Chapter()
                 {
                     Name = dto.Name,
@@ -642,6 +682,8 @@ namespace API.Controllers
                     _uow.RollbackTransaction();
                     return BadRequest("Fail to create chapter");
                 }
+
+                var listNew = new List<string>();
 
                 #region upload image and save
                 foreach (var file in dto.Files)
@@ -659,6 +701,8 @@ namespace API.Controllers
                         return BadRequest("Fail in upload image process!");
                     }
 
+                    listNew.Add(resultUpload.PublicId);
+
                     var chapterPhoto = new ChapterPhoto()
                     {
                         Url = resultUpload.SecureUrl.AbsoluteUri,
@@ -670,7 +714,11 @@ namespace API.Controllers
                     await _uow.ChapterPhotoRepository.Add(chapterPhoto);
                     if (!await _uow.Complete())
                     {
-                        var resultDeleteTemp = await _photoService.DeletePhotoAsync(chapterPhoto.PublicId);
+                        for (var i = 0; i < listNew.Count; i += 100)
+                        {
+                            var batch = listNew.Skip(i).Take(100).ToList();
+                            var resultDelete = await _photoService.DeleteListPhotoAsync(batch);
+                        }
                         _uow.RollbackTransaction();
                         return BadRequest("Fail to save image photo");
                     }
@@ -690,7 +738,7 @@ namespace API.Controllers
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == User.GetUserId());
             if (user == null) return Unauthorized("Not found User");
 
-            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == comicId && x.AuthorId == User.GetUserId());
+            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == comicId && x.AuthorId == User.GetUserId() && x.ApprovalStatus == ApprovalStatusComic.Accept);
             if (comic == null) return BadRequest("Request invalid, please reload again");
 
             var chapter = await _uow.ChapterRepository.GetAll().FirstOrDefaultAsync(x => x.Id == ChapterId);
@@ -711,22 +759,15 @@ namespace API.Controllers
 
             #region delete chapterPhoto
             var chapterPhotos = await _uow.ChapterPhotoRepository.GetAll().Where(x => x.ChapterId == chapter.Id).ToListAsync();
-
+            var listPhoto = new List<string>();
             if (chapterPhotos.Any())
             {
-                var listid = chapterPhotos.Select(x => x.PublicId).ToList();
+                listPhoto = chapterPhotos.Select(x => x.PublicId).ToList();
                 _uow.ChapterPhotoRepository.DeleteRange(chapterPhotos);
                 if (!await _uow.Complete())
                 {
                     _uow.RollbackTransaction();
                     return BadRequest("Fail to delete image data");
-                }
-
-                var resultDeletePhotos = await _photoService.DeleteListPhotoAsync(listid);
-                if (resultDeletePhotos.Error != null)
-                {
-                    _uow.RollbackTransaction();
-                    return BadRequest("Fail to delete Image from Source");
                 }
             }
 
@@ -739,20 +780,50 @@ namespace API.Controllers
                 return BadRequest("fail to update time comic");
             }
 
+            #region delete report error chapter
+            var chapterReports = await _uow.ReportErrorChapterRepository.GetAll().Where(x => x.ChapterId == chapter.Id).ToListAsync();
+            if (chapterReports.Any())
+            {
+                _uow.ReportErrorChapterRepository.DeleteRange(chapterReports);
+                if (!await _uow.Complete())
+                {
+                    _uow.RollbackTransaction();
+                    return BadRequest("fail to delete report error chapter");
+                }
+            }
+
+            #endregion
             _uow.ChapterRepository.Delete(chapter);
             if (!await _uow.Complete())
             {
                 _uow.RollbackTransaction();
                 return BadRequest("Fail to delete chapter");
             }
+
+            for (var i = 0; i < listPhoto.Count; i += 100)
+            {
+                var batch = listPhoto.Skip(i).Take(100).ToList();
+                var resultDelete = await _photoService.DeleteListPhotoAsync(batch);
+            }
+
             return Ok(new { message = "Delete chapter success!" });
+        }
+
+        [HttpGet("check-valid-create-comic")]
+        public async Task<ActionResult> CheckValidCreateComic()
+        {
+            var author = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == User.GetUserId());
+            if (author == null) return Unauthorized();
+            var totalComic = await _uow.ComicRepository.GetAll().Where(x => x.AuthorId == author.Id).CountAsync();
+            if (totalComic >= author.MaxComic) return BadRequest("Please request increase max comic create");
+            return Ok();
         }
 
         [HttpGet("get-all-report-chapters")]
         public async Task<ActionResult<PagedList<ReportErrorChapterForAuthorDto>>> GetAllReportChapter([FromQuery] ReportChapterParam dto)
         {
             var list = from x in _uow.ReportErrorChapterRepository.GetAll().Where(rec => (dto.IsOnlyInprocessing && !rec.Status) || !dto.IsOnlyInprocessing)
-                       join y in _uow.ComicRepository.GetAll().Where(comic => comic.AuthorId == User.GetUserId()) on x.ComicId equals y.Id
+                       join y in _uow.ComicRepository.GetAll().Where(comic => comic.AuthorId == User.GetUserId() && comic.ApprovalStatus == ApprovalStatusComic.Accept) on x.ComicId equals y.Id
                        join z in _uow.ChapterRepository.GetAll() on new { comicId = y.Id, chapterId = x.ChapterId } equals new { comicId = z.ComicId, chapterId = z.Id }
                        select new ReportErrorChapterForAuthorDto
                        {
@@ -783,6 +854,50 @@ namespace API.Controllers
             listReportChapter.ForEach(x => x.Status = true);
             if (!await _uow.Complete()) return BadRequest("fail to mark done this report error!");
             return Ok();
+        }
+
+        [HttpPost("request-inc-max-comic")]
+        public async Task<ActionResult> RequestIncMaxComicAction(CreateRequestIncMaxComicDto dto)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == User.GetUserId() && x.IsAuthor);
+            if (user == null) return Unauthorized("not found user");
+
+            var check = await _uow.RequestIncMaxComicRepository.GetAll().FirstOrDefaultAsync(x => x.UserId == user.Id && x.Status == RequestIncMaxComicStatus.Waiting);
+            if (check != null) return BadRequest("You already has sent");
+
+            RequestIncMaxComic req = new RequestIncMaxComic();
+            req.UserId = user.Id;
+            req.Quantity = dto.Quantity;
+            req.Request = dto.Request;
+            req.Status = RequestIncMaxComicStatus.Waiting;
+            req.CreationTime = DateTime.Now;
+
+            await _uow.RequestIncMaxComicRepository.Add(req);
+            if (!await _uow.Complete()) return BadRequest("fail to send request");
+
+            return Ok();
+        }
+
+        [HttpGet("check-valid-req-inc-comic")]
+        public async Task<ActionResult> CheckValidReqIncComic()
+        {
+            var author = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == User.GetUserId());
+            if (author == null) return Unauthorized();
+            var check = await _uow.RequestIncMaxComicRepository.GetAll().Where(x => x.UserId == author.Id && x.Status == RequestIncMaxComicStatus.Waiting).FirstOrDefaultAsync();
+            if (check != null) return BadRequest("You have already sent your request");
+            return Ok();
+        }
+
+        [HttpGet("check-valid-create-chapter")]
+        public async Task<ActionResult> CheckValidCreateChapter([FromQuery] int comicId)
+        {
+            var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.AuthorId == User.GetUserId() && x.Id == comicId && x.ApprovalStatus == ApprovalStatusComic.Accept);
+            if (comic == null) return NotFound("not found comic");
+            var check = await _uow.ChapterRepository.GetAll().FirstOrDefaultAsync(x => x.ComicId == comic.Id && x.ApprovalStatus == ApprovalStatusChapter.Waiting);
+            if (check != null) return BadRequest("You has a chapter waiting");
+
+            return Ok();
+
         }
     }
 }

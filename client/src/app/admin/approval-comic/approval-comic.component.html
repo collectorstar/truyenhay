@@ -1,0 +1,85 @@
+<h1>Approval Comic Request List</h1>
+
+<div class="boxsearch mt-1 mb-2">
+  <span>Search:</span>
+  <input
+    class="name-search"
+    type="text"
+    [(ngModel)]="nameSearch"
+    placeholder="Name comic"
+  />
+  <div class="form-check is-only-in-processing">
+    <input
+      class="form-check-input"
+      [(ngModel)]="hideAcceptComic"
+      type="checkbox"
+      id="flexCheckDefault"
+    />
+    <label class="form-check-label" for="flexCheckDefault">
+      Hide Accept Comic
+    </label>
+  </div>
+
+  <button class="btn btn-success" (click)="getAll()">Search</button>
+</div>
+
+<simple-ag-grid
+  [columnDefs]="columnDefs"
+  [rowData]="rowData"
+  [defaultColDef]="defaultColDef"
+  (callBackGrid)="onGridReady()"
+  (rowClicked)="selectedRowClicked($event)"
+  (changePage)="changePage($event)"
+  [pagination]="true"
+  [paginationParams]="paginationParams"
+></simple-ag-grid>
+
+<div class="action">
+  <div class="action-item">
+    <button class="btn btn-info" (click)="info()" [disabled]="!selectedRow">
+      <i class="fa-solid fa-circle-info"></i> Info
+    </button>
+  </div>
+  <div class="action-item">
+    <button
+      (click)="accept()"
+      class="btn btn-outline-success"
+      [disabled]="
+        !selectedRow || (selectedRow && selectedRow.approvalStatus == 1)
+      "
+    >
+      <i class="fa-solid fa-check"></i> Accept
+    </button>
+  </div>
+  <div class="action-item">
+    <button
+      class="btn btn-outline-danger"
+      (click)="deny()"
+      [disabled]="
+        !selectedRow ||
+        (selectedRow &&
+          (selectedRow.approvalStatus == 2 || selectedRow.approvalStatus == 1))
+      "
+    >
+      <i class="fa fa-xmark"></i> Deny
+    </button>
+  </div>
+  <div class="action-item">
+    <button
+      class="btn btn-outline-primary"
+      (click)="delete()"
+      [disabled]="
+        !selectedRow ||
+        (selectedRow &&
+          (selectedRow.approvalStatus == 0 || selectedRow.approvalStatus == 1))
+      "
+    >
+      <i class="fa fa-trash"></i> Delete
+    </button>
+  </div>
+  <div class="action-item">
+    <button class="btn btn-outline-primary" (click)="deleteAll()">
+      <i class="fa fa-trash"></i> Delete All Deny
+    </button>
+  </div>
+</div>

@@ -74,6 +74,22 @@ export class ListChapterComponent implements OnInit {
     });
   }
 
+  checkValidCreateChapter() {
+    this.busyService.busy();
+    this.uploadComicService
+      .checkValidCreateChapter(this.comic.id)
+      .pipe(
+        finalize(() => {
+          this.busyService.idle();
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.openModal(true);
+        },
+      });
+  }
+
   deleteChapter(chapterId: number) {
     this.confirmService
       .confirm(
@@ -90,6 +106,7 @@ export class ListChapterComponent implements OnInit {
               .deleteChapter(this.comic.id, chapterId)
               .pipe(
                 finalize(() => {
+                  this.busyService.idle();
                   this.getAll();
                 })
               )

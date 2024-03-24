@@ -1,0 +1,44 @@
+<div>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Increase Max Comic</h4>
+    <button
+      type="button"
+      class="btn-close close pull-right"
+      aria-label="Close"
+      (click)="bsModalRef.hide()"
+    >
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="container">
+      <div class="quantity-inc">
+        <label for="quantity">Quantity comic inc: </label>
+        <input
+          type="number"
+          name="quantity"
+          id="quantity"
+          min="1"
+          max="100"
+          [(ngModel)]="quantity"
+        />
+      </div>
+      <div class="form-floating">
+        <textarea
+        [(ngModel)]="request"
+          class="form-control"
+          placeholder="Leave a comment here"
+          id="floatingTextarea2"
+          style="height: 100px"
+        ></textarea>
+        <label style="max-width: 100%" for="floatingTextarea2"
+          >Briefly describe your intentions and requirements</label
+        >
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-success" (click)="save()">Save</button>
+    <button class="btn btn-danger" (click)="bsModalRef.hide()">Cancel</button>
+  </div>
+</div>

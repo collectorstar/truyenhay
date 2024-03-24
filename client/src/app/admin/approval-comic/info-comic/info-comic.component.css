@@ -1,0 +1,12 @@
+.comic-container {
+  max-height: 60vh;
+  overflow-y: scroll;
+  margin: 10px 0;
+}
+
+.comic-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0;
+}

@@ -100,16 +100,20 @@ export class CreateOrEditChapterComponent implements OnInit {
     }
 
     if (
-      selectedListfile.findIndex((x) =>
-        ! IsNumericFileName(x.name.split('.')[0])
+      selectedListfile.findIndex(
+        (x) => !IsNumericFileName(x.name.split('.')[0])
       ) != -1
     ) {
       this.toastr.error('The file name must be an integer!');
       return;
     }
 
+    if (selectedListfile.length > 120) {
+      this.toastr.error('max 120 image');
+      return;
+    }
+
     this.selectedFiles = selectedListfile;
     this.textFile = ' selected ' + this.selectedFiles?.length + ' photos';
-
   }
 }
