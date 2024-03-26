@@ -18,6 +18,7 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
 import { RequestIncMaxComicComponent } from './request-inc-max-comic/request-inc-max-comic.component';
 import { ApprovalChapterComponent } from './approval-chapter/approval-chapter.component';
 import { InfoChapterComponent } from './approval-chapter/info-chapter/info-chapter.component';
+import { ComicHotComponent } from './comic-hot/comic-hot.component';
 
 
 @NgModule({
@@ -32,6 +33,7 @@ import { InfoChapterComponent } from './approval-chapter/info-chapter/info-chapt
     RequestIncMaxComicComponent,
     ApprovalChapterComponent,
     InfoChapterComponent,
+    ComicHotComponent,
   ],
   imports: [
     FormsModule,

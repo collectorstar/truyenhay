@@ -33,7 +33,7 @@ export class RecommendComicsService {
 
   getListComicRecommend() {
     return this.http.get<ComicForIsRecommend[]>(
-      this.baseUrl + 'carosel/list-commic-recommend'
+      this.baseUrl + 'carosel/list-comic-recommend'
     );
   }
 }

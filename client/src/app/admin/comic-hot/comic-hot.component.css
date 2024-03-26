@@ -1,0 +1,30 @@
+.boxsearch {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    .name-search {
+      width: 300px;
+      margin: 0 10px;
+      padding: 5px;
+      border-radius: 10px;
+    }
+
+    .is-only-in-processing {
+      width: 300px;
+      margin: 0 10px;
+    }
+  }
+
+.action {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 10px;
+
+  .action-item {
+    margin: 0 5px;
+  }
+}

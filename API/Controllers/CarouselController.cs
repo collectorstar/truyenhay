@@ -80,8 +80,8 @@ namespace API.Controllers
         }
 
         [Authorize(Policy = "RequireAdminRole")]
-        [HttpGet("list-commic-recommend")]
-        public async Task<List<ComicForIsRecommend>> ListCommicRecommend()
+        [HttpGet("list-comic-recommend")]
+        public async Task<List<ComicForIsRecommend>> ListComicRecommend()
         {
             var result = await (from x in _uow.ComicRepository.GetAll().Where(x => x.IsRecommend && x.Status && x.ApprovalStatus == ApprovalStatusComic.Accept)
                                 select new ComicForIsRecommend
