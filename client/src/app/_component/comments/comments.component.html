@@ -1,0 +1,86 @@
+<h3 class="list-title"><i class="fa fa-comment"> </i> Comments</h3>
+<div class="form-floating mb-2">
+  <textarea
+    class="form-control"
+    placeholder="Leave a comment here"
+    id="floatingTextarea"
+    style="height: 100px"
+    [(ngModel)]="content"
+    (ngModelChange)="changeContent.emit($event)"
+  ></textarea>
+  <label for="floatingTextarea">Your Comment</label>
+</div>
+
+<div class="form-floating mb-3">
+  <input
+    type="email"
+    class="form-control"
+    id="floatingInput"
+    placeholder="Your name (required)"
+    [(ngModel)]="name"
+    (ngModelChange)="changeName.emit($event)"
+  />
+  <label for="floatingInput">Your name (required)</label>
+</div>
+<div class="action-btn">
+  <button class="btn btn-outline-info" (click)="send()">Send</button>
+  <button class="btn btn-info" (click)="refesh()">
+    <i class="fa-solid fa-arrows-rotate"></i> Refesh
+  </button>
+</div>
+
+<div class="list-comment">
+  <div class="comment" *ngFor="let comment of comments">
+    <img
+      class="user-avatar"
+      [defaultImage]="'/assets/loading.gif'"
+      [lazyLoad]="comment.photoAvatar"
+      alt="{{ comment.name }}"
+    />
+    <div class="content">
+      <div class="info-user">
+        <span>{{ comment.name }}</span>
+        <span *ngIf="comment.chapterId != -1"
+          ><a
+          class="chapter-name"
+            (click)="
+              router.navigateByUrl(
+                '/comic-detail/' +
+                  comment.comicName.replaceAll(' ', '-') +
+                  '/' +
+                  comment.comicId +
+                  '/' +
+                  comment.name.replaceAll(' ', '-') +
+                  '/' +
+                  comment.chapterId
+              )
+            "
+          >
+            - {{ comment.chapterName }}</a
+          ></span
+        >
+        <span> - {{ comment.creationTime | timeago }}</span>
+      </div>
+      <span>{{ comment.content }}</span>
+    </div>
+  </div>
+</div>
+
+<div class="paginator">
+  <div
+    id="paginate-comment"
+    *ngIf="paginationParams.totalPages > 1"
+    style="margin-top: 20px"
+  >
+    <p-paginator
+      locale="en-US"
+      (onPageChange)="paginationChange($event)"
+      [first]="
+        (paginationParams.currentPage - 1) * paginationParams.itemsPerPage
+      "
+      [rows]="paginationParams.itemsPerPage"
+      [totalRecords]="paginationParams.totalItems"
+      [showCurrentPageReport]="false"
+    ></p-paginator>
+  </div>
+</div>

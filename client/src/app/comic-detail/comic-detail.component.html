@@ -28,7 +28,7 @@
           </a>
         </p>
       </div>
-      <div class="d-flex align-items-top gap-2 comic-watcher">
+      <div class="d-flex align-items-top gap-2">
         <p class="d-flex gap-2 pt-1">
           <i style="line-height: 1" class="fa-solid fa-heart"></i
           ><span style="line-height: 1"> Total Follow:</span>
@@ -37,7 +37,16 @@
           convertToK(comic.noFollows)
         }}</span>
       </div>
-      <div class="d-flex align-items-top gap-2 comic-watcher">
+      <div class="d-flex align-items-top gap-2">
+        <p class="d-flex gap-2 pt-1">
+          <i style="line-height: 1" class="fa-solid fa-heart"></i
+          ><span style="line-height: 1"> Total Comments:</span>
+        </p>
+        <span class="text-decoration-none">{{
+          convertToK(comic.noComments)
+        }}</span>
+      </div>
+      <div class="d-flex align-items-top gap-2">
         <p class="d-flex gap-2 pt-1">
           <i style="line-height: 1" class="fa-solid fa-eye"></i
           ><span style="line-height: 1"> Total Reivew:</span>
@@ -74,8 +83,12 @@
         class="comic-utility-action"
         *ngIf="comic.chapters && comic.chapters.length > 0"
       >
-        <button class="first-button" (click)="readFirst()">First Chapter</button>
-        <button class="newest-button" (click)="readNewest()">Newest Chapter</button>
+        <button class="first-button" (click)="readFirst()">
+          First Chapter
+        </button>
+        <button class="newest-button" (click)="readNewest()">
+          Newest Chapter
+        </button>
         <button class="continue-button">Read Continute ></button>
       </div>
     </div>
@@ -107,7 +120,8 @@
     <li class="chapter-item" *ngFor="let chapter of comic.chapters">
       <div class="col-5 text-left">
         <a
-          class="chapter-name" [ngClass]="chapter.hasRead ? 'has-read' : ''"
+          class="chapter-name"
+          [ngClass]="chapter.hasRead ? 'has-read' : ''"
           (click)="
             router.navigateByUrl(
               '/comic-detail/' +
@@ -134,3 +148,17 @@
     No chapters available!
   </p>
 </div>
+
+<comments
+  [user]="user"
+  [name]="nameComment"
+  [content]="contentComment"
+  [comments]="comments"
+  [paginationParams]="paginationParamsComment"
+  (changeContent)="contentComment = $event"
+  (changeName)="nameComment = $event"
+  (changePagination)="changePageComment($event)"
+  (sendEvent)="sendComment()"
+  (refeshEvent)="refeshComment()"
+>
+</comments>

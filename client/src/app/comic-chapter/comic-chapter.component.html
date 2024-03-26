@@ -103,3 +103,18 @@
     Next chapter <i class="fa-solid fa-chevron-right"></i>
   </button>
 </div>
+
+
+<comments
+  [user]="user"
+  [name]="nameComment"
+  [content]="contentComment"
+  [comments]="comments"
+  [paginationParams]="paginationParamsComment"
+  (changeContent)="contentComment = $event"
+  (changeName)="nameComment = $event"
+  (changePagination)="changePageComment($event)"
+  (sendEvent)="sendComment()"
+  (refeshEvent)="refeshComment()"
+>
+</comments>

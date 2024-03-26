@@ -41,6 +41,7 @@ namespace API.Controllers
                 MainImage = comic.MainImage,
                 Rate = comic.Rate,
                 NOReviews = comic.NOReviews,
+                NOComments = _uow.CommentRepository.GetAll().Where(x => x.ComicId == comic.Id).Count(),
                 NOFollows = _uow.ComicFollowRepository.GetAll().Where(x => x.ComicFollowedId == comic.Id).Count(),
                 AuthorId = comic.AuthorId,
                 AuthorName = _userManager.Users.First(x => x.Id == comic.AuthorId).Name,

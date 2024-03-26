@@ -7,7 +7,7 @@
             <img
               (click)="
                 router.navigateByUrl(
-                  '/comic-detail/' + data.comicName + '/' + data.id
+                  '/comic-detail/' + data.comicName.replaceAll(' ','-')+ '/' + data.id
                 )
               "
               style="max-height: 240px"

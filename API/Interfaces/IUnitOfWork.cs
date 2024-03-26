@@ -15,6 +15,7 @@ namespace API.Interfaces
         IChapterHasReadedRepository ChapterHasReadedRepository { get; }
         IReportErrorChapterRepository ReportErrorChapterRepository { get; }
         IRequestIncMaxComicRepository RequestIncMaxComicRepository { get; }
+        ICommentRepository CommentRepository { get; }
 
         Task<bool> Complete();
         bool HasChanges();

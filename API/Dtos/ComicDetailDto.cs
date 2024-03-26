@@ -10,6 +10,7 @@
         public int Rate { get; set; }
         public int NOReviews { get; set; }
         public int NOFollows { get; set; }
+        public int NOComments { get; set; }
         public int AuthorId { get; set; }
         public string AuthorName { get; set; }
         public bool IsFollow { get; set; }

@@ -11,6 +11,10 @@ import { ChapterInfoForComicChapterDto } from '../_models/chapterInfoForComicCha
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ChaptersModalComponent } from './chapters-modal/chapters-modal.component';
 import { ReportErrorModalComponent } from './report-error-modal/report-error-modal.component';
+import { GetCommentsParam } from '../_models/getCommentsParam';
+import { Pagination } from '../_models/pagination';
+import { CommentDto } from '../_models/commentDto';
+import { CommentService } from '../_services/comment.service';
 
 @Component({
   selector: 'app-comic-chapter',
@@ -32,6 +36,16 @@ export class ComicChapterComponent implements OnInit, OnDestroy {
   bsModalRefReportChapter: BsModalRef<ReportErrorModalComponent> =
     new BsModalRef<ReportErrorModalComponent>();
 
+  nameComment: string = '';
+  contentComment: string = '';
+  paginationParamsComment: Pagination = {
+    currentPage: 1,
+    itemsPerPage: 10,
+    totalItems: 3,
+    totalPages: 1,
+  };
+  comments: CommentDto[] = [];
+
   constructor(
     private busyService: BusyService,
     private toastr: ToastrService,
@@ -39,12 +53,14 @@ export class ComicChapterComponent implements OnInit, OnDestroy {
     public router: Router,
     public chapterService: ChapterService,
     private accountService: AccountService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private commentService: CommentService
   ) {
     this.accountService.currentUser$.subscribe({
       next: (res) => {
+        this.user = res;
         if (res) {
-          this.user = res;
+          this.nameComment = res.name;
         }
       },
     });
@@ -72,12 +88,21 @@ export class ComicChapterComponent implements OnInit, OnDestroy {
       chapterId
     );
 
+    let param = new GetCommentsParam();
+    param.comicId = comicId;
+    param.chapterId = chapterId;
+    param.pageNumber = this.paginationParamsComment.currentPage;
+    param.pageSize = this.paginationParamsComment.itemsPerPage;
+    param;
+    const commentRequest = this.commentService.getAllComment(param);
+
     this.busyService.busy();
     forkJoin([
       getComicInfoRequest,
       getChapterInfoRequest,
       getListChapterRequest,
       getChapterImagesRequest,
+      commentRequest
     ])
       .pipe(
         finalize(() => {
@@ -93,6 +118,11 @@ export class ComicChapterComponent implements OnInit, OnDestroy {
           this.chapter = res[1];
           this.chaptersForModal = res[2];
           this.images = res[3];
+
+          if (res[4] && res[4].pagination && res[4].result) {
+            this.comments = res[4].result;
+            this.paginationParamsComment = res[4].pagination;
+          }
         },
       });
   }
@@ -246,11 +276,14 @@ export class ComicChapterComponent implements OnInit, OnDestroy {
       class: 'modal-dialog',
       initialState: {
         chapter: this.chapter,
-        comic: this.comic
+        comic: this.comic,
       },
     };
 
-    this.bsModalRefReportChapter = this.modalService.show(ReportErrorModalComponent, config);
+    this.bsModalRefReportChapter = this.modalService.show(
+      ReportErrorModalComponent,
+      config
+    );
 
     this.bsModalRefReportChapter.onHide?.subscribe({
       next: () => {
@@ -263,8 +296,8 @@ export class ComicChapterComponent implements OnInit, OnDestroy {
   }
 
   openModelChapter() {
-    if(this.user == null){
-      this.toastr.error("Please login!");
+    if (this.user == null) {
+      this.toastr.error('Please login!');
       return;
     }
     const config = {
@@ -331,5 +364,73 @@ export class ComicChapterComponent implements OnInit, OnDestroy {
           this.comic.isFollow = false;
         },
       });
+  }
+
+  validComment(): boolean {
+    if (!this.user) {
+      this.toastr.error('you must login');
+      return false;
+    }
+    if (this.contentComment.trim() == '') {
+      this.toastr.error('comment empty');
+      return false;
+    }
+
+    if (this.nameComment.trim() == '') {
+      this.toastr.error('name empty');
+      return false;
+    }
+
+    return true;
+  }
+
+  sendComment() {
+    if (!this.validComment()) return;
+    this.busyService.busy();
+    let dto = {
+      comicId: this.comic.id,
+      chapterId: this.chapter.id,
+      name: this.nameComment,
+      content: this.contentComment,
+    };
+    this.commentService
+      .sendComment(dto)
+      .pipe(
+        finalize(() => {
+          this.busyService.idle();
+          this.contentComment = '';
+          this.getAllComment();
+        })
+      )
+      .subscribe();
+  }
+
+  refeshComment() {
+    this.getAllComment();
+  }
+
+  getAllComment() {
+    this.busyService.busy();
+    let param = new GetCommentsParam();
+    param.pageNumber = this.paginationParamsComment.currentPage;
+    param.pageSize = this.paginationParamsComment.itemsPerPage;
+    param.chapterId = this.chapter.id;
+    param.comicId = this.comic.id;
+    this.commentService
+      .getAllComment(param)
+      .pipe(finalize(() => this.busyService.idle()))
+      .subscribe({
+        next: (res) => {
+          if (res && res.pagination && res.result) {
+            this.comments = res.result;
+            this.paginationParamsComment = res.pagination;
+          }
+        },
+      });
+  }
+
+  changePageComment(event: Pagination) {
+    this.paginationParamsComment = event;
+    this.getAllComment();
   }
 }

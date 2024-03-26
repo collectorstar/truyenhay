@@ -1,0 +1,64 @@
+.list-title {
+  color: #2980b9;
+  border-bottom: 2px solid #2980b9;
+  font-weight: 300;
+  font-size: 16px;
+  text-transform: uppercase;
+  margin: 10px 0;
+  padding-bottom: 2px;
+}
+
+.action-btn{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.list-comment {
+  .comment {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 10px;
+
+    .user-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50px;
+    }
+
+    .content {
+      border: 1px solid #d8d8d8;
+      padding: 5px 10px;
+      background-color: #fffdfd;
+      border-radius: 10px;
+      flex-grow: 1;
+
+      .info-user {
+        padding-bottom: 10px;
+        border-bottom: 1px solid #d8d8d8;
+
+        .chapter-name{
+          color: #2980b9;
+          text-decoration: none;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 320px) and (max-width: 767px) {
+  :host ::ng-deep {
+    #paginate-comment {
+      .p-paginator .p-paginator-pages .p-paginator-page,
+      .p-paginator .p-paginator-next,
+      .p-paginator .p-paginator-last,
+      .p-paginator .p-paginator-prev,
+      .p-paginator .p-paginator-first {
+        min-width: 35px;
+      }
+    }
+  }
+}

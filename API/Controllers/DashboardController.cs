@@ -35,6 +35,7 @@ namespace API.Controllers
                            Rate = x.Rate,
                            NOFollows = _uow.ComicFollowRepository.GetAll().Where(y => y.ComicFollowedId == x.Id).Count(),
                            NOReviews = x.NOReviews,
+                           NOComments = _uow.CommentRepository.GetAll().Where(z => z.ComicId == x.Id).Count(),
                            Chapters = (from y in _uow.ChapterRepository.GetAll().Where(z => z.ComicId == x.Id && z.Status && z.ApprovalStatus == ApprovalStatusChapter.Accept).OrderByDescending(x => x.Id).Take(3)
                                        select new ChapterForComicNewestDto
                                        {

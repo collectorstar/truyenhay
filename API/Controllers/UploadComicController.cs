@@ -439,6 +439,18 @@ namespace API.Controllers
             }
             #endregion
 
+            #region delete comments
+            var comments = _uow.CommentRepository.GetAll().Where(x => x.ComicId == comic.Id).ToList();
+            if (comments.Any())
+            {
+                _uow.CommentRepository.DeleteRange(comments);
+                if (!await _uow.Complete())
+                {
+                    _uow.RollbackTransaction();
+                    return BadRequest("fail to delete comment");
+                }
+            }
+            #endregion
             _uow.ComicRepository.Delete(comic);
 
             if (!await _uow.Complete())
@@ -753,6 +765,19 @@ namespace API.Controllers
                 {
                     _uow.RollbackTransaction();
                     return BadRequest("Fail to delete has readed");
+                }
+            }
+            #endregion
+
+            #region  delete comments
+            var comments = _uow.CommentRepository.GetAll().Where(x => x.ComicId == comic.Id && x.ChapterId == chapter.Id).ToList();
+            if (comments.Any())
+            {
+                _uow.CommentRepository.DeleteRange(comments);
+                if (!await _uow.Complete())
+                {
+                    _uow.RollbackTransaction();
+                    return BadRequest("Fail to delete comments");
                 }
             }
             #endregion

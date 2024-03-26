@@ -45,6 +45,7 @@ import { ReportErrorModalComponent } from './comic-chapter/report-error-modal/re
 import { SelectorComponent } from './_component/selector/selector.component';
 import { SimpleAgGridComponent } from './_component/simple-ag-grid/simple-ag-grid.component';
 import { RequestIncreaseMaxComicCreateComponent } from './upload-comic/request-increase-max-comic-create/request-increase-max-comic-create.component';
+import { CommentsComponent } from './_component/comments/comments.component';
 
 @NgModule({
   declarations: [
@@ -95,7 +96,8 @@ import { RequestIncreaseMaxComicCreateComponent } from './upload-comic/request-i
     LazyLoadImageModule,
     RatingModule,
     SelectorComponent,
-    SimpleAgGridComponent
+    SimpleAgGridComponent,
+    CommentsComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

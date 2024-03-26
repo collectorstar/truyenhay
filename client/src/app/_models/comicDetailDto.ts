@@ -10,6 +10,7 @@ export interface ComicDetailDto {
   rate: number;
   noReviews: number;
   noFollows: number;
+  noComments: number;
   authorId: number;
   authorName: string;
   isFollow: boolean;

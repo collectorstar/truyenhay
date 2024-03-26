@@ -33,11 +33,12 @@ namespace API.Extensions
             services.Configure<DataProtectionTokenProviderOptions>(opt => opt.TokenLifespan = TimeSpan.FromMinutes(5));
             services.AddSignalR();
             services.AddSingleton<PresenceTracker>();
-            services.AddScoped<IRatingComicRepository,RatingComicRepository>();
-            services.AddScoped<IComicFollowRepository,ComicFollowRepository>();
-            services.AddScoped<IChapterHasReadedRepository,ChapterHasReadedRepository>();
-            services.AddScoped<IReportErrorChapterRepository,ReportErrorChapterRepository>();
-            services.AddScoped<IRequestIncMaxComicRepository,RequestIncMaxComicRepository>();
+            services.AddScoped<IRatingComicRepository, RatingComicRepository>();
+            services.AddScoped<IComicFollowRepository, ComicFollowRepository>();
+            services.AddScoped<IChapterHasReadedRepository, ChapterHasReadedRepository>();
+            services.AddScoped<IReportErrorChapterRepository, ReportErrorChapterRepository>();
+            services.AddScoped<IRequestIncMaxComicRepository, RequestIncMaxComicRepository>();
+            services.AddScoped<ICommentRepository, CommentRepository>();
             return services;
         }
     }

@@ -9,5 +9,6 @@ namespace API.Entities
 
         public int UserSentId { get; set; }
         public int ComicId { get; set; }
+        public int ChapterId { get; set; }
     }
 }

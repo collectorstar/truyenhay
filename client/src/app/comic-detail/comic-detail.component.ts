@@ -4,9 +4,13 @@ import { ComicDetailService } from '../_services/comic-detail.service';
 import { ComicDetailDto } from '../_models/comicDetailDto';
 import { BusyService } from '../_services/busy.service';
 import { ToastrService } from 'ngx-toastr';
-import { finalize } from 'rxjs';
+import { finalize, forkJoin } from 'rxjs';
 import { User } from '../_models/user';
 import { AccountService } from '../_services/account.service';
+import { Pagination } from '../_models/pagination';
+import { CommentService } from '../_services/comment.service';
+import { CommentDto } from '../_models/commentDto';
+import { GetCommentsParam } from '../_models/getCommentsParam';
 
 @Component({
   selector: 'app-comic-detail',
@@ -19,18 +23,30 @@ export class ComicDetailComponent implements OnInit, OnDestroy {
   hasRead: any;
   user: User | null = null;
 
+  nameComment: string = '';
+  contentComment: string = '';
+  paginationParamsComment: Pagination = {
+    currentPage: 1,
+    itemsPerPage: 10,
+    totalItems: 3,
+    totalPages: 1,
+  };
+  comments: CommentDto[] = [];
+
   constructor(
     private route: ActivatedRoute,
     private comicDetailService: ComicDetailService,
     private busyService: BusyService,
     private accountService: AccountService,
     private toastr: ToastrService,
-    public router: Router
+    public router: Router,
+    private commentService: CommentService
   ) {
     this.accountService.currentUser$.subscribe({
       next: (res) => {
+        this.user = res;
         if (res) {
-          this.user = res;
+          this.nameComment = res.name;
         }
       },
     });
@@ -39,15 +55,25 @@ export class ComicDetailComponent implements OnInit, OnDestroy {
     clearTimeout(this.hasRead);
   }
   ngOnInit(): void {
-    this.getComic();
-
+    this.repairData();
     this.hasRead = setTimeout(() => {}, 5000);
   }
 
-  getComic() {
+  repairData() {
+    this.busyService.busy();
     let comicId = this.route.snapshot.params['comicId'];
-    this.comicDetailService
-      .getComic(comicId, this.user)
+    let param = new GetCommentsParam();
+    param.comicId = comicId;
+    param.chapterId = -1;
+    param.pageNumber = this.paginationParamsComment.currentPage;
+    param.pageSize = this.paginationParamsComment.itemsPerPage;
+    param;
+    const commentRequest = this.commentService.getAllComment(param);
+    const getComicRequest = this.comicDetailService.getComic(
+      comicId,
+      this.user
+    );
+    forkJoin([commentRequest, getComicRequest])
       .pipe(
         finalize(() => {
           this.busyService.idle();
@@ -55,7 +81,11 @@ export class ComicDetailComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (res) => {
-          this.comic = res;
+          this.comic = res[1];
+          if (res[0] && res[0].pagination && res[0].result) {
+            this.comments = res[0].result;
+            this.paginationParamsComment = res[0].pagination;
+          }
         },
       });
   }
@@ -168,5 +198,73 @@ export class ComicDetailComponent implements OnInit, OnDestroy {
           chapterWant.id
       );
     }
+  }
+
+  validComment(): boolean {
+    if (!this.user) {
+      this.toastr.error('you must login');
+      return false;
+    }
+    if (this.contentComment.trim() == '') {
+      this.toastr.error('comment empty');
+      return false;
+    }
+
+    if (this.nameComment.trim() == '') {
+      this.toastr.error('name empty');
+      return false;
+    }
+
+    return true;
+  }
+
+  sendComment() {
+    if (!this.validComment()) return;
+    this.busyService.busy();
+    let dto = {
+      comicId: this.comic.id,
+      chapterId: -1,
+      name: this.nameComment,
+      content: this.contentComment,
+    };
+    this.commentService
+      .sendComment(dto)
+      .pipe(
+        finalize(() => {
+          this.busyService.idle();
+          this.contentComment = '';
+          this.getAllComment();
+        })
+      )
+      .subscribe();
+  }
+
+  refeshComment() {
+    this.getAllComment();
+  }
+
+  getAllComment() {
+    this.busyService.busy();
+    let param = new GetCommentsParam();
+    param.pageNumber = this.paginationParamsComment.currentPage;
+    param.pageSize = this.paginationParamsComment.itemsPerPage;
+    param.chapterId = -1;
+    param.comicId = this.comic.id;
+    this.commentService
+      .getAllComment(param)
+      .pipe(finalize(() => this.busyService.idle()))
+      .subscribe({
+        next: (res) => {
+          if (res && res.pagination && res.result) {
+            this.comments = res.result;
+            this.paginationParamsComment = res.pagination;
+          }
+        },
+      });
+  }
+
+  changePageComment(event: Pagination) {
+    this.paginationParamsComment = event;
+    this.getAllComment();
   }
 }

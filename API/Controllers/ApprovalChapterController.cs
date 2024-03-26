@@ -104,13 +104,7 @@ namespace API.Controllers
             }
             #endregion
 
-            _uow.ChapterRepository.Delete(chapter);
-            if (!await _uow.Complete())
-            {
-                _uow.RollbackTransaction();
-                return BadRequest("Fail to delete chapter");
-            }
-
+            #region delete chapter has readed
             var chapterHasreads = await _uow.ChapterHasReadedRepository.GetAll().Where(x => x.ChapterId == chapter.Id).ToListAsync();
             if (chapterHasreads.Any())
             {
@@ -121,7 +115,9 @@ namespace API.Controllers
                     return BadRequest("Fail to delete chapter has read");
                 }
             }
+            #endregion
 
+            #region delete chapter report
             var chapterReports = await _uow.ReportErrorChapterRepository.GetAll().Where(x => x.ChapterId == chapter.Id).ToListAsync();
             if (chapterReports.Any())
             {
@@ -133,6 +129,28 @@ namespace API.Controllers
                 }
             }
 
+            #endregion
+
+            #region delete comment chapter
+            var comments = await _uow.CommentRepository.GetAll().Where(x => x.ChapterId == chapter.Id).ToListAsync();
+            if(comments.Any()){
+                _uow.CommentRepository.DeleteRange(comments);
+                if (!await _uow.Complete())
+                {
+                    _uow.RollbackTransaction();
+                    return BadRequest("Fail to delete comment");
+                }
+            }
+            #endregion
+
+            #region delete chapter
+            _uow.ChapterRepository.Delete(chapter);
+            if (!await _uow.Complete())
+            {
+                _uow.RollbackTransaction();
+                return BadRequest("Fail to delete chapter");
+            }
+            #endregion
             for (var i = 0; i < imagesOld.Count; i += 100)
             {
                 var batch = imagesOld.Skip(i).Take(100).ToList();
