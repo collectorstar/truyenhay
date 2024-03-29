@@ -12,6 +12,11 @@ export const sidebarList: INavbarData[] = [
     roles: [],
   },
   {
+    routeLink: 'history',
+    label: "History",
+    roles: [],
+  },
+  {
     routeLink: 'upload-comic',
     label: 'Upload commic',
     roles: ['Member'],

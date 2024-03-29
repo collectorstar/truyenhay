@@ -1,11 +1,12 @@
-import { ChapterForComicFollowDto } from "./chapterForComicFollowDto";
+import { ChapterForComicFollowDto } from './chapterForComicFollowDto';
 
-export interface ComicFollowDto{
-    id: number;
-    comicName: string;
-    isFeatured:boolean;
-    mainImage:string;
-    rate:number;
-    noReviews:number;
-    chapters: ChapterForComicFollowDto[]
+export interface ComicFollowDto {
+  id: number;
+  comicName: string;
+  mainImage: string;
+  rate: number;
+  noReviews: number;
+  chapterIdContinue: number;
+  chapterNameContinue: string;
+  chapters: ChapterForComicFollowDto[];
 }

@@ -13,6 +13,7 @@ import { AccountDetailComponent } from './account-detail/account-detail.componen
 import { ListChapterComponent } from './upload-comic/list-chapter/list-chapter.component';
 import { ComicDetailComponent } from './comic-detail/comic-detail.component';
 import { ComicChapterComponent } from './comic-chapter/comic-chapter.component';
+import { HistoryComponent } from './history/history.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -56,6 +57,7 @@ const routes: Routes = [
     canActivate: [loginGuard],
     pathMatch: 'full',
   },
+  { path: 'history', component: HistoryComponent, canActivate: [loginGuard] },
   { path: 'not-found', component: NotFoundComponent },
   { path: '**', component: NotFoundComponent, pathMatch: 'full' },
 ];

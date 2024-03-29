@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ComicDetailService } from '../_services/comic-detail.service';
 import { ComicDetailDto } from '../_models/comicDetailDto';
@@ -17,10 +17,9 @@ import { GetCommentsParam } from '../_models/getCommentsParam';
   templateUrl: './comic-detail.component.html',
   styleUrls: ['./comic-detail.component.css'],
 })
-export class ComicDetailComponent implements OnInit, OnDestroy {
+export class ComicDetailComponent implements OnInit {
   comic: ComicDetailDto = {} as ComicDetailDto;
   isSortDesc: boolean = true;
-  hasRead: any;
   user: User | null = null;
 
   nameComment: string = '';
@@ -51,12 +50,9 @@ export class ComicDetailComponent implements OnInit, OnDestroy {
       },
     });
   }
-  ngOnDestroy(): void {
-    clearTimeout(this.hasRead);
-  }
+
   ngOnInit(): void {
     this.repairData();
-    this.hasRead = setTimeout(() => {}, 5000);
   }
 
   repairData() {
@@ -171,7 +167,7 @@ export class ComicDetailComponent implements OnInit, OnDestroy {
 
   readFirst() {
     if (this.comic.chapters.length > 0) {
-      let chapterWant = this.comic.chapters[0];
+      let chapterWant = this.comic.chapters[this.comic.chapters.length - 1];
       this.router.navigateByUrl(
         '/comic-detail/' +
           this.comic.name.replaceAll(' ', '-') +
@@ -186,7 +182,7 @@ export class ComicDetailComponent implements OnInit, OnDestroy {
   }
   readNewest() {
     if (this.comic.chapters.length > 0) {
-      let chapterWant = this.comic.chapters[this.comic.chapters.length - 1];
+      let chapterWant = this.comic.chapters[0];
       this.router.navigateByUrl(
         '/comic-detail/' +
           this.comic.name.replaceAll(' ', '-') +

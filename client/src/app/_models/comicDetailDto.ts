@@ -16,4 +16,6 @@ export interface ComicDetailDto {
   isFollow: boolean;
   genres: GenreForComicDetailDto[];
   chapters: ChapterForComicDetailDto[];
+  chapterIdContinue: number;
+  chapterNameContinue: string;
 }

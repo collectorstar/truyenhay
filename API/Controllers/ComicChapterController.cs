@@ -108,14 +108,13 @@ namespace API.Controllers
             var chapter = await _uow.ChapterRepository.GetAll().FirstOrDefaultAsync(x => x.Id == chapterId && x.Status && x.ComicId == comic.Id && x.ApprovalStatus == ApprovalStatusChapter.Accept);
             if (chapter == null) return NotFound("not found chapter");
 
-            var find = await _uow.ChapterHasReadedRepository.GetAll().FirstOrDefaultAsync(x => x.UserId == user.Id && x.ChapterId == chapter.Id);
-            if (find != null) return Ok();
 
             ChapterHasReaded mark = new ChapterHasReaded()
             {
                 UserId = user.Id,
                 ChapterId = chapter.Id,
-                DatetimeRead = DateTime.Now
+                DatetimeRead = DateTime.Now,
+                ComicId = comic.Id
             };
 
             await _uow.ChapterHasReadedRepository.Add(mark);

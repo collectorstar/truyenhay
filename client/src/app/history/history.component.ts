@@ -1,53 +1,44 @@
 import { Component, OnInit } from '@angular/core';
-import { Pagination } from '../_models/pagination';
+import { HistoryService } from '../_services/history.service';
 import { ToastrService } from 'ngx-toastr';
 import { BusyService } from '../_services/busy.service';
-import { FollowService } from '../_services/follow.service';
-import { Router } from '@angular/router';
-import { GetComicFollowParam } from '../_models/getComicFollowParam';
 import { finalize } from 'rxjs';
-import { ComicFollowDto } from '../_models/comicFollowDto';
-import { AccountService } from '../_services/account.service';
-import { User } from '../_models/user';
+import { GetComicHistoryParam } from '../_models/getComicHistoryParam';
+import { Pagination } from '../_models/pagination';
+import { GetComicHistoryDto } from '../_models/getComicHistoryDto';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-follow',
-  templateUrl: './follow.component.html',
-  styleUrls: ['./follow.component.css'],
+  selector: 'app-history',
+  templateUrl: './history.component.html',
+  styleUrls: ['./history.component.css'],
 })
-export class FollowComponent implements OnInit {
-  followComics: ComicFollowDto[] = [];
+export class HistoryComponent implements OnInit {
   paginationParams: Pagination = {
     currentPage: 1,
     itemsPerPage: 36,
     totalItems: 0,
     totalPages: 1,
   };
-  user: User | null = null;
+  rowData: GetComicHistoryDto[] = [];
 
   constructor(
+    private historyService: HistoryService,
     private toastr: ToastrService,
     private busyService: BusyService,
-    private followService: FollowService,
     public router: Router,
-    private accountService: AccountService
-  ) {
-    this.accountService.currentUser$.subscribe({
-      next: (res) => {
-        this.user = res;
-      },
-    });
-  }
+  ) {}
   ngOnInit(): void {
     this.getAll();
   }
 
   getAll() {
-    let param = new GetComicFollowParam();
+    this.busyService.busy();
+    let param = new GetComicHistoryParam();
     param.pageNumber = this.paginationParams.currentPage;
     param.pageSize = this.paginationParams.itemsPerPage;
-    this.followService
-      .getComicsFollow(param)
+    this.historyService
+      .getAll(param)
       .pipe(
         finalize(() => {
           this.busyService.idle();
@@ -56,7 +47,7 @@ export class FollowComponent implements OnInit {
       .subscribe({
         next: (res) => {
           if (res && res.pagination && res.result) {
-            this.followComics = res.result;
+            this.rowData = res.result;
             this.paginationParams = res.pagination;
           }
         },
@@ -68,5 +59,10 @@ export class FollowComponent implements OnInit {
     this.paginationParams.itemsPerPage = event.rows;
     this.paginationParams.totalPages = event.pageCount;
     this.getAll();
+  }
+
+  convertToK(target: number): string {
+    if (target < 1000) return target + '';
+    return (target / 1000).toFixed(2) + 'k';
   }
 }

@@ -1,0 +1,62 @@
+<h4 style="color: #2980b9; margin-bottom: 5px">History></h4>
+<span *ngIf="rowData.length == 0"
+  ><i class="">Haven't read any comics yet!</i></span
+>
+<div class="d-flex flex-wrap comic-container" *ngIf="rowData.length > 0">
+  <div class="col-6 col-md-3 col-xl-2 comic-card" *ngFor="let comic of rowData">
+    <div class="comic-img">
+      <img
+        [defaultImage]="'/assets/loading.gif'"
+        (click)="
+          router.navigateByUrl(
+            '/comic-detail/' + comic.name.replaceAll(' ', '-') + '/' + comic.id
+          )
+        "
+        [lazyLoad]="comic.mainImage"
+        alt="{{ comic.name }}"
+        [loading]="true"
+      />
+    </div>
+    <h5
+      class="comic-name"
+      (click)="
+        router.navigateByUrl(
+          '/comic-detail/' + comic.name.replaceAll(' ', '-') + '/' + comic.id
+        )
+      "
+    >
+      {{ comic.name }}
+    </h5>
+    <span 
+    class="comic-read-continue"
+      (click)="
+        router.navigateByUrl(
+          '/comic-detail/' +
+            comic.name.replaceAll(' ', '-') +
+            '/' +
+            comic.id +
+            '/' +
+            comic.chapterNameContinue.replaceAll(' ', '-') +
+            '/' +
+            comic.chapterIdContinue
+        )
+      "
+      >Read continue {{ comic.chapterNameContinue }}</span
+    >
+  </div>
+</div>
+
+<div
+  id="paginate-history"
+  *ngIf="paginationParams.totalPages > 1"
+  style="margin-top: 20px"
+>
+  <p-paginator
+    locale="en-US"
+    (onPageChange)="paginationChange($event)"
+    [first]="(paginationParams.currentPage - 1) * paginationParams.itemsPerPage"
+    [rows]="paginationParams.itemsPerPage"
+    [totalRecords]="paginationParams.totalItems"
+    [showCurrentPageReport]="false"
+  ></p-paginator>
+</div>

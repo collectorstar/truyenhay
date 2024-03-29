@@ -27,28 +27,33 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<PagedList<ComicFollowDto>>> GetComicsFollow([FromQuery] GetComicFollowParam dto, [FromQuery] string email)
+        public async Task<ActionResult<PagedList<ComicFollowDto>>> GetComicsFollow([FromQuery] GetComicFollowParam dto)
         {
 
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == email);
-
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == User.GetUserId());
+            var chapterContinues = from x in _uow.ChapterHasReadedRepository.GetAll().Where(x => x.UserId == user.Id)
+                                   join y in _uow.ComicRepository.GetAll().Where(x => x.Status && x.ApprovalStatus == ApprovalStatusComic.Accept) on x.ComicId equals y.Id
+                                   join z in _uow.ChapterRepository.GetAll().Where(x => x.Status && x.ApprovalStatus == ApprovalStatusChapter.Accept) on x.ChapterId equals z.Id
+                                   orderby x.Id descending
+                                   select x;
             var list = from x in _uow.ComicRepository.GetAll().Where(x => x.Status && x.ApprovalStatus == ApprovalStatusComic.Accept).OrderByDescending(x => x.UpdateTime ?? x.CreationTime)
                        join y in _uow.ComicFollowRepository.GetAll().Where(x => x.UserFollowedId == User.GetUserId()) on x.Id equals y.ComicFollowedId
                        select new ComicFollowDto
                        {
                            Id = x.Id,
                            ComicName = x.Name,
-                           IsFeatured = x.IsFeatured,
                            MainImage = x.MainImage,
                            Rate = x.Rate,
                            NOReviews = x.NOReviews,
+                           ChapterIdContinue = chapterContinues.Where(z => z.ComicId == x.Id).Any() ? chapterContinues.First(z => z.ComicId == x.Id).ChapterId : 0,
+                           ChapterNameContinue = chapterContinues.Where(z => z.ComicId == x.Id).Any() ? _uow.ChapterRepository.GetAll().First(z => z.Id == chapterContinues.First(k => k.ComicId == x.Id).ChapterId).Name : "",
                            Chapters = (from z in _uow.ChapterRepository.GetAll().Where(z => z.ComicId == x.Id && z.Status && z.ApprovalStatus == ApprovalStatusChapter.Accept).OrderByDescending(x => x.Id).Take(3)
                                        select new ChapterForComicFollowDto
                                        {
                                            Id = z.Id,
                                            Name = z.Name,
                                            UpdateTime = z.UpdateTime ?? z.CreationTime,
-                                           HasRead = user != null ? _uow.ChapterHasReadedRepository.GetAll().Any(k => k.UserId == user.Id && k.ChapterId == z.Id) : false
+                                           HasRead = _uow.ChapterHasReadedRepository.GetAll().Any(k => k.UserId == user.Id && k.ChapterId == z.Id)
                                        }).ToList(),
                        };
 

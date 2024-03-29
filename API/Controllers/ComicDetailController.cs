@@ -32,6 +32,22 @@ namespace API.Controllers
             var isFollow = false;
             if (comicFollow != null) isFollow = true;
 
+            var listRead = new List<int>();
+            var chapterIdContinue = 0;
+            Chapter chapterNameContinue = null;
+            if (user != null)
+            {
+                listRead = (from x in _uow.ChapterHasReadedRepository.GetAll().Where(x => x.UserId == user.Id && x.ComicId == comic.Id)
+                            join y in _uow.ChapterRepository.GetAll().Where(x => x.ComicId == comic.Id && x.Status && x.ApprovalStatus == ApprovalStatusChapter.Accept) on x.ChapterId equals y.Id
+                            orderby x.Id descending
+                            select y.Id).ToList();
+                if (listRead.Any())
+                {
+                    chapterIdContinue = listRead[0];
+                    chapterNameContinue = _uow.ChapterRepository.GetAll().FirstOrDefault(x => x.Id == chapterIdContinue && x.Status && x.ApprovalStatus == ApprovalStatusChapter.Accept);
+                }
+            }
+
             var result = new ComicDetailDto()
             {
                 Id = comic.Id,
@@ -63,6 +79,8 @@ namespace API.Controllers
                                 View = _uow.ChapterHasReadedRepository.GetAll().Where(z => z.ChapterId == x.Id).Count(),
 
                             }).ToList(),
+                ChapterIdContinue = chapterIdContinue,
+                ChapterNameContinue = chapterNameContinue != null ? chapterNameContinue.Name : ""
             };
 
             return Ok(result);

@@ -16,5 +16,7 @@
         public bool IsFollow { get; set; }
         public List<GenreForComicDetailDto> Genres { get; set; }
         public List<ChapterForComicDetailDto> Chapters { get; set; }
+        public int ChapterIdContinue { get; set; }
+        public string ChapterNameContinue { get; set; }
     }
 }

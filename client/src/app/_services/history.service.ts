@@ -1,24 +1,24 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { GetComicFollowParam } from '../_models/getComicFollowParam';
+import { GetComicHistoryParam } from '../_models/getComicHistoryParam';
 import { getPaginationHeader, getPaginationResult } from './paginationHelper';
-import { ComicFollowDto } from '../_models/comicFollowDto';
+import { GetComicHistoryDto } from '../_models/getComicHistoryDto';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class FollowService {
+export class HistoryService {
   baseUrl = environment.apiUrl;
-  constructor(private http:HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  getComicsFollow(param : GetComicFollowParam){
+  getAll(param: GetComicHistoryParam) {
     let params = getPaginationHeader(
       param.pageNumber,
       param.pageSize
     );
-    return getPaginationResult<ComicFollowDto[]>(
-      this.baseUrl + 'follow',
+    return getPaginationResult<GetComicHistoryDto[]>(
+      this.baseUrl + 'history',
       params,
       this.http
     );

@@ -35,9 +35,6 @@ namespace API.Data
             builder.Entity<ComicFollow>()
                 .HasKey(k => new { k.UserFollowedId, k.ComicFollowedId });
 
-            builder.Entity<ChapterHasReaded>()
-                .HasKey(k => new { k.UserId, k.ChapterId });
-
             builder.Entity<ComicGenre>()
                 .HasKey(k => new { k.GenreId, k.ComicId });
 

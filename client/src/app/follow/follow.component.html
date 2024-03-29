@@ -25,7 +25,23 @@
           alt="{{ comic.comicName }}"
           [loading]="true"
         />
-        <span class="comic-hot" *ngIf="comic.isFeatured"></span>
+        <span
+          class="read-continue"
+          *ngIf="comic.chapterIdContinue"
+          (click)="
+            router.navigateByUrl(
+              '/comic-detail/' +
+                comic.comicName.replaceAll(' ', '-') +
+                '/' +
+                comic.id +
+                '/' +
+                comic.chapterNameContinue.replaceAll(' ', '-') +
+                '/' +
+                comic.chapterIdContinue
+            )
+          "
+          ><a>Continue reading {{ comic.chapterNameContinue }} </a></span
+        >
       </div>
       <h5
         class="comic-name"

@@ -39,7 +39,7 @@
       </div>
       <div class="d-flex align-items-top gap-2">
         <p class="d-flex gap-2 pt-1">
-          <i style="line-height: 1" class="fa-solid fa-heart"></i
+          <i style="line-height: 1" class="fa-solid fa-comment"></i
           ><span style="line-height: 1"> Total Comments:</span>
         </p>
         <span class="text-decoration-none">{{
@@ -89,7 +89,24 @@
         <button class="newest-button" (click)="readNewest()">
           Newest Chapter
         </button>
-        <button class="continue-button">Read Continute ></button>
+        <button
+          class="continue-button"
+          *ngIf="comic.chapterIdContinue != 0"
+          (click)="
+            router.navigateByUrl(
+              '/comic-detail/' +
+                comic.name.replaceAll(' ', '-') +
+                '/' +
+                comic.id +
+                '/' +
+                comic.chapterNameContinue.replaceAll(' ', '-') +
+                '/' +
+                comic.chapterIdContinue
+            )
+          "
+        >
+          Read Continute >
+        </button>
       </div>
     </div>
   </div>
