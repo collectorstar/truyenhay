@@ -13,6 +13,8 @@ export interface ComicDetailDto {
   noComments: number;
   authorId: number;
   authorName: string;
+  nullAuthorName: boolean;
+  isCompleted : boolean;
   isFollow: boolean;
   genres: GenreForComicDetailDto[];
   chapters: ChapterForComicDetailDto[];

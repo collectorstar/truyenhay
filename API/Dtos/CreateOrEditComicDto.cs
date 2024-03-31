@@ -1,6 +1,4 @@
 
-using Microsoft.AspNetCore.Mvc;
-
 namespace API.Dtos
 {
     public class CreateOrEditComicDto
@@ -8,10 +6,12 @@ namespace API.Dtos
         public int? Id { get; set; }
 
         public string Name { get; set; }
+        public string AuthorName { get; set; }
 
         public string Desc { get; set; }
 
         public bool Status { get; set; }
+        public bool IsCompleted { get; set; }
         public int AuthorId { get; set; }
         // public List<GenreForUploadComicDto> ListGenre { get; set; }
         public string ListGenre { get; set; }

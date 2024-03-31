@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { AccountService } from './_services/account.service';
 import { User } from './_models/user';
 import { finalize } from 'rxjs';
@@ -14,8 +14,32 @@ export class AppComponent implements OnInit {
     private accountService: AccountService,
     private busyService: BusyService
   ) {}
+
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    this.checkTop();
+  }
+
   ngOnInit(): void {
+    this.checkTop();
     this.setCurrentUser();
+  }
+
+  checkTop() {
+    let top = document.getElementById('move-to-top');
+    if (top) {
+      if (window.scrollY > 0) {
+        top.style.visibility = 'visible';
+        top.style.opacity = '1';
+      } else {
+        top.style.visibility = 'hidden';
+        top.style.opacity = '0';
+      }
+    }
+  }
+
+  clickToTop() {
+    window.scrollTo(0, 0);
   }
 
   setCurrentUser() {
@@ -37,10 +61,9 @@ export class AppComponent implements OnInit {
             this.accountService.setCurrentUser(res);
           }
         },
-        error: (error)=>{
+        error: (error) => {
           this.accountService.logout();
-        }
+        },
       });
   }
-
 }

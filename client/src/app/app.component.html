@@ -3,10 +3,12 @@
 </ngx-spinner>
 <app-navbar></app-navbar>
 
-<div class="container pt-4 pb-4" style="min-height: 75vh;">
+<div class="container pt-4 pb-4" style="min-height: 75vh">
   <router-outlet></router-outlet>
 </div>
 
-<footer style="background-color: black; min-height: 25vh;">
+<button (click)="clickToTop()" id="move-to-top" class="btn btn-danger">
+  <i class="fa-solid fa-chevron-up"></i>
+</button>
 
-</footer>
+<footer style="background-color: black; min-height: 25vh"></footer>

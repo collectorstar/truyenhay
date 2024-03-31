@@ -20,6 +20,18 @@
             class="form-control"
             id="floatingInput"
             placeholder=""
+            [(ngModel)]="selectedRow.authorName"
+          />
+          <label for="floatingInput">Author</label>
+        </div>
+      </div>
+      <div class="item-detail">
+        <div class="form-floating mb-3">
+          <input
+            type="text"
+            class="form-control"
+            id="floatingInput"
+            placeholder=""
             [(ngModel)]="selectedRow.name"
           />
           <label for="floatingInput">Name</label>
@@ -35,6 +47,20 @@
             [(ngModel)]="selectedRow.desc"
           ></textarea>
           <label for="floatingTextarea2">Desc</label>
+        </div>
+      </div>
+
+      <div class="item-detail mb-1">
+        <div class="form-check form-switch">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="flexSwitchCheckDefault"
+            [(ngModel)]="selectedRow.isCompleted"
+          />
+          <label class="form-check-label" for="flexSwitchCheckDefault">{{
+            selectedRow.isCompleted ? "Completed" : "In Processing"
+          }}</label>
         </div>
       </div>
 

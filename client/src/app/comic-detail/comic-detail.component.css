@@ -21,6 +21,17 @@
     a {
       cursor: pointer;
     }
+
+    .comic-author {
+      .comic-author-name {
+        text-decoration: none;
+        &.no-author-name {
+          color: #000;
+          cursor: auto;
+
+        }
+      }
+    }
   }
 }
 
@@ -84,7 +95,7 @@
       color: #000;
     }
 
-    .chapter-name.has-read{
+    .chapter-name.has-read {
       opacity: 0.6;
     }
   }
@@ -136,8 +147,6 @@
     }
   }
 }
-
-
 
 :host ::ng-deep {
   #rating-comic-detail {

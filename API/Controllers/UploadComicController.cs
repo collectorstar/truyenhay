@@ -107,6 +107,8 @@ namespace API.Controllers
                 find.Name = dto.Name;
                 find.Desc = dto.Desc;
                 find.Status = dto.Status;
+                find.IsCompleted = dto.IsCompleted;
+                find.AuthorName = dto.AuthorName;
                 find.UpdateTime = DateTime.Now;
 
                 if (!await _uow.Complete())
@@ -262,8 +264,10 @@ namespace API.Controllers
                 var newComic = new Comic
                 {
                     Name = dto.Name,
+                    AuthorName = dto.AuthorName,
                     Desc = dto.Desc,
                     Status = dto.Status,
+                    IsCompleted = dto.IsCompleted,
                     MainImage = photoComicNew.Url,
                     PhotoComicId = photoComicNew.Id,
                     AuthorId = user.Id,
@@ -479,9 +483,11 @@ namespace API.Controllers
                        {
                            Id = x.Id,
                            Name = x.Name,
+                           AuthorName = x.AuthorName,
                            IsFeatured = x.IsFeatured,
                            Desc = x.Desc,
                            Status = x.Status,
+                           IsCompleted = x.IsCompleted,
                            MainImage = x.MainImage,
                            Rate = x.Rate,
                            NOReviews = x.NOReviews,

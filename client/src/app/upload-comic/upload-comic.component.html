@@ -69,6 +69,14 @@
         >
           <h2 class="comic-name d-block">{{ item.name }}</h2>
           <span class="comic-desc"
+            ><span class="fw-bold">Author Name: </span>
+            {{ item.authorName == "" || item.authorName == null ? "Is Updating" : item.authorName }}</span
+          >
+          <span class="comic-desc"
+            ><span class="fw-bold">Status Comic: </span>
+            {{ item.isCompleted ? "Completed" : "In processing" }}</span
+          >
+          <span class="comic-desc"
             ><span class="fw-bold">Descreation: </span> {{ item.desc }}</span
           >
           <span class="d-block"

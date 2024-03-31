@@ -64,6 +64,8 @@ export class UploadComicService {
     param.append('name', dto.name);
     param.append('desc', dto.desc);
     param.append('status', dto.status ? 'true' : 'false');
+    param.append('isCompleted', dto.isCompleted ? 'true' : 'false');
+    param.append('authorName', dto.authorName);
 
     var list = JSON.stringify(listGenre);
 

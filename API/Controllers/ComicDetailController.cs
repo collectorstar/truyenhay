@@ -60,7 +60,9 @@ namespace API.Controllers
                 NOComments = _uow.CommentRepository.GetAll().Where(x => x.ComicId == comic.Id).Count(),
                 NOFollows = _uow.ComicFollowRepository.GetAll().Where(x => x.ComicFollowedId == comic.Id).Count(),
                 AuthorId = comic.AuthorId,
-                AuthorName = _userManager.Users.First(x => x.Id == comic.AuthorId).Name,
+                AuthorName = string.IsNullOrEmpty(comic.AuthorName) ? "Is Updating" : comic.AuthorName,
+                NullAuthorName = string.IsNullOrEmpty(comic.AuthorName),
+                IsCompleted = comic.IsCompleted,
                 IsFollow = isFollow,
                 Genres = (from y in _uow.ComicGenreRepository.GetAll().Where(y => y.ComicId == comic.Id)
                           join z in _uow.GenreRepository.GetAll().Where(x => x.Status == true) on y.GenreId equals z.Id

@@ -15,7 +15,18 @@
           <i class="fa-solid fa-user" style="line-height: 1"></i
           ><span style="line-height: 1"> Author:</span>
         </p>
-        <a class="text-decoration-none">{{ comic.authorName }}</a>
+        <a
+          class="comic-author-name"
+          [ngClass]="comic.nullAuthorName ? 'no-author-name' : ''"
+          >{{ comic.authorName }}</a
+        >
+      </div>
+      <div class="d-flex align-items-top gap-2 comic-author">
+        <p class="d-flex gap-2 pt-1">
+          <i class="fa-solid fa-rss"></i
+          ><span style="line-height: 1"> Status:</span>
+        </p>
+        <span>{{ comic.isCompleted ? "Completed" : "In processing" }}</span>
       </div>
       <div class="d-flex align-items-top gap-2 comic-genre">
         <p class="d-flex gap-2 pt-1">

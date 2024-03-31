@@ -98,6 +98,8 @@ export class CreateOrEditComicComponent {
   refesh() {
     this.selectedRow = {} as UploadComicDto;
     this.selectedRow.name = '';
+    this.selectedRow.authorName = '';
+    this.selectedRow.isCompleted = false
     this.selectedRow.desc = '';
     this.selectedRow.id = null;
     this.selectedRow.isFeatured = false;
