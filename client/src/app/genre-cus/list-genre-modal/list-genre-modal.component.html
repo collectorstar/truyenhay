@@ -1,0 +1,38 @@
+<div>
+  <div class="modal-header">
+    <input
+      [(ngModel)]="searchGenre"
+      (ngModelChange)="onChange($event)"
+      class="search-chapter"
+      type="text"
+      placeholder="Input genre you want find..."
+    />
+    <button
+      type="button"
+      class="btn-close close pull-right"
+      aria-label="Close"
+      (click)="bsModalRef.hide()"
+    >
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="genre-list">
+      <div class="genre-button" *ngFor="let item of genresForModalSource">
+        <button
+          (click)="selectGenre(item)"
+          class="btn"
+          [ngClass]="
+            genre.value == item.value ? 'btn-success' : 'btn-outline-success'
+          "
+        >
+          {{ item.label }}
+        </button>
+        <span class="genre-hot" *ngIf="item.isFeatured"></span>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-danger" (click)="bsModalRef.hide()">Cancel</button>
+  </div>
+</div>

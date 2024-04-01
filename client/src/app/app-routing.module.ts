@@ -14,6 +14,8 @@ import { ListChapterComponent } from './upload-comic/list-chapter/list-chapter.c
 import { ComicDetailComponent } from './comic-detail/comic-detail.component';
 import { ComicChapterComponent } from './comic-chapter/comic-chapter.component';
 import { HistoryComponent } from './history/history.component';
+import { GenreCusComponent } from './genre-cus/genre-cus.component';
+import { FindComicComponent } from './find-comic/find-comic.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -58,6 +60,8 @@ const routes: Routes = [
     pathMatch: 'full',
   },
   { path: 'history', component: HistoryComponent, canActivate: [loginGuard] },
+  { path: 'genre-cus', component: GenreCusComponent },
+  { path: 'find-comic', component: FindComicComponent },
   { path: 'not-found', component: NotFoundComponent },
   { path: '**', component: NotFoundComponent, pathMatch: 'full' },
 ];

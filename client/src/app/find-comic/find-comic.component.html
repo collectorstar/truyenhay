@@ -1,0 +1,145 @@
+<h4 style="color: #2980b9; margin-bottom: 5px">Find Comic ></h4>
+
+<div class="status-comic-action">
+  <h5 class="status-comic-action-label">{{ "Comic Status: " }}</h5>
+  <button
+    class="btn"
+    [ngClass]="statusComic == 0 ? 'btn-success' : 'btn-outline-success'"
+    (click)="selectStatusComic(0)"
+  >
+    All
+  </button>
+
+  <button
+    class="btn"
+    [ngClass]="statusComic == 1 ? 'btn-success' : 'btn-outline-success'"
+    (click)="selectStatusComic(1)"
+  >
+    Completed
+  </button>
+
+  <button
+    class="btn"
+    [ngClass]="statusComic == 2 ? 'btn-success' : 'btn-outline-success'"
+    (click)="selectStatusComic(2)"
+  >
+    In processing
+  </button>
+</div>
+
+<div id="selector-find-comic">
+  <h5 style="display: inline">{{ "Select Genres: " }}</h5>
+  <multiselect-dropdown
+    [dropdownList]="dropDownGenres"
+    [selectedItems]="selectedGenres"
+    [placeholder]="'select genres'"
+    (onChange)="onChange($event)"
+  ></multiselect-dropdown>
+</div>
+
+<div class="search-comic">
+  <h5 style="display: inline">{{ "Search: " }}</h5>
+  <input type="text" [(ngModel)]="comicName" placeholder="Comic Name" />
+</div>
+
+<button class="btn btn-success mb-2" (click)="getAll()">Search</button>
+
+<h5 style="color: #2980b9; margin-bottom: 10px">Result ></h5>
+
+<span *ngIf="rowData.length == 0">Not Found Comics</span>
+<div *ngIf="rowData.length > 0">
+  <div class="d-flex flex-wrap comic-container">
+    <div
+      class="col-6 col-md-3 col-xl-2 comic-card"
+      *ngFor="let comic of rowData"
+    >
+      <div class="comic-img">
+        <img
+          [defaultImage]="'/assets/loading.gif'"
+          (click)="
+            router.navigateByUrl(
+              '/comic-detail/' +
+                comic.comicName.replaceAll(' ', '-') +
+                '/' +
+                comic.id
+            )
+          "
+          [lazyLoad]="comic.mainImage"
+          alt="{{ comic.comicName }}"
+          [loading]="true"
+        />
+        <span class="comic-hot" *ngIf="comic.isFeatured"></span>
+        <div
+          class="comic-more-info d-flex align-content-center justify-content-center gap-4"
+        >
+          <span
+            ><i class="fa-solid fa-eye"></i
+            >{{ convertToK(comic.noReviews) }}</span
+          >
+          <span
+            ><i class="fa-solid fa-comment"></i
+            >{{ convertToK(comic.noComments) }}</span
+          >
+          <span
+            ><i class="fa-solid fa-heart"></i
+            >{{ convertToK(comic.noFollows) }}</span
+          >
+        </div>
+      </div>
+      <h5
+        class="comic-name"
+        (click)="
+          router.navigateByUrl(
+            '/comic-detail/' +
+              comic.comicName.replaceAll(' ', '-') +
+              '/' +
+              comic.id
+          )
+        "
+      >
+        {{ comic.comicName }}
+      </h5>
+      <div class="comic-chapters">
+        <div class="chapter-info" *ngFor="let chapter of comic.chapters">
+          <a
+            class="chapter-name"
+            [ngClass]="chapter.hasRead ? 'has-read' : ''"
+            (click)="
+              router.navigateByUrl(
+                '/comic-detail/' +
+                  comic.comicName.replaceAll(' ', '-') +
+                  '/' +
+                  comic.id +
+                  '/' +
+                  chapter.name.replaceAll(' ', '-') +
+                  '/' +
+                  chapter.id
+              )
+            "
+            >{{ chapter.name }}</a
+          >
+          <span class="chapter-update-time">{{
+            chapter.updateTime | timeago
+          }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    id="paginate-genre-cus"
+    *ngIf="paginationParams.totalPages > 1"
+    style="margin-top: 20px"
+  >
+    <p-paginator
+      locale="en-US"
+      (onPageChange)="paginationChange($event)"
+      [first]="
+        (paginationParams.currentPage - 1) * paginationParams.itemsPerPage
+      "
+      [rows]="paginationParams.itemsPerPage"
+      [totalRecords]="paginationParams.totalItems"
+      [showCurrentPageReport]="false"
+    ></p-paginator>
+  </div>
+</div>

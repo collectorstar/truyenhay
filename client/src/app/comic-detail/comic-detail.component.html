@@ -34,7 +34,15 @@
           <span style="line-height: 1"> Genres:</span>
         </p>
         <p class="">
-          <a class="text-decoration-none" *ngFor="let genre of comic.genres"
+          <a
+            class="text-decoration-none"
+            *ngFor="let genre of comic.genres"
+            (click)="
+              router.navigateByUrl(
+                '/genre-cus?genreName=' +
+                  genre.name.replaceAll(' ', '-').toLowerCase()
+              )
+            "
             >{{ genre.name }},
           </a>
         </p>

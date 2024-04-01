@@ -12,8 +12,18 @@ export const sidebarList: INavbarData[] = [
     roles: [],
   },
   {
+    routeLink: 'genre-cus',
+    label: 'Genre',
+    roles: [],
+  },
+  {
+    routeLink: 'find-comic',
+    label: 'Find Comic',
+    roles: [],
+  },
+  {
     routeLink: 'history',
-    label: "History",
+    label: 'History',
     roles: [],
   },
   {
@@ -59,8 +69,8 @@ export const sidebarList: INavbarData[] = [
       {
         routeLink: 'admintruyenhay/approval-chapter',
         label: 'Approval Chapter',
-        roles:['Admin']
-      }
+        roles: ['Admin'],
+      },
     ],
   },
 ];

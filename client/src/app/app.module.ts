@@ -47,6 +47,9 @@ import { SimpleAgGridComponent } from './_component/simple-ag-grid/simple-ag-gri
 import { RequestIncreaseMaxComicCreateComponent } from './upload-comic/request-increase-max-comic-create/request-increase-max-comic-create.component';
 import { CommentsComponent } from './_component/comments/comments.component';
 import { HistoryComponent } from './history/history.component';
+import { GenreCusComponent } from './genre-cus/genre-cus.component';
+import { FindComicComponent } from './find-comic/find-comic.component';
+import { ListGenreModalComponent } from './genre-cus/list-genre-modal/list-genre-modal.component';
 
 @NgModule({
   declarations: [
@@ -71,6 +74,9 @@ import { HistoryComponent } from './history/history.component';
     ReportErrorModalComponent,
     RequestIncreaseMaxComicCreateComponent,
     HistoryComponent,
+    GenreCusComponent,
+    FindComicComponent,
+    ListGenreModalComponent,
   ],
   imports: [
     BrowserModule,

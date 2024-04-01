@@ -1,0 +1,29 @@
+.search-chapter {
+  width: 60%;
+  font-size: 16px;
+  padding: 10px 5px;
+  border-radius: 5px;
+}
+
+.genre-list {
+  max-height: 60vh;
+  overflow-y: scroll;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  .genre-button {
+    position: relative;
+
+    .genre-hot {
+      position: absolute;
+      top:  0px;
+      right: 0px;
+      height: 11px;
+      width: 28px;
+      display: inline-block;
+      background: url("/assets/icon-hot.gif") no-repeat;
+    }
+  }
+}
