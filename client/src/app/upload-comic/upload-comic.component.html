@@ -1,7 +1,6 @@
 <tabset>
   <tab heading="Upload Comic">
-    <h1>Your Comics</h1>
-
+    <h4 style="color: #2980b9; margin: 10px 0">Your Comics ></h4>
     <div class="no-author" *ngIf="!user.isAuthor">
       <button class="btn btn-success mb-3" (click)="sendRequest()">
         <i class="fa-solid fa-upload"></i> Register to become an author
@@ -70,7 +69,11 @@
           <h2 class="comic-name d-block">{{ item.name }}</h2>
           <span class="comic-desc"
             ><span class="fw-bold">Author Name: </span>
-            {{ item.authorName == "" || item.authorName == null ? "Is Updating" : item.authorName }}</span
+            {{
+              item.authorName == "" || item.authorName == null
+                ? "Is Updating"
+                : item.authorName
+            }}</span
           >
           <span class="comic-desc"
             ><span class="fw-bold">Status Comic: </span>
@@ -141,7 +144,7 @@
   </tab>
   <tab heading="Report error chapters" *ngIf="user.isAuthor">
     <div id="report-error-chapters">
-      <h1>Report error chapters</h1>
+      <h4 style="color: #2980b9; margin: 10px 0">Report error chapters ></h4>
       <div class="boxsearch mt-1 mb-2">
         <span>Search:</span>
         <input

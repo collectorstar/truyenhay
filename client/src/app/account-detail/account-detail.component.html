@@ -2,7 +2,7 @@
   <div class="col-12">
     <tabset class="member-tabset">
       <tab heading="Account Info">
-        <h1 class="mt-3">Your Account Info</h1>
+        <h4 style="color: #2980b9; margin: 10px 0">Your Account Info ></h4>
         <form
           #editForm="ngForm"
           id="editForm"
@@ -34,9 +34,16 @@
           </div>
 
           <div class="form-check mb-3">
-            <input class="form-check-input" type="checkbox" [(ngModel)]="member.isAuthor" name="isAuthor" id="flexCheckDisabled" disabled>
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [(ngModel)]="member.isAuthor"
+              name="isAuthor"
+              id="flexCheckDisabled"
+              disabled
+            />
             <label class="form-check-label" for="flexCheckDisabled">
-            Is Author
+              Is Author
             </label>
           </div>
 
@@ -60,11 +67,13 @@
             [src]="member.photoUrl || './assets/user.png'"
             [alt]="member.name"
           />
-          <button class="btn btn-success mt-2" (click)="upload()">Upload</button>
+          <button class="btn btn-success mt-2" (click)="upload()">
+            Upload
+          </button>
         </div>
       </tab>
       <tab heading="Change Password">
-        <h1 class="mt-3">Change your password</h1>
+        <h4 style="color: #2980b9; margin: 10px 0">Change your password ></h4>
         <form
           #editForm="ngForm"
           id="editForm"
