@@ -1,5 +1,6 @@
 using API.Data;
 using API.Entities;
+using API.Helpers;
 using API.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,7 +21,7 @@ namespace API.Repositories
 
         public async Task<RequestAuthor> GetRequestToDay(int userId)
         {
-            return await _context.RequestAuthors.FirstOrDefaultAsync(x => x.UserId == userId && x.CreationTime.Date == DateTime.Now.Date);
+            return await _context.RequestAuthors.FirstOrDefaultAsync(x => x.UserId == userId && x.CreationTime.Date == DateTime.Now.Date && (x.Status == StatusRequesAuthor.SendRequest || x.Status == StatusRequesAuthor.Contact));
         }
 
         public void Delete(RequestAuthor requestAuthor)

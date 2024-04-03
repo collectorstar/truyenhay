@@ -1,0 +1,52 @@
+<h4 style="color: #2980b9; margin-bottom: 5px">Notify ></h4>
+
+<span *ngIf="rowData.length == 0" class="fst-italic text-center d-block"
+  >Empty Notification!</span
+>
+
+<div class="container-notifies" *ngIf="rowData.length > 0">
+  <div class="d-flex flex-row-reverse">
+    <p class="mark-all-readed" (click)="markAllDone()">Mark All Readed</p>
+  </div>
+  <div class="notifies">
+    <div
+      class="notify"
+      *ngFor="let notify of rowData"
+      (click)="markReaded(notify)"
+      [ngClass]="notify.isReaded ? 'readed' : ''"
+    >
+      <div class="image-notify">
+        <img
+          class=""
+          [defaultImage]="
+            notify.image != '' ? '/assets/loading.gif' : '/assets/logo2.png'
+          "
+          [lazyLoad]="notify.image != '' ? notify.image : '/assets/logo2.png'"
+          [loading]="true"
+        />
+      </div>
+      <div class="content-notify">
+        <p>{{ notify.message }}</p>
+        <p class="notify-time">{{ notify.creationTime | timeago }}</p>
+      </div>
+      <div class="isReaded" *ngIf="!notify.isReaded"></div>
+    </div>
+  </div>
+
+  <div
+    id="paginate-notify"
+    *ngIf="paginationParams.totalPages > 1"
+    style="margin-top: 20px"
+  >
+    <p-paginator
+      locale="en-US"
+      (onPageChange)="paginationChange($event)"
+      [first]="
+        (paginationParams.currentPage - 1) * paginationParams.itemsPerPage
+      "
+      [rows]="paginationParams.itemsPerPage"
+      [totalRecords]="paginationParams.totalItems"
+      [showCurrentPageReport]="false"
+    ></p-paginator>
+  </div>
+</div>

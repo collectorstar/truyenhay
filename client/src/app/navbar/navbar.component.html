@@ -1,9 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
-    <a
-      class="navbar-brand logo"
-      routerLink="/home"
-      routerLinkActive="active"
+    <a class="navbar-brand logo" routerLink="/home" routerLinkActive="active"
       >TH</a
     >
     <button
@@ -41,7 +38,10 @@
                 >{{ data.label }}</a
               >
               <ul class="dropdown-menu mb-5">
-                <submenu [sidebarList]="data.items" (clickLink)="closeNav()"></submenu>
+                <submenu
+                  [sidebarList]="data.items"
+                  (clickLink)="closeNav()"
+                ></submenu>
               </ul>
             </div>
           </li>
@@ -50,27 +50,41 @@
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <div *ngIf="!(accountService.currentUser$ | async)">
           <div class="no-account">
-            <a [routerLink]="['login']" class="login" (click)="closeNav()">Login</a>
+            <a [routerLink]="['login']" class="login" (click)="closeNav()"
+              >Login</a
+            >
             <span style="color: #fff"> / </span>
-            <a [routerLink]="['register']" class="register" (click)="closeNav()">Register</a>
+            <a [routerLink]="['register']" class="register" (click)="closeNav()"
+              >Register</a
+            >
           </div>
         </div>
         <a
           *ngIf="accountService.currentUser$ | async as user"
           class="has-account dropdown"
         >
-          <div
-            class="dropdown-toggle text-light"
-            data-bs-toggle="dropdown"
-          >
-            <img
-              src="{{ user.photoUrl || './assets/user.png' }}"
-              alt="user photo"
-            />
+          <div class="dropdown-toggle text-light" data-bs-toggle="dropdown">
+            <div class="image-avatar">
+              <img
+                src="{{ user.photoUrl || './assets/user.png' }}"
+                alt="user photo"
+              />
+              <div class="dot-avatar"></div>
+            </div>
             <span class="text-light ms-3">Wellcome </span>
           </div>
           <ul class="dropdown-menu">
-            <li class="dropdown-item" routerLink="/account-detail" (click)="closeNav()">
+            <li class="dropdown-item" (click)="router.navigateByUrl('/notify')">
+              <a class="notify-tab"
+                >Notification
+                <div class="dot-notify"></div
+              ></a>
+            </li>
+            <li
+              class="dropdown-item"
+              routerLink="/account-detail"
+              (click)="closeNav()"
+            >
               <a>Edit Profile</a>
             </li>
             <li class="dropdown-item" (click)="logout()"><a>Logout</a></li>

@@ -59,6 +59,20 @@ namespace API.Controllers
 
             if (!await _uow.Complete()) return BadRequest("fail to accept");
 
+            var notify = new Notify()
+            {
+                ComicIdRef = comic.Id,
+                CreationTime = DateTime.Now,
+                UserRecvId = comic.AuthorId,
+                Message = "Your comic " + comic.Name + " has been accepted",
+                Type = NotifyType.ApprovalComic,
+                IsReaded = false
+            };
+
+            await _uow.NotityRepository.Add(notify);
+
+            if (!await _uow.Complete()) return BadRequest("Fail to create notify");
+
             return Ok();
         }
 
@@ -71,6 +85,21 @@ namespace API.Controllers
             comic.ApprovalStatus = ApprovalStatusComic.Deny;
 
             if (!await _uow.Complete()) return BadRequest("Fail to Deny");
+
+            var notify = new Notify()
+            {
+                ComicIdRef = comic.Id,
+                CreationTime = DateTime.Now,
+                UserRecvId = comic.AuthorId,
+                Message = "Your comic " + comic.Name + " has been rejected",
+                Type = NotifyType.ApprovalComic,
+                IsReaded = false
+            };
+
+            await _uow.NotityRepository.Add(notify);
+
+            if (!await _uow.Complete()) return BadRequest("Fail to create notify");
+
 
             return Ok();
         }
@@ -92,6 +121,20 @@ namespace API.Controllers
                 _uow.RollbackTransaction();
                 return BadRequest("Not found Comic");
             }
+
+            #region delete notify
+            var notifies = await _uow.NotityRepository.GetAll().Where(x => x.ComicIdRef == comic.Id).ToListAsync();
+            if (notifies.Any())
+            {
+                _uow.NotityRepository.DeleteRange(notifies);
+                if (!await _uow.Complete())
+                {
+                    _uow.RollbackTransaction();
+                    return BadRequest("Fail to delete notify");
+                }
+            }
+            #endregion
+
             #region delete image comic
             var imageComic = await _uow.PhotoComicRepository.GetAll().FirstOrDefaultAsync(x => x.ComicId == comic.Id);
             if (imageComic == null)
@@ -189,6 +232,21 @@ namespace API.Controllers
                 }
             }
 
+            #endregion
+
+            #region delete notify
+            var notifies = (from x in comics
+                            join y in _uow.NotityRepository.GetAll() on x.Id equals y.ComicIdRef
+                            select y).ToList();
+            if (notifies.Any())
+            {
+                _uow.NotityRepository.DeleteRange(notifies);
+                if (!await _uow.Complete())
+                {
+                    _uow.RollbackTransaction();
+                    return BadRequest("Fail to delete notify");
+                }
+            }
             #endregion
 
             _uow.ComicRepository.DeleteRange(comics);

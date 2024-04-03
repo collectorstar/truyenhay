@@ -52,9 +52,27 @@ namespace API.Controllers
             var chapter = await _uow.ChapterRepository.GetAll().FirstOrDefaultAsync(x => x.Id == dto.Id && (x.ApprovalStatus == ApprovalStatusChapter.Waiting || x.ApprovalStatus == ApprovalStatusChapter.Deny));
             if (chapter == null) return BadRequest("not found chapter");
 
+            var comic = await _uow.ComicRepository.GetAll().Where(x => x.Id == chapter.ComicId && x.ApprovalStatus == ApprovalStatusComic.Accept).FirstOrDefaultAsync();
+            if (comic == null) return BadRequest("not found comic");
+
             chapter.ApprovalStatus = ApprovalStatusChapter.Accept;
 
             if (!await _uow.Complete()) return BadRequest("fail to accept");
+
+            var notify = new Notify()
+            {
+                ComicIdRef = comic.Id,
+                ChapterIdRef = chapter.Id,
+                CreationTime = DateTime.Now,
+                UserRecvId = comic.AuthorId,
+                Message = chapter.Name + " of comic "+comic.Name + " has been accepted",
+                Type = NotifyType.ApprovalChapter,
+                IsReaded = false
+            };
+
+            await _uow.NotityRepository.Add(notify);
+
+            if (!await _uow.Complete()) return BadRequest("Fail to create notify");
 
             return Ok();
         }
@@ -65,9 +83,27 @@ namespace API.Controllers
             var chapter = await _uow.ChapterRepository.GetAll().FirstOrDefaultAsync(x => x.Id == dto.Id && (x.ApprovalStatus == ApprovalStatusChapter.Waiting));
             if (chapter == null) return BadRequest("not found chapter");
 
+            var comic = await _uow.ComicRepository.GetAll().Where(x => x.Id == chapter.ComicId && x.ApprovalStatus == ApprovalStatusComic.Accept).FirstOrDefaultAsync();
+            if (comic == null) return BadRequest("not found comic");
+
             chapter.ApprovalStatus = ApprovalStatusChapter.Deny;
 
             if (!await _uow.Complete()) return BadRequest("Fail to Deny");
+
+            var notify = new Notify()
+            {
+                ComicIdRef = comic.Id,
+                ChapterIdRef = chapter.Id,
+                CreationTime = DateTime.Now,
+                UserRecvId = comic.AuthorId,
+                Message = chapter.Name + " of comic "+comic.Name + " has been rejected",
+                Type = NotifyType.ApprovalChapter,
+                IsReaded = false
+            };
+
+            await _uow.NotityRepository.Add(notify);
+
+            if (!await _uow.Complete()) return BadRequest("Fail to create notify");
 
             return Ok();
         }
@@ -133,12 +169,26 @@ namespace API.Controllers
 
             #region delete comment chapter
             var comments = await _uow.CommentRepository.GetAll().Where(x => x.ChapterId == chapter.Id).ToListAsync();
-            if(comments.Any()){
+            if (comments.Any())
+            {
                 _uow.CommentRepository.DeleteRange(comments);
                 if (!await _uow.Complete())
                 {
                     _uow.RollbackTransaction();
                     return BadRequest("Fail to delete comment");
+                }
+            }
+            #endregion
+
+            #region delete notify
+            var notifies = await _uow.NotityRepository.GetAll().Where(x => x.ComicIdRef == chapter.ComicId && x.ChapterIdRef == chapter.Id).ToListAsync();
+            if (notifies.Any())
+            {
+                _uow.NotityRepository.DeleteRange(notifies);
+                if (!await _uow.Complete())
+                {
+                    _uow.RollbackTransaction();
+                    return BadRequest("Fail to delete notify");
                 }
             }
             #endregion

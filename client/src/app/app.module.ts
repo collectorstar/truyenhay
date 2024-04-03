@@ -50,6 +50,7 @@ import { HistoryComponent } from './history/history.component';
 import { GenreCusComponent } from './genre-cus/genre-cus.component';
 import { FindComicComponent } from './find-comic/find-comic.component';
 import { ListGenreModalComponent } from './genre-cus/list-genre-modal/list-genre-modal.component';
+import { NotifyComponent } from './notify/notify.component';
 
 @NgModule({
   declarations: [
@@ -77,6 +78,7 @@ import { ListGenreModalComponent } from './genre-cus/list-genre-modal/list-genre
     GenreCusComponent,
     FindComicComponent,
     ListGenreModalComponent,
+    NotifyComponent,
   ],
   imports: [
     BrowserModule,

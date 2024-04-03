@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using MimeKit.Encodings;
 
 namespace API.Controllers
 {
@@ -66,7 +65,7 @@ namespace API.Controllers
                 return BadRequest("Fail to Accept request");
             }
 
-            var author = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == dto.Email && x.IsAuthor);
+            var author = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == req.UserId && x.IsAuthor);
             if (author == null)
             {
                 _uow.RollbackTransaction();
@@ -78,6 +77,23 @@ namespace API.Controllers
             {
                 _uow.RollbackTransaction();
                 return BadRequest("fail to increase");
+            }
+
+            var notify = new Notify()
+            {
+                CreationTime = DateTime.Now,
+                UserRecvId = req.UserId,
+                Message = "Your request to increase comic max has been accepted",
+                Type = NotifyType.RequestIncMaxComic,
+                IsReaded = false
+            };
+
+            await _uow.NotityRepository.Add(notify);
+
+            if (!await _uow.Complete())
+            {
+                _uow.RollbackTransaction();
+                return BadRequest("Fail to create notify");
             }
 
             var connectionIds = await PresenceTracker.GetConnectionsForUser(author.Id.ToString());
@@ -105,6 +121,23 @@ namespace API.Controllers
             {
                 _uow.RollbackTransaction();
                 return BadRequest("Fail to Accept request");
+            }
+
+            var notify = new Notify()
+            {
+                CreationTime = DateTime.Now,
+                UserRecvId = req.UserId,
+                Message = "Your request to increase comic max has been rejected",
+                Type = NotifyType.RequestIncMaxComic,
+                IsReaded = false
+            };
+
+            await _uow.NotityRepository.Add(notify);
+
+            if (!await _uow.Complete())
+            {
+                _uow.RollbackTransaction();
+                return BadRequest("Fail to create notify");
             }
 
             _uow.CommitTransaction();

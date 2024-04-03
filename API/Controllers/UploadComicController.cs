@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MimeKit.Encodings;
 using Newtonsoft.Json;
 
 namespace API.Controllers
@@ -385,6 +384,19 @@ namespace API.Controllers
             }
             #endregion
 
+            #region delete notify
+            var notifies = await _uow.NotityRepository.GetAll().Where(x => x.ComicIdRef == comic.Id).ToListAsync();
+            if (notifies.Any())
+            {
+                _uow.NotityRepository.DeleteRange(notifies);
+                if (!await _uow.Complete())
+                {
+                    _uow.RollbackTransaction();
+                    return BadRequest("Fail to delete notify");
+                }
+            }
+            #endregion
+
             #region delete image comic
             var imageComic = await _uow.PhotoComicRepository.GetAll().FirstOrDefaultAsync(x => x.ComicId == comic.Id);
             if (imageComic == null)
@@ -754,13 +766,25 @@ namespace API.Controllers
         {
             await _uow.BeginTransactionAsync();
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == User.GetUserId());
-            if (user == null) return Unauthorized("Not found User");
+            if (user == null)
+            {
+                _uow.RollbackTransaction();
+                return Unauthorized("Not found User");
+            }
 
             var comic = await _uow.ComicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == comicId && x.AuthorId == User.GetUserId() && x.ApprovalStatus == ApprovalStatusComic.Accept);
-            if (comic == null) return BadRequest("Request invalid, please reload again");
+            if (comic == null)
+            {
+                _uow.RollbackTransaction();
+                return BadRequest("Request invalid, please reload again");
+            }
 
             var chapter = await _uow.ChapterRepository.GetAll().FirstOrDefaultAsync(x => x.Id == ChapterId);
-            if (chapter == null) return BadRequest("Invalid Chapter");
+            if (chapter == null)
+            {
+                _uow.RollbackTransaction();
+                return BadRequest("Invalid Chapter");
+            }
 
             #region delete hasreaded
             var hasReadeds = _uow.ChapterHasReadedRepository.GetAll().Where(x => x.ChapterId == chapter.Id).ToList();
@@ -771,6 +795,19 @@ namespace API.Controllers
                 {
                     _uow.RollbackTransaction();
                     return BadRequest("Fail to delete has readed");
+                }
+            }
+            #endregion
+
+            #region delete notify
+            var notifies = await _uow.NotityRepository.GetAll().Where(x => x.ComicIdRef == comic.Id && x.ChapterIdRef == chapter.Id).ToListAsync();
+            if (notifies.Any())
+            {
+                _uow.NotityRepository.DeleteRange(notifies);
+                if (!await _uow.Complete())
+                {
+                    _uow.RollbackTransaction();
+                    return BadRequest("Fail to delete notify");
                 }
             }
             #endregion
@@ -831,6 +868,8 @@ namespace API.Controllers
                 return BadRequest("Fail to delete chapter");
             }
 
+            _uow.CommitTransaction();
+
             for (var i = 0; i < listPhoto.Count; i += 100)
             {
                 var batch = listPhoto.Skip(i).Take(100).ToList();
@@ -855,7 +894,7 @@ namespace API.Controllers
         {
             var list = from x in _uow.ReportErrorChapterRepository.GetAll().Where(rec => (dto.IsOnlyInprocessing && !rec.Status) || !dto.IsOnlyInprocessing)
                        join y in _uow.ComicRepository.GetAll().Where(comic => comic.AuthorId == User.GetUserId() && comic.ApprovalStatus == ApprovalStatusComic.Accept) on x.ComicId equals y.Id
-                       join z in _uow.ChapterRepository.GetAll() on new { comicId = y.Id, chapterId = x.ChapterId } equals new { comicId = z.ComicId, chapterId = z.Id }
+                       join z in _uow.ChapterRepository.GetAll().Where(x => x.ApprovalStatus == ApprovalStatusChapter.Accept) on new { comicId = y.Id, chapterId = x.ChapterId } equals new { comicId = z.ComicId, chapterId = z.Id }
                        select new ReportErrorChapterForAuthorDto
                        {
                            Id = x.Id,
@@ -881,9 +920,33 @@ namespace API.Controllers
             var reportChapter = await _uow.ReportErrorChapterRepository.GetAll().FirstOrDefaultAsync(x => x.Id == dto.Id);
             if (reportChapter == null) return NotFound("not found report error");
 
-            var listReportChapter = await _uow.ReportErrorChapterRepository.GetAll().Where(x => x.ComicId == dto.ComicId && x.ChapterId == dto.ChapterId && x.Status == false).ToListAsync();
-            listReportChapter.ForEach(x => x.Status = true);
-            if (!await _uow.Complete()) return BadRequest("fail to mark done this report error!");
+            var listReportChapter = await (from x in _uow.ReportErrorChapterRepository.GetAll().Where(x => x.ComicId == dto.ComicId && x.ChapterId == dto.ChapterId && !x.Status)
+                                           join y in _uow.ComicRepository.GetAll().Where(comic => comic.AuthorId == User.GetUserId() && comic.ApprovalStatus == ApprovalStatusComic.Accept) on x.ComicId equals y.Id
+                                           join z in _uow.ChapterRepository.GetAll().Where(x => x.ApprovalStatus == ApprovalStatusChapter.Accept) on new { comicId = y.Id, chapterId = x.ChapterId } equals new { comicId = z.ComicId, chapterId = z.Id }
+                                           select x).ToListAsync();
+            ;
+            if (listReportChapter.Any())
+            {
+                var notifies = (from x in listReportChapter.Select(x => new { x.ComicId, x.ChapterId, x.UserId }).DistinctBy(x => new { x.ComicId, x.ChapterId, x.UserId })
+                                join c in _uow.ComicRepository.GetAll() on x.ComicId equals c.Id
+                                join ch in _uow.ChapterRepository.GetAll() on x.ChapterId equals ch.Id
+                                join y in _userManager.Users on x.UserId equals y.Id
+                                select new Notify
+                                {
+                                    CreationTime = DateTime.Now,
+                                    ComicIdRef = x.ComicId,
+                                    ChapterIdRef = x.ChapterId,
+                                    UserRecvId = y.Id,
+                                    Message = "The comic " + c.Name + " has fixed the error in " + ch.Name,
+                                    Type = NotifyType.FixDoneChapter,
+                                    IsReaded = false
+                                }).ToList();
+
+                await _uow.NotityRepository.AddRange(notifies);
+
+                listReportChapter.ForEach(x => x.Status = true);
+                if (!await _uow.Complete()) return BadRequest("fail to mark done this report error!");
+            }
             return Ok();
         }
 

@@ -1,0 +1,74 @@
+.container-notifies {
+  .mark-all-readed {
+    color: #0866ff;
+    font-style: italic;
+    cursor: pointer;
+    opacity: 0.8;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+  .notifies {
+    .notify {
+      position: relative;
+      display: flex;
+      align-items: center;
+      border: none;
+      cursor: pointer;
+
+      &.readed {
+        opacity: 0.8;
+      }
+
+      margin: 10px 0;
+      border-radius: 10px;
+
+      &:hover {
+        background-color: #ddd;
+      }
+
+      .isReaded {
+        position: absolute;
+        right: 10px;
+        width: 15px;
+        height: 15px;
+        background-color: #0866ff;
+        border-radius: 50%;
+      }
+
+      .image-notify {
+        display: flex;
+        align-items: center;
+        padding: 0 10px;
+
+        img {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+        }
+      }
+
+      .content-notify {
+        padding: 10px 0;
+        .notify-time {
+          color: #0866ff;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 320px) and (max-width: 767px) {
+  :host ::ng-deep {
+    #paginate-notify {
+      .p-paginator .p-paginator-pages .p-paginator-page,
+      .p-paginator .p-paginator-next,
+      .p-paginator .p-paginator-last,
+      .p-paginator .p-paginator-prev,
+      .p-paginator .p-paginator-first {
+        min-width: 35px;
+      }
+    }
+  }
+}

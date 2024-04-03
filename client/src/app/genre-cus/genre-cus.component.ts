@@ -12,6 +12,7 @@ import { GenreCusOption } from '../_models/genreCusOption';
 import { SelectorComponent } from '../_component/selector/selector.component';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ListGenreModalComponent } from './list-genre-modal/list-genre-modal.component';
+import { ComicForGenreCusDto } from '../_models/comicForGenreCusDto';
 
 @Component({
   selector: 'app-genre-cus',
@@ -28,7 +29,7 @@ export class GenreCusComponent implements OnInit {
     isFeatured: false,
   };
   user: User | null = null;
-  rowData: any[] = [];
+  rowData: ComicForGenreCusDto[] = [];
   statusComic: number = 0;
   paginationParams: Pagination = {
     currentPage: 1,
@@ -74,12 +75,10 @@ export class GenreCusComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.genreOptions.push(...res);
-          let genreName = this.route.snapshot.queryParams[
-            'genreName'
-          ].replaceAll('-', ' ');
+          let genreName = this.route.snapshot.queryParams['genreName'];
           if (genreName) {
             let temp = this.genreOptions.findIndex(
-              (x) => x.label.toLowerCase() == genreName
+              (x) => x.label.toLowerCase() == genreName.replaceAll('-', ' ')
             );
             if (temp != -1) {
               this.genreSelected = this.genreOptions[temp];
@@ -119,12 +118,6 @@ export class GenreCusComponent implements OnInit {
     this.paginationParams.totalPages = event.pageCount;
     this.getAll();
   }
-
-  // onChangeGenre(event: any) {
-  //   this.genreSelected = event;
-  //   this.paginationParams.currentPage = 1;
-  //   this.getAll();
-  // }
 
   clickSelectorGenre() {
     const config = {

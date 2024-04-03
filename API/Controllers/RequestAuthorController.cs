@@ -81,6 +81,19 @@ namespace API.Controllers
 
             if (!await _uow.Complete()) return BadRequest("Fail to update data");
 
+            var notify = new Notify()
+            {
+                CreationTime = DateTime.Now,
+                UserRecvId = requestAuthor.UserId,
+                Message = "Your request to become an author has been denied",
+                Type = NotifyType.RequestAuthor,
+                IsReaded = false
+            };
+
+            await _uow.NotityRepository.Add(notify);
+
+            if (!await _uow.Complete()) return BadRequest("Fail to update data");
+
             return Ok(new { message = "This request was denied" });
 
         }
@@ -107,9 +120,22 @@ namespace API.Controllers
 
             if (!await _uow.Complete()) return BadRequest("Fail to update data");
 
+            var notify = new Notify()
+            {
+                CreationTime = DateTime.Now,
+                UserRecvId = requestAuthor.UserId,
+                Message = "Your request to become an author has been accepted",
+                Type = NotifyType.RequestAuthor,
+                IsReaded = false
+            };
+
+            await _uow.NotityRepository.Add(notify);
+
+            if (!await _uow.Complete()) return BadRequest("Fail to update data");
+
             var connectionIds = await PresenceTracker.GetConnectionsForUser(author.Id.ToString());
 
-            if(connectionIds != null) await _presenceHub.Clients.Clients(connectionIds).SendAsync("AcceptAuthor", "You have just been accepted as an author!");
+            if (connectionIds != null) await _presenceHub.Clients.Clients(connectionIds).SendAsync("AcceptAuthor", "You have just been accepted as an author!");
 
             return Ok(new { message = "This request was accepted" });
         }
@@ -144,6 +170,19 @@ namespace API.Controllers
             var result = await _emailService.SendMail(mailContent);
 
             if (!result) return BadRequest("Request Email fail");
+
+            if (!await _uow.Complete()) return BadRequest("Fail to update data");
+
+            var notify = new Notify()
+            {
+                CreationTime = DateTime.Now,
+                UserRecvId = requestAuthor.UserId,
+                Message = "You have an email waiting to be contacted by the administrator, please check your email",
+                Type = NotifyType.RequestAuthor,
+                IsReaded = false
+            };
+
+            await _uow.NotityRepository.Add(notify);
 
             if (!await _uow.Complete()) return BadRequest("Fail to update data");
 

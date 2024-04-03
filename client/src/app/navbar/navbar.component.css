@@ -54,3 +54,46 @@
     text-decoration: underline;
   }
 }
+
+.image-avatar {
+  position: relative;
+  display: inline-block;
+  .dot-avatar {
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-radius: 50%;
+    background-color: red;
+    animation: blink 1s infinite;
+  }
+}
+
+.notify-tab {
+  position: relative;
+  text-decoration: none;
+  color: #000;
+  .dot-notify {
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    top: -10px;
+    right: -15px;
+    border-radius: 50%;
+    background-color: red;
+    animation: blink 1s infinite;
+  }
+}
+
+@keyframes blink {
+  0% {
+    background-color: red;
+  }
+  50% {
+    background-color: white;
+  }
+  100% {
+    background-color: red;
+  }
+}

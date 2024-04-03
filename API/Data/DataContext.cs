@@ -27,6 +27,7 @@ namespace API.Data
         public DbSet<ChapterHasReaded> ChapterHasReadeds { get; set; }
         public DbSet<ReportErrorChapter> ReportErrorChapters { get; set; }
         public DbSet<RequestIncMaxComic> RequestIncMaxComics { get; set; }
+        public DbSet<Notify> Notifys { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
