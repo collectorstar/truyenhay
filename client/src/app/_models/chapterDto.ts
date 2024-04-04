@@ -1,4 +1,4 @@
-import { ApprovalStatusChapter } from "../_extensions/enumHelper";
+import { ApprovalStatusChapter } from '../_extensions/enumHelper';
 
 export interface ChapterDto {
   id: number | null;
@@ -8,4 +8,5 @@ export interface ChapterDto {
   view: number;
   status: boolean;
   approvalStatus: ApprovalStatusChapter;
+  rank: number;
 }

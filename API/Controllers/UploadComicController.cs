@@ -504,7 +504,7 @@ namespace API.Controllers
                            Rate = x.Rate,
                            NOReviews = x.NOReviews,
                            ApprovalStatus = x.ApprovalStatus,
-                           NewestChapter = _uow.ChapterRepository.GetAll().Where(z => z.ComicId == x.Id).OrderByDescending(x => x.Id).First().Name ?? "",
+                           NewestChapter = _uow.ChapterRepository.GetAll().Where(z => z.ComicId == x.Id).OrderByDescending(x => x.Rank).First().Name ?? "",
                            TotalChapter = _uow.ChapterRepository.GetAll().Where(z => z.ComicId == x.Id).Count(),
                            SelectedGenres = (from y in _uow.ComicGenreRepository.GetAll().Where(y => y.ComicId == x.Id)
                                              join z in _uow.GenreRepository.GetAll().Where(x => x.Status == true) on y.GenreId equals z.Id
@@ -534,7 +534,7 @@ namespace API.Controllers
                 Id = comic.Id,
                 Name = comic.Name,
                 Chapters = (from x in _uow.ChapterRepository.GetAll().Where(x => x.ComicId == ComicId)
-                            orderby x.Id descending
+                            orderby x.Rank descending
                             select new ChapterDto
                             {
                                 Id = x.Id,
@@ -543,6 +543,7 @@ namespace API.Controllers
                                 UpdateTime = x.UpdateTime,
                                 Status = x.Status,
                                 ApprovalStatus = x.ApprovalStatus,
+                                Rank = x.Rank,
                                 View = _uow.ChapterHasReadedRepository.GetAll().Where(z => z.ChapterId == x.Id).Count()
                             }).ToList(),
             };
@@ -581,6 +582,7 @@ namespace API.Controllers
                 chapter.Name = dto.Name;
                 chapter.UpdateTime = DateTime.Now;
                 chapter.Status = dto.Status;
+                chapter.Rank = dto.Rank;
 
                 if (!await _uow.Complete())
                 {
@@ -699,12 +701,15 @@ namespace API.Controllers
                     return BadRequest("Max 120 photos");
                 }
 
+                var rankNew = await _uow.ChapterRepository.GetAll().Where(x => x.ComicId == comic.Id).CountAsync();
+
                 var chapter = new Chapter()
                 {
                     Name = dto.Name,
                     Status = dto.Status,
                     CreationTime = DateTime.Now,
-                    ComicId = comic.Id
+                    ComicId = comic.Id,
+                    Rank = rankNew + 1
                 };
                 await _uow.ChapterRepository.Add(chapter);
 

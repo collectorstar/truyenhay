@@ -42,6 +42,13 @@ export class CreateOrEditChapterComponent implements OnInit {
       }
     }
 
+    if (this.selectedRow?.id != null) {
+      if (this.selectedRow?.rank < 1) {
+        this.toastr.error('Rank must be greater than 0!');
+        return;
+      }
+    }
+
     this.busyService.busy();
     this.uploadComicService
       .createOrEditChapter(

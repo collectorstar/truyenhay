@@ -41,6 +41,7 @@ export class CommentsComponent implements OnInit {
   @Output() changePagination = new EventEmitter();
   @Output() sendEvent = new EventEmitter();
   @Output() refeshEvent = new EventEmitter();
+  @Output() OnFocusCommentEvent = new EventEmitter();
 
   constructor(
     private accountService: AccountService,
@@ -48,8 +49,7 @@ export class CommentsComponent implements OnInit {
     private busyService: BusyService,
     public router: Router
   ) {}
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   paginationChange(event: any) {
     this.paginationParams.currentPage = event.page + 1;
@@ -63,5 +63,13 @@ export class CommentsComponent implements OnInit {
   }
   refesh() {
     this.refeshEvent.emit();
+  }
+
+  focus() {
+    this.OnFocusCommentEvent.emit(false);
+  }
+
+  blur() {
+    this.OnFocusCommentEvent.emit(true);
   }
 }

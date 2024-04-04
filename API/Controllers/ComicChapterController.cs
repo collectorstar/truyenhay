@@ -84,6 +84,7 @@ namespace API.Controllers
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == email);
 
             var result = (from x in _uow.ChapterRepository.GetAll().Where(y => y.ComicId == comic.Id && y.Status && y.ApprovalStatus == ApprovalStatusChapter.Accept)
+                          orderby x.Rank descending
                           select new ChapterInfoForComicChapterDto
                           {
                               Id = x.Id,

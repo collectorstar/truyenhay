@@ -11,5 +11,6 @@ namespace API.Dtos
         public DateTime? UpdateTime { get; set; }
         public int View { get; set; }
         public ApprovalStatusChapter ApprovalStatus { get; set; }
+        public int Rank { get; set; }
     }
 }

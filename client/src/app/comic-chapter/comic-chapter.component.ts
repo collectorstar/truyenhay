@@ -22,6 +22,7 @@ import { CommentService } from '../_services/comment.service';
   styleUrls: ['./comic-chapter.component.css'],
 })
 export class ComicChapterComponent implements OnInit, OnDestroy {
+  canAction: boolean = true;
   comic: ComicInfoForComicChapterDto = {} as ComicInfoForComicChapterDto;
   chapter: ChapterInfoForComicChapterDto = {} as ChapterInfoForComicChapterDto;
   chaptersForModal: ChapterInfoForComicChapterDto[] = [];
@@ -102,7 +103,7 @@ export class ComicChapterComponent implements OnInit, OnDestroy {
       getChapterInfoRequest,
       getListChapterRequest,
       getChapterImagesRequest,
-      commentRequest
+      commentRequest,
     ])
       .pipe(
         finalize(() => {
@@ -158,11 +159,16 @@ export class ComicChapterComponent implements OnInit, OnDestroy {
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
-    if (event.key == 'ArrowRight') {
-      this.navNext();
-    }
-    if (event.key == 'ArrowLeft') {
-      this.navPrev();
+    if (
+      (event.key == 'ArrowRight' || event.key == 'ArrowLeft') &&
+      this.canAction
+    ) {
+      if (event.key == 'ArrowRight') {
+        this.navNext();
+      }
+      if (event.key == 'ArrowLeft') {
+        this.navPrev();
+      }
     }
   }
 
@@ -280,6 +286,8 @@ export class ComicChapterComponent implements OnInit, OnDestroy {
       },
     };
 
+    this.canAction = false;
+
     this.bsModalRefReportChapter = this.modalService.show(
       ReportErrorModalComponent,
       config
@@ -287,6 +295,7 @@ export class ComicChapterComponent implements OnInit, OnDestroy {
 
     this.bsModalRefReportChapter.onHide?.subscribe({
       next: () => {
+        this.canAction = true;
         let chapterSelected = this.bsModalRefReportChapter.content?.chapter;
         if (chapterSelected != undefined) {
           this.actionLoadSameComic(chapterSelected);
@@ -432,5 +441,9 @@ export class ComicChapterComponent implements OnInit, OnDestroy {
   changePageComment(event: Pagination) {
     this.paginationParamsComment = event;
     this.getAllComment();
+  }
+
+  disposeAction(event: boolean) {
+    this.canAction = event;
   }
 }

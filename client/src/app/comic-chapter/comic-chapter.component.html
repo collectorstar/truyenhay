@@ -47,7 +47,6 @@
 
   <a
     class="nav-left"
-    (keydown)="eventKeyDown($event)"
     (click)="navPrev()"
     [ngClass]="isChapterFirst ? 'nav-disabled' : ''"
     ><i class="fa-solid fa-chevron-left"></i
@@ -57,7 +56,6 @@
   </select>
   <a
     class="nav-right"
-    (keydown)="eventKeyDown($event)"
     (click)="navNext()"
     [ngClass]="isChapterLast ? 'nav-disabled' : ''"
     ><i class="fa-solid fa-chevron-right"></i
@@ -66,7 +64,8 @@
     <i class="fa-solid fa-heart"></i> <span class="comic-follow"> Follow</span>
   </button>
   <button class="btn btn-danger" (click)="unfollow()" *ngIf="comic.isFollow">
-    <i class="fa-solid fa-xmark"></i> <span class="comic-follow"> Unfollow</span>
+    <i class="fa-solid fa-xmark"></i>
+    <span class="comic-follow"> Unfollow</span>
   </button>
 </div>
 
@@ -104,7 +103,6 @@
   </button>
 </div>
 
-
 <comments
   [user]="user"
   [name]="nameComment"
@@ -116,5 +114,6 @@
   (changePagination)="changePageComment($event)"
   (sendEvent)="sendComment()"
   (refeshEvent)="refeshComment()"
+  (OnFocusCommentEvent)="canAction = $event"
 >
 </comments>
