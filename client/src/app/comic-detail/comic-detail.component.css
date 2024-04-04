@@ -28,7 +28,6 @@
         &.no-author-name {
           color: #000;
           cursor: auto;
-
         }
       }
     }
@@ -82,6 +81,8 @@
   padding: 5px;
   border-radius: 5px;
   list-style: none;
+  max-height: 1000px;
+  overflow-y: scroll;
 
   .chapter-item {
     display: flex;

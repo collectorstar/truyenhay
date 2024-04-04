@@ -4,6 +4,8 @@
   padding: 5px;
   border-radius: 5px;
   list-style: none;
+  max-height: 2000px;
+  overflow-y: scroll;
 
   .listChapter-item {
     border-bottom: 1px dashed #ddd;

@@ -534,6 +534,7 @@ namespace API.Controllers
                 Id = comic.Id,
                 Name = comic.Name,
                 Chapters = (from x in _uow.ChapterRepository.GetAll().Where(x => x.ComicId == ComicId)
+                            orderby x.Id descending
                             select new ChapterDto
                             {
                                 Id = x.Id,
