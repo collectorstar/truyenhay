@@ -3,4 +3,5 @@ export interface INavbarData {
   label: string;
   roles: string[];
   items?: INavbarData[];
+  class?: string;
 }

@@ -72,5 +72,6 @@ export const sidebarList: INavbarData[] = [
         roles: ['Admin'],
       },
     ],
+    class: 'admin-nav'
   },
 ];

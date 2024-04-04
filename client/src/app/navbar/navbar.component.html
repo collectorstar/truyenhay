@@ -34,10 +34,10 @@
                 type="button"
                 data-bs-toggle="dropdown"
                 data-bs-auto-close="outside"
-                [ngClass]="{ active: router.url.startsWith('/admin') }"
+                [ngClass]="{ active: router.url.startsWith('/admintruyenhay') }"
                 >{{ data.label }}</a
               >
-              <ul class="dropdown-menu mb-5">
+              <ul class="dropdown-menu mb-5" [ngClass]="data.class">
                 <submenu
                   [sidebarList]="data.items"
                   (clickLink)="closeNav()"
