@@ -25,17 +25,15 @@
         <div class="col-5">
           <a
             class="chapterInfo-name"
-            (click)="
-              router.navigateByUrl(
-                'comic-detail/' +
-                  comic.name.replaceAll(' ', '-') +
-                  '/' +
-                  comic.id +
-                  '/' +
-                  item.name.replaceAll(' ', '-') +
-                  '/' +
-                  item.id
-              )
+            [routerLink]="
+              'comic-detail/' +
+              comic.name.replaceAll(' ', '-') +
+              '/' +
+              comic.id +
+              '/' +
+              item.name.replaceAll(' ', '-') +
+              '/' +
+              item.id
             "
             >{{ item.name }}</a
           >
@@ -61,10 +59,10 @@
         </div>
       </div>
       <div class="status-watting" *ngIf="item.approvalStatus == 0">
-        <img src="../assets/wattingforapproval.gif" alt="">
+        <img src="../assets/wattingforapproval.gif" alt="" />
       </div>
       <div class="status-deny" *ngIf="item.approvalStatus == 2">
-        <img src="../assets/denyforapprov.gif" alt="">
+        <img src="../assets/denyforapprov.gif" alt="" />
       </div>
     </li>
   </ul>

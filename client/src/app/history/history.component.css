@@ -28,6 +28,8 @@
     }
 
     .comic-read-continue {
+      color: #000;
+      text-decoration: none;
       cursor: pointer;
       opacity: 0.6;
     }

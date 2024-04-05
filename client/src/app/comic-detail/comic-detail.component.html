@@ -158,17 +158,15 @@
         <a
           class="chapter-name"
           [ngClass]="chapter.hasRead ? 'has-read' : ''"
-          (click)="
-            router.navigateByUrl(
-              '/comic-detail/' +
-                comic.name.replaceAll(' ', '-') +
-                '/' +
-                comic.id +
-                '/' +
-                chapter.name.replaceAll(' ', '-') +
-                '/' +
-                chapter.id
-            )
+          [routerLink]="
+            '/comic-detail/' +
+            comic.name.replaceAll(' ', '-') +
+            '/' +
+            comic.id +
+            '/' +
+            chapter.name.replaceAll(' ', '-') +
+            '/' +
+            chapter.id
           "
           >{{ chapter.name }}</a
         >
