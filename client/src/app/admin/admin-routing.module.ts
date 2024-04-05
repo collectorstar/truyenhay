@@ -8,6 +8,9 @@ import { ApprovalComicComponent } from './approval-comic/approval-comic.componen
 import { RequestIncMaxComicComponent } from './request-inc-max-comic/request-inc-max-comic.component';
 import { ApprovalChapterComponent } from './approval-chapter/approval-chapter.component';
 import { ComicHotComponent } from './comic-hot/comic-hot.component';
+import { UserManagerComponent } from './user-manager/user-manager.component';
+import { AssignAdminComponent } from './assign-admin/assign-admin.component';
+import { superAdminGuard } from '../_guards/super-admin.guard';
 
 const routes: Routes = [
   { path: 'genre', component: GenreComponent },
@@ -17,6 +20,12 @@ const routes: Routes = [
   { path: 'request-inc-max-comic', component: RequestIncMaxComicComponent },
   { path: 'approval-chapter', component: ApprovalChapterComponent },
   { path: 'comic-hot', component: ComicHotComponent },
+  { path: 'user-manager', component: UserManagerComponent },
+  {
+    path: 'assign-admin',
+    component: AssignAdminComponent,
+    canActivate: [superAdminGuard],
+  },
   { path: '**', component: NotFoundComponent, pathMatch: 'full' },
 ];
 

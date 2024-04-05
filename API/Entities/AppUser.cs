@@ -10,6 +10,7 @@ namespace API.Entities
         public string PhotoUrl { get; set; }
         public int? PhotoAvatarId { get; set; }
         public int MaxComic { get; set; }
+        public bool IsBlock { get; set; }
         public List<AppUserRole> UserRoles { get; set; }
     }
 }

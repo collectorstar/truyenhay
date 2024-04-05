@@ -28,8 +28,15 @@ export class NavbarComponent implements OnInit {
 
   setupItemNav(user: User | null, result: INavbarData[], list: INavbarData[]) {
     if (user) {
-      if (user.roles.includes('Admin')) {
+      if (user.roles.includes('SuperAdmin')) {
         result = list;
+      } else if (user.roles.includes('Admin')) {
+        result = list.filter(
+          (x) =>
+            x.roles.length == 0 ||
+            x.roles.includes('Member') ||
+            x.roles.includes('Admin')
+        );
       } else if (user.roles.includes('Member')) {
         result = list.filter(
           (x) => x.roles.length == 0 || x.roles.includes('Member')

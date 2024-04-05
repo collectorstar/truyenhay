@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, max } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -10,6 +10,7 @@ import { ChangePasswordDto } from '../_models/changePasswordDto';
 import { UpdateInfoAccountDto } from '../_models/updateInfoAccountDto';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +22,11 @@ export class AccountService {
   hubUrl = environment.hubUrl;
   private hubConnection?: HubConnection;
 
-  constructor(private http: HttpClient, private toastr: ToastrService) {}
+  constructor(
+    private http: HttpClient,
+    private toastr: ToastrService,
+    private router: Router
+  ) {}
 
   login(model: LoginDto) {
     return this.http.post<User>(this.baseUrl + 'account/login', model).pipe(
@@ -149,6 +154,23 @@ export class AccountService {
         user.maxComic = maxComic;
         this.setCurrentUserNoCreateConnect(user);
       }
+    });
+
+    this.hubConnection.on('BlockUser', () => {
+      this.logout();
+      this.toastr.info('You have been blocked by the administrator!');
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 3000);
+    });
+
+    this.hubConnection.on('ChangeRole', () => {
+      this.toastr.info(
+        'Your account has just updated its permissions, please log in again!'
+      );
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 3000);
     });
   }
 

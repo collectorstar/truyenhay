@@ -75,8 +75,7 @@
   overflow-y: scroll;
 
   &::-webkit-scrollbar {
-    width: 2px;
-    height: 2px; 
+    width: 5px;
   }
 
   &::-webkit-scrollbar-thumb {

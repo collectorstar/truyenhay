@@ -1,0 +1,58 @@
+<h4 style="color: #2980b9; margin: 10px 0">User Management ></h4>
+
+<div class="box-search">
+  <span class="">{{ "Search Email: " }}</span>
+  <input
+    type="text"
+    [(ngModel)]="email"
+    placeholder="input email"
+    class="inputserch"
+  />
+</div>
+
+<div class="box-checkbox">
+  <div class="form-check mt-1 mb-1">
+    <input
+      class="form-check-input"
+      type="checkbox"
+      [(ngModel)]="onlyAdmin"
+      id="onlyAdmin"
+    />
+    <label class="form-check-label" for="onlyAdmin"> Only Admin </label>
+  </div>
+</div>
+
+<button class="btn btn-success btn-search" (click)="getAll()">Search</button>
+
+<simple-ag-grid
+  [columnDefs]="columnDefs"
+  [rowData]="rowData"
+  [defaultColDef]="defaultColDef"
+  (callBackGrid)="onGridReady()"
+  (rowClicked)="selectedRowClicked($event)"
+  (changePage)="changePage($event)"
+  [pagination]="true"
+  [paginationParams]="paginationParams"
+></simple-ag-grid>
+
+<div class="action">
+  <div class="action-item">
+    <button
+      class="btn btn-outline-danger"
+      (click)="removeRoleAdmin()"
+      [disabled]="!selectedRow || (selectedRow && !selectedRow.isAdmin)"
+    >
+      <i class="fa-solid fa-trash"></i> Remove Role Admin
+    </button>
+  </div>
+
+  <div class="action-item">
+    <button
+      (click)="addRoleAdmin()"
+      class="btn btn-outline-success"
+      [disabled]="!selectedRow || (selectedRow && selectedRow.isAdmin)"
+    >
+      <i class="fa-solid fa-plus"></i> Add Role Admin
+    </button>
+  </div>
+</div>

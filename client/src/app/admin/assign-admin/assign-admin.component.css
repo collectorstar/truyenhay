@@ -1,0 +1,45 @@
+.box-search {
+    .inputserch {
+      padding: 5px;
+      border-radius: 10px;
+      border: 0.5px solid #666;
+      width: 300px;
+    }
+  }
+  
+  .box-date {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 10px 0;
+  
+    .inputserch {
+      padding: 5px;
+      border-radius: 10px;
+      border: 0.5px solid #666;
+      width: 200px;
+    }
+  }
+  
+  .box-checkbox {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .btn-search {
+    margin-bottom: 10px;
+  }
+  
+  .action {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 10px;
+  
+    .action-item {
+      margin: 0 5px;
+    }
+  }
+  

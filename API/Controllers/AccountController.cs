@@ -47,17 +47,25 @@ namespace API.Controllers
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenClaimsPrincipal = tokenHandler.ValidateToken(token, tokenParams, out var validatedToken);
             var userId = 0;
+            var roles = new List<string>();
             try
             {
                 userId = int.Parse(tokenClaimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+                var roleTemp = tokenClaimsPrincipal.FindAll(ClaimTypes.Role).Select(x => x.Value);
+                if (roleTemp.Any())
+                {
+                    roles.AddRange(roleTemp);
+                }
             }
             catch (Exception)
             {
                 return Unauthorized("Please login again");
             }
 
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
-            if (user == null) return Unauthorized("Please login again");
+            var user = await _userManager.Users.Include(x => x.UserRoles).ThenInclude(r => r.Role).FirstOrDefaultAsync(x => x.Id == userId && !x.IsBlock);
+            if (user == null) return Unauthorized();
+
+            if (user.UserRoles.Count() != roles.Count()) return Unauthorized("Please login again");
 
             return new UserDto
             {
@@ -111,6 +119,8 @@ namespace API.Controllers
             var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
 
             if (!result) return Unauthorized("Invalid Password");
+
+            if (user.IsBlock) return BadRequest("Your account is blocked");
 
             return new UserDto
             {

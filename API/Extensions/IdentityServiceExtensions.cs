@@ -58,6 +58,7 @@ namespace API.Extensions
             {
                 opt.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
                 opt.AddPolicy("RequireMemberRole", policy => policy.RequireRole("Member"));
+                opt.AddPolicy("RequireSuperAdminRole", policy => policy.RequireRole("SuperAdmin"));
 
             });
 

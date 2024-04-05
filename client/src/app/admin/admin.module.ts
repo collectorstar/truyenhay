@@ -19,6 +19,8 @@ import { RequestIncMaxComicComponent } from './request-inc-max-comic/request-inc
 import { ApprovalChapterComponent } from './approval-chapter/approval-chapter.component';
 import { InfoChapterComponent } from './approval-chapter/info-chapter/info-chapter.component';
 import { ComicHotComponent } from './comic-hot/comic-hot.component';
+import { UserManagerComponent } from './user-manager/user-manager.component';
+import { AssignAdminComponent } from './assign-admin/assign-admin.component';
 
 
 @NgModule({
@@ -34,6 +36,8 @@ import { ComicHotComponent } from './comic-hot/comic-hot.component';
     ApprovalChapterComponent,
     InfoChapterComponent,
     ComicHotComponent,
+    UserManagerComponent,
+    AssignAdminComponent,
   ],
   imports: [
     FormsModule,
