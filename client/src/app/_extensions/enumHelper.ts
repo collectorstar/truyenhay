@@ -35,5 +35,5 @@ export enum NotifyType {
   ApprovalComic = 1,
   ApprovalChapter = 2,
   RequestIncMaxComic = 3,
-  FixDoneChapter = 4
+  FixDoneChapter = 4,
 }

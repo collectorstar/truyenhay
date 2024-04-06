@@ -33,6 +33,7 @@ namespace API.Controllers
                            IsFeatured = x.IsFeatured,
                            MainImage = x.MainImage,
                            Rate = x.Rate,
+                           NOViews = _uow.ChapterHasReadedRepository.GetAll().Where(z => z.ComicId == x.Id).Count(),
                            NOFollows = _uow.ComicFollowRepository.GetAll().Where(y => y.ComicFollowedId == x.Id).Count(),
                            NOReviews = x.NOReviews,
                            NOComments = _uow.CommentRepository.GetAll().Where(z => z.ComicId == x.Id).Count(),

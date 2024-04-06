@@ -27,6 +27,10 @@
       }
 
       .comic-more-info{
+        display: flex;
+        align-content: center;
+        justify-content: center;
+        gap: 10px;
         position: absolute;
         bottom: 0;
         left: 0;

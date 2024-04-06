@@ -68,10 +68,10 @@
       <div class="d-flex align-items-top gap-2">
         <p class="d-flex gap-2 pt-1">
           <i style="line-height: 1" class="fa-solid fa-eye"></i
-          ><span style="line-height: 1"> Total Reivew:</span>
+          ><span style="line-height: 1"> Total Views:</span>
         </p>
         <span class="text-decoration-none">{{
-          convertToK(comic.noReviews)
+          convertToK(comic.noViews)
         }}</span>
       </div>
       <div class="d-flex align-items-top gap-2 comic-rate">
@@ -88,6 +88,10 @@
           ></p-rating
         ></span>
       </div>
+      <span class="fst-italic opacity-75"
+        >Ranking {{ comic.rate }}/5 in
+        {{ convertToK(comic.noReviews) }} reviews</span
+      >
       <div class="comic-follow mt-3" *ngIf="!comic.isFollow">
         <button class="btn btn-success" (click)="follow()">
           <i class="fa-solid fa-heart"></i> Follow

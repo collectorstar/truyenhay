@@ -6,6 +6,7 @@ export interface ComicNewestDto {
   isFeatured: boolean;
   mainImage: string;
   noFollows: number;
+  noViews: number;
   rate: number;
   noReviews: number;
   noComments: number;

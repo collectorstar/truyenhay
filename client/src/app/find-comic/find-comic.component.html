@@ -27,6 +27,65 @@
   </button>
 </div>
 
+<div class="status-comic-sort">
+  <h5 class="status-comic-sort-label">{{ "Sort by: " }}</h5>
+  <button
+    class="btn"
+    [ngClass]="sortComic == 0 ? 'btn-success' : 'btn-outline-success'"
+    (click)="selectSortComic(0)"
+  >
+    Top All
+  </button>
+
+  <button
+    class="btn"
+    [ngClass]="sortComic == 1 ? 'btn-success' : 'btn-outline-success'"
+    (click)="selectSortComic(1)"
+  >
+    Top Month
+  </button>
+
+  <button
+    class="btn"
+    [ngClass]="sortComic == 2 ? 'btn-success' : 'btn-outline-success'"
+    (click)="selectSortComic(2)"
+  >
+    Top Week
+  </button>
+
+  <button
+    class="btn"
+    [ngClass]="sortComic == 3 ? 'btn-success' : 'btn-outline-success'"
+    (click)="selectSortComic(3)"
+  >
+    Top Day
+  </button>
+
+  <button
+    class="btn"
+    [ngClass]="sortComic == 4 ? 'btn-success' : 'btn-outline-success'"
+    (click)="selectSortComic(4)"
+  >
+    Follows
+  </button>
+
+  <button
+    class="btn"
+    [ngClass]="sortComic == 5 ? 'btn-success' : 'btn-outline-success'"
+    (click)="selectSortComic(5)"
+  >
+    Comments
+  </button>
+
+  <button
+    class="btn"
+    [ngClass]="sortComic == 6 ? 'btn-success' : 'btn-outline-success'"
+    (click)="selectSortComic(6)"
+  >
+    Chapters
+  </button>
+</div>
+
 <div id="selector-find-comic">
   <h5 style="display: inline">{{ "Select Genres: " }}</h5>
   <multiselect-dropdown
@@ -69,12 +128,10 @@
           [loading]="true"
         />
         <span class="comic-hot" *ngIf="comic.isFeatured"></span>
-        <div
-          class="comic-more-info d-flex align-content-center justify-content-center gap-4"
-        >
+        <div class="comic-more-info">
           <span
             ><i class="fa-solid fa-eye"></i
-            >{{ convertToK(comic.noReviews) }}</span
+            >{{ convertToK(comic.noViews) }}</span
           >
           <span
             ><i class="fa-solid fa-comment"></i

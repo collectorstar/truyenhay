@@ -27,6 +27,10 @@
       }
 
       .comic-more-info {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
         position: absolute;
         bottom: 0;
         left: 0;
@@ -89,8 +93,8 @@
   gap: 10px;
   align-items: center;
   margin: 10px 0;
-  
-  input{
+
+  input {
     width: 100%;
     max-width: 300px;
     padding: 10px;
@@ -99,6 +103,17 @@
 }
 
 .status-comic-action {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.status-comic-sort {
+  border: 1px solid #ddd;
+  padding: 10px 5px;
+  border-radius: 10px;
   display: flex;
   gap: 10px;
   margin: 10px 0;
@@ -139,6 +154,10 @@
     }
 
     .status-comic-action-label {
+      display: none;
+    }
+
+    .status-comic-sort-label {
       display: none;
     }
 

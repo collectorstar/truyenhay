@@ -26,20 +26,18 @@
           [loading]="true"
         />
         <span class="comic-hot" *ngIf="comic.isFeatured"></span>
-        <div
-          class="comic-more-info d-flex align-content-center justify-content-center gap-4"
-        >
+        <div class="comic-more-info">
           <span
-            ><i class="fa-solid fa-eye"></i
-            >{{ convertToK(comic.noReviews) }}</span
+            ><i class="fa-solid fa-eye"></i>
+            {{ convertToK(comic.noViews) }}</span
           >
           <span
-            ><i class="fa-solid fa-comment"></i
-            >{{ convertToK(comic.noComments) }}</span
+            ><i class="fa-solid fa-comment"></i>
+            {{ convertToK(comic.noComments) }}</span
           >
           <span
-            ><i class="fa-solid fa-heart"></i
-            >{{ convertToK(comic.noFollows) }}</span
+            ><i class="fa-solid fa-heart"></i>
+            {{ convertToK(comic.noFollows) }}</span
           >
         </div>
       </div>

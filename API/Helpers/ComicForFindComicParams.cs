@@ -5,5 +5,6 @@ namespace API.Helpers
         public int StatusComic { get; set; }
         public string GenresSeleted { get; set; }
         public string ComicName { get; set; }
+        public int SortComic { get; set; }
     }
 }

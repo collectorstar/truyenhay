@@ -11,6 +11,7 @@
         public int NOReviews { get; set; }
         public int NOFollows { get; set; }
         public int NOComments { get; set; }
+        public int NOViews { get; set; }
         public int AuthorId { get; set; }
         public string AuthorName { get; set; }
         public bool NullAuthorName { get; set; }

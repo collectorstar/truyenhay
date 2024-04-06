@@ -24,6 +24,7 @@ export class FindComicService {
     params = params.append('statusComic', param.statusComic);
     params = params.append('genresSeleted', genresSeleted);
     params = params.append('comicName', param.comicName);
+    params = params.append('sortComic', param.sortComic);
     return getPaginationResult<ComicForFindComicDto[]>(
       this.baseUrl + 'findComic',
       params,

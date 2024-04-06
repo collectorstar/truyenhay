@@ -21,6 +21,7 @@ export class FindComicComponent implements OnInit {
   user: User | null = null;
   rowData: any[] = [];
   statusComic: number = 0;
+  sortComic: number = 0;
   comicName: string = '';
   paginationParams: Pagination = {
     currentPage: 1,
@@ -63,13 +64,14 @@ export class FindComicComponent implements OnInit {
       this.toastr.warning('Choose at lease one genre!');
       return;
     }
-    console.log(this.comicName)
+    console.log(this.comicName);
     let genres = JSON.stringify(this.selectedGenres.map((x) => x.value));
     let param = new ComicForFindComicParams();
     param.pageNumber = this.paginationParams.currentPage;
     param.pageSize = this.paginationParams.itemsPerPage;
     param.comicName = this.comicName.trim();
     param.statusComic = this.statusComic;
+    param.sortComic = this.sortComic;
     this.busyService.busy();
     this.findComicService
       .getAll(param, genres)
@@ -97,6 +99,12 @@ export class FindComicComponent implements OnInit {
 
   selectStatusComic(stautsComic: number) {
     this.statusComic = stautsComic;
+    this.paginationParams.currentPage = 1;
+    this.getAll();
+  }
+
+  selectSortComic(sortComic: number) {
+    this.sortComic = sortComic;
     this.paginationParams.currentPage = 1;
     this.getAll();
   }
