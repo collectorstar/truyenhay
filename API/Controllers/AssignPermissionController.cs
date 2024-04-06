@@ -32,11 +32,13 @@ namespace API.Controllers
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == User.GetUserId());
             if (user == null) return Unauthorized();
 
-            var list = from x in _userManager.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role).Where(x => (string.IsNullOrWhiteSpace(dto.Email) || x.Email.Contains(dto.Email)) && (dto.OnlyAdmin && x.UserRoles.Any(x => x.Role.Name == "Admin") || !dto.OnlyAdmin) && !x.UserRoles.Any(x => x.Role.Name == "SuperAdmin"))
+            var list = from x in _userManager.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role).Where(x => (string.IsNullOrWhiteSpace(dto.Email) || x.Email.Contains(dto.Email)) && (dto.OnlyAdmin && x.UserRoles.Any(x => x.Role.Name == "Admin") || !dto.OnlyAdmin) && !x.UserRoles.Any(x => x.Role.Name == "SuperAdmin")).OrderByDescending(x => x.CreationTime)
+                       orderby x.CreationTime descending
                        select new GetUserForAssignPermistionDto
                        {
                            Id = x.Id,
                            Email = x.Email,
+                           CreationTime = x.CreationTime,
                            IsAdmin = x.UserRoles.Any(x => x.Role.Name == "Admin")
                        };
             var result = await PagedList<GetUserForAssignPermistionDto>.CreateAsync(list, dto.PageNumber, dto.PageSize);
