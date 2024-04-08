@@ -1,0 +1,93 @@
+<div class="newest-update-comic" *ngIf="rowData.length > 0">
+  <h4 style="color: #2980b9; margin-bottom: 5px">
+    Comics by author {{ authorName }} >
+  </h4>
+  <div class="d-flex flex-wrap comic-container">
+    <div
+      class="col-6 col-md-3 col-xl-2 comic-card"
+      *ngFor="let comic of rowData"
+    >
+      <div class="comic-img">
+        <img
+          [defaultImage]="'/assets/loading.gif'"
+          (click)="
+            router.navigateByUrl(
+              '/comic-detail/' +
+                comic.comicName.replaceAll(' ', '-') +
+                '/' +
+                comic.id
+            )
+          "
+          [lazyLoad]="comic.mainImage"
+          alt="{{ comic.comicName }}"
+          [loading]="true"
+        />
+        <div class="comic-more-info">
+          <span
+            ><i class="fa-solid fa-eye"></i>
+            {{ convertToK(comic.noViews) }}</span
+          >
+          <span
+            ><i class="fa-solid fa-comment"></i>
+            {{ convertToK(comic.noComments) }}</span
+          >
+          <span
+            ><i class="fa-solid fa-heart"></i>
+            {{ convertToK(comic.noFollows) }}</span
+          >
+        </div>
+      </div>
+      <h5
+        class="comic-name"
+        (click)="
+          router.navigateByUrl(
+            '/comic-detail/' +
+              comic.comicName.replaceAll(' ', '-') +
+              '/' +
+              comic.id
+          )
+        "
+      >
+        {{ comic.comicName }}
+      </h5>
+      <div class="comic-chapters">
+        <div class="chapter-info" *ngFor="let chapter of comic.chapters">
+          <a
+            class="chapter-name"
+            [routerLink]="
+              '/comic-detail/' +
+              comic.comicName.replaceAll(' ', '-') +
+              '/' +
+              comic.id +
+              '/' +
+              chapter.name.replaceAll(' ', '-') +
+              '/' +
+              chapter.id
+            "
+            >{{ chapter.name }}</a
+          >
+          <span class="chapter-update-time">{{
+            chapter.updateTime | timeago
+          }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    id="paginate-find-author"
+    *ngIf="paginationParams.totalPages > 1"
+    style="margin-top: 20px"
+  >
+    <p-paginator
+      locale="en-US"
+      (onPageChange)="paginationChange($event)"
+      [first]="
+        (paginationParams.currentPage - 1) * paginationParams.itemsPerPage
+      "
+      [rows]="paginationParams.itemsPerPage"
+      [totalRecords]="paginationParams.totalItems"
+      [showCurrentPageReport]="false"
+    ></p-paginator>
+  </div>
+</div>

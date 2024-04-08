@@ -17,6 +17,7 @@ import { HistoryComponent } from './history/history.component';
 import { GenreCusComponent } from './genre-cus/genre-cus.component';
 import { FindComicComponent } from './find-comic/find-comic.component';
 import { NotifyComponent } from './notify/notify.component';
+import { FindAuthorComponent } from './find-author/find-author.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -64,6 +65,10 @@ const routes: Routes = [
   { path: 'genre-cus', component: GenreCusComponent },
   { path: 'find-comic', component: FindComicComponent },
   { path: 'notify', component: NotifyComponent, canActivate: [loginGuard] },
+  {
+    path: 'find-author/:authorName',
+    component: FindAuthorComponent,
+  },
   { path: 'not-found', component: NotFoundComponent },
   { path: '**', component: NotFoundComponent, pathMatch: 'full' },
 ];

@@ -18,6 +18,7 @@
         <a
           class="comic-author-name"
           [ngClass]="comic.nullAuthorName ? 'no-author-name' : ''"
+          (click)="goToAuthor(comic)"
           >{{ comic.authorName }}</a
         >
       </div>

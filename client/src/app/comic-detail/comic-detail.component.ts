@@ -160,6 +160,13 @@ export class ComicDetailComponent implements OnInit {
       });
   }
 
+  goToAuthor(comic: ComicDetailDto) {
+    if (comic.nullAuthorName) return;
+    this.router.navigateByUrl(
+      '/find-author/' + comic.authorName.replaceAll(' ', '-')
+    );
+  }
+
   convertToK(target: number): string {
     if (target < 1000) return target + '';
     return (target / 1000).toFixed(2) + 'k';
