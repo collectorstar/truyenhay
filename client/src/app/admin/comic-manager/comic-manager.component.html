@@ -1,0 +1,51 @@
+<h4 style="color: #2980b9; margin: 10px 0">Approval Chapter Request ></h4>
+
+<div class="boxsearch mt-1 mb-2">
+  <span>Email:</span>
+  <input
+    class="name-search"
+    type="text"
+    [(ngModel)]="emailSearch"
+    placeholder="Email"
+  />
+  <span>Comic Name:</span>
+  <input
+    class="name-search"
+    type="text"
+    [(ngModel)]="comicNameSearch"
+    placeholder="Comic Name"
+  />
+  <button class="btn btn-success" (click)="getAll()">Search</button>
+</div>
+
+<simple-ag-grid
+  [columnDefs]="columnDefs"
+  [rowData]="rowData"
+  [defaultColDef]="defaultColDef"
+  (callBackGrid)="onGridReady()"
+  (rowClicked)="selectedRowClicked($event)"
+  (changePage)="changePage($event)"
+  [pagination]="true"
+  [paginationParams]="paginationParams"
+></simple-ag-grid>
+
+<div class="action">
+  <div class="action-item">
+    <button
+      class="btn btn-info"
+      (click)="transferComic()"
+      [disabled]="!selectedRow"
+    >
+      <i class="fa-solid fa-trash"></i> Transfer
+    </button>
+  </div>
+  <div class="action-item">
+    <button
+      class="btn btn-danger"
+      (click)="deleteComic()"
+      [disabled]="!selectedRow"
+    >
+      <i class="fa-solid fa-trash"></i> Delete
+    </button>
+  </div>
+</div>

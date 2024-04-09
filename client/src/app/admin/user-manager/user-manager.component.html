@@ -69,6 +69,24 @@
 ></simple-ag-grid>
 
 <div class="action">
+  <div class="action-item" *ngIf="user && user.roles.includes('SuperAdmin')">
+    <button
+      class="btn btn-outline-success"
+      (click)="changeToAuthor()"
+      [disabled]="!selectedRow || (selectedRow && selectedRow.isAuthor)"
+    >
+      <i class="fa-solid fa-user"></i> Change To Author
+    </button>
+  </div>
+  <div class="action-item" *ngIf="user && user.roles.includes('SuperAdmin')">
+    <button
+      class="btn btn-outline-success"
+      (click)="incMaxComic()"
+      [disabled]="!selectedRow || (selectedRow && !selectedRow.isAuthor)"
+    >
+      <i class="fa-solid fa-user"></i> +1 Max Comic
+    </button>
+  </div>
   <div class="action-item">
     <button
       class="btn btn-outline-danger"

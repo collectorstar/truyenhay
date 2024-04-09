@@ -4,7 +4,9 @@ import { ToastrService } from 'ngx-toastr';
 import { finalize } from 'rxjs';
 import { GetUserForUserManagerDto } from 'src/app/_models/getUserForUserManagerDto';
 import { Pagination } from 'src/app/_models/pagination';
+import { User } from 'src/app/_models/user';
 import { UserForUserManagerParam } from 'src/app/_models/userForUserManagerParam';
+import { AccountService } from 'src/app/_services/account.service';
 import { BusyService } from 'src/app/_services/busy.service';
 import { DataFormatServiceService } from 'src/app/_services/data-format-service.service';
 import { UserManagerService } from 'src/app/_services/user-manager.service';
@@ -15,6 +17,7 @@ import { UserManagerService } from 'src/app/_services/user-manager.service';
   styleUrls: ['./user-manager.component.css'],
 })
 export class UserManagerComponent implements OnInit {
+  user: User = {} as User;
   email = '';
   allUser = false;
   fromDate: Date = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
@@ -92,12 +95,20 @@ export class UserManagerComponent implements OnInit {
 
   rowData: GetUserForUserManagerDto[] = [];
   constructor(
+    public accountService: AccountService,
     private dataFormatService: DataFormatServiceService,
     private toastr: ToastrService,
     private busyService: BusyService,
     private userManagerService: UserManagerService
   ) {}
   ngOnInit(): void {
+    this.accountService.currentUser$.subscribe({
+      next: (res) => {
+        if (res) {
+          this.user = res;
+        }
+      },
+    });
     this.getAll();
   }
   onGridReady() {
@@ -177,6 +188,40 @@ export class UserManagerComponent implements OnInit {
           next: () => {
             this.toastr.success('UnBlock Success!');
           },
+        });
+    }
+  }
+
+  incMaxComic() {
+    if (this.selectedRow) {
+      this.busyService.busy();
+      this.userManagerService
+        .incMaxComic(this.selectedRow.id)
+        .pipe(
+          finalize(() => {
+            this.busyService.idle();
+            this.getAll();
+          })
+        )
+        .subscribe(() => {
+          this.toastr.success('Inc success!');
+        });
+    }
+  }
+
+  changeToAuthor() {
+    if (this.selectedRow) {
+      this.busyService.busy();
+      this.userManagerService
+        .changeToAuthor(this.selectedRow.id)
+        .pipe(
+          finalize(() => {
+            this.busyService.idle();
+            this.getAll();
+          })
+        )
+        .subscribe(() => {
+          this.toastr.success('Change to Author success!');
         });
     }
   }

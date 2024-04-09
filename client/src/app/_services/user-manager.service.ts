@@ -33,4 +33,15 @@ export class UserManagerService {
   unBlockUser(userId: number) {
     return this.http.post(this.baseUrl + 'userManager/unblock', userId);
   }
+
+  incMaxComic(userId: number) {
+    return this.http.post(this.baseUrl + 'userManager/inc-max-comic', userId);
+  }
+
+  changeToAuthor(userId: number) {
+    return this.http.post(
+      this.baseUrl + 'userManager/change-to-author',
+      userId
+    );
+  }
 }

@@ -95,5 +95,41 @@ namespace API.Controllers
 
             return Ok();
         }
+
+        [Authorize(Policy = "RequireSuperAdminRole")]
+        [HttpPost("inc-max-comic")]
+        public async Task<ActionResult> IncMaxComic([FromBody] int userId)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == User.GetUserId());
+            if (user == null) return Unauthorized();
+            var userTarget = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            if (userTarget == null) return BadRequest("not found user");
+            userTarget.MaxComic += 1;
+            if (!await _uow.Complete())
+            {
+                return BadRequest("Fail to Inc Max Comic");
+            }
+
+            return Ok();
+        }
+
+        [Authorize(Policy = "RequireSuperAdminRole")]
+        [HttpPost("change-to-author")]
+        public async Task<ActionResult> ChangeToAuthor([FromBody] int userId)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == User.GetUserId());
+            if (user == null) return Unauthorized();
+            var userTarget = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId && !x.IsAuthor);
+            if (userTarget == null) return BadRequest("not found user");
+            userTarget.IsAuthor = true;
+            userTarget.MaxComic = 1;
+            if (!await _uow.Complete())
+            {
+                return BadRequest("Fail to change to author");
+            }
+
+            return Ok();
+        }
+
     }
 }

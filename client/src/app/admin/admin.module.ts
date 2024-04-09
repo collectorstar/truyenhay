@@ -21,6 +21,8 @@ import { InfoChapterComponent } from './approval-chapter/info-chapter/info-chapt
 import { ComicHotComponent } from './comic-hot/comic-hot.component';
 import { UserManagerComponent } from './user-manager/user-manager.component';
 import { AssignAdminComponent } from './assign-admin/assign-admin.component';
+import { ComicManagerComponent } from './comic-manager/comic-manager.component';
+import { TransferComicComponent } from './comic-manager/transfer-comic/transfer-comic.component';
 
 
 @NgModule({
@@ -38,6 +40,8 @@ import { AssignAdminComponent } from './assign-admin/assign-admin.component';
     ComicHotComponent,
     UserManagerComponent,
     AssignAdminComponent,
+    ComicManagerComponent,
+    TransferComicComponent,
   ],
   imports: [
     FormsModule,

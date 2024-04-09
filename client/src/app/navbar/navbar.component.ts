@@ -20,7 +20,7 @@ export class NavbarComponent implements OnInit {
         this.sidebarList = this.setupItemNav(
           user,
           this.sidebarList,
-          sidebarList
+          sidebarList.map(x => ({ ...x }))
         );
       },
     });

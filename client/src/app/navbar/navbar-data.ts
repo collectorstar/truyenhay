@@ -72,6 +72,11 @@ export const sidebarList: INavbarData[] = [
         roles: ['Admin'],
       },
       {
+        routeLink: 'admintruyenhay/comic-manager',
+        label: 'Comic Manager',
+        roles: ['SuperAdmin'],
+      },
+      {
         routeLink: 'admintruyenhay/user-manager',
         label: 'User Manager',
         roles: ['Admin'],

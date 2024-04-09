@@ -1,0 +1,33 @@
+<div *ngIf="selectedRow">
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Transfer Comic</h4>
+    <button
+      type="button"
+      class="btn-close close pull-right"
+      aria-label="Close"
+      (click)="bsModalRef.hide()"
+    >
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="container">
+      <div class="form-floating mb-3">
+        <input
+          type="email"
+          class="form-control"
+          id="floatingInput"
+          placeholder="name@example.com"
+          [(ngModel)]="email"
+        />
+        <label for="floatingInput">Email</label>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-success" (click)="save()">
+      Transfer
+    </button>
+    <button class="btn btn-danger" (click)="bsModalRef.hide()">Cancel</button>
+  </div>
+</div>
