@@ -1,19 +1,19 @@
-<h4 style="color: #2980b9; margin: 10px 0">Comic Manager ></h4>
+<h4 style="color: #2980b9; margin: 10px 0">Chapter Manager ></h4>
 
 <div class="boxsearch mt-1 mb-2">
-  <span>Email:</span>
-  <input
-    class="name-search"
-    type="text"
-    [(ngModel)]="emailSearch"
-    placeholder="Email"
-  />
   <span>Comic Name:</span>
   <input
     class="name-search"
-    type="text"
-    [(ngModel)]="comicNameSearch"
+    type="search"
+    [(ngModel)]="comicName"
     placeholder="Comic Name"
+  />
+  <span>Chapter Name:</span>
+  <input
+    class="name-search"
+    type="search"
+    [(ngModel)]="chapterName"
+    placeholder="Chapter Name"
   />
   <button class="btn btn-success" (click)="getAll()">Search</button>
 </div>
@@ -32,17 +32,8 @@
 <div class="action">
   <div class="action-item">
     <button
-      class="btn btn-info"
-      (click)="transferComic()"
-      [disabled]="!selectedRow"
-    >
-      <i class="fa-solid fa-trash"></i> Transfer
-    </button>
-  </div>
-  <div class="action-item">
-    <button
       class="btn btn-danger"
-      (click)="deleteComic()"
+      (click)="deleteChapter()"
       [disabled]="!selectedRow"
     >
       <i class="fa-solid fa-trash"></i> Delete

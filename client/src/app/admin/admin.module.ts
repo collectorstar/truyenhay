@@ -23,6 +23,7 @@ import { UserManagerComponent } from './user-manager/user-manager.component';
 import { AssignAdminComponent } from './assign-admin/assign-admin.component';
 import { ComicManagerComponent } from './comic-manager/comic-manager.component';
 import { TransferComicComponent } from './comic-manager/transfer-comic/transfer-comic.component';
+import { ChapterManagerComponent } from './chapter-manager/chapter-manager.component';
 
 
 @NgModule({
@@ -42,6 +43,7 @@ import { TransferComicComponent } from './comic-manager/transfer-comic/transfer-
     AssignAdminComponent,
     ComicManagerComponent,
     TransferComicComponent,
+    ChapterManagerComponent,
   ],
   imports: [
     FormsModule,

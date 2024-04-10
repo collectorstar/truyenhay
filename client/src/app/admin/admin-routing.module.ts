@@ -12,6 +12,7 @@ import { UserManagerComponent } from './user-manager/user-manager.component';
 import { AssignAdminComponent } from './assign-admin/assign-admin.component';
 import { superAdminGuard } from '../_guards/super-admin.guard';
 import { ComicManagerComponent } from './comic-manager/comic-manager.component';
+import { ChapterManagerComponent } from './chapter-manager/chapter-manager.component';
 
 const routes: Routes = [
   { path: 'genre', component: GenreComponent },
@@ -30,6 +31,11 @@ const routes: Routes = [
   {
     path: 'comic-manager',
     component: ComicManagerComponent,
+    canActivate: [superAdminGuard],
+  },
+  {
+    path: 'chapter-manager',
+    component: ChapterManagerComponent,
     canActivate: [superAdminGuard],
   },
   { path: '**', component: NotFoundComponent, pathMatch: 'full' },
