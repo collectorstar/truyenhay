@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "d:\\truyenhay\\API\\API.csproj": {}
+    "D:\\truyenhay\\API\\API.csproj": {}
   },
   "projects": {
-    "d:\\truyenhay\\API\\API.csproj": {
+    "D:\\truyenhay\\API\\API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\truyenhay\\API\\API.csproj",
+        "projectUniqueName": "D:\\truyenhay\\API\\API.csproj",
         "projectName": "API",
-        "projectPath": "d:\\truyenhay\\API\\API.csproj",
+        "projectPath": "D:\\truyenhay\\API\\API.csproj",
         "packagesPath": "C:\\Users\\ACER\\.nuget\\packages\\",
-        "outputPath": "d:\\truyenhay\\API\\obj\\",
+        "outputPath": "D:\\truyenhay\\API\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\ACER\\AppData\\Roaming\\NuGet\\NuGet.Config",

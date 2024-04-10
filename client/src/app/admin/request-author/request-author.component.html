@@ -3,11 +3,13 @@
 <div class="boxsearch d-flex align-items-center flex-wrap">
   <div class="row">
     <div class="col-12 col-md-6 col-xl-3">
-      <span class="mt-1 mb-1 d-block">Search Email:</span>
+      <span class="mt-1 mb-1 d-block">Search:</span>
       <input
-        type="text"
+        type="search"
+        (search)="getAll()"
         [(ngModel)]="emailSearch"
         class="mt-1 mb-1 inputserch"
+        placeholder="Email"
       />
     </div>
 

@@ -2,7 +2,7 @@
 
 <div class="boxsearch">
   <span>Search:</span>
-  <input type="text" [(ngModel)]="nameSearch" />
+  <input type="search" (search)="getAll()" placeholder="Genre Name" [(ngModel)]="nameSearch" />
   <button class="btn btn-success" (click)="getAll()">Search</button>
 </div>
 

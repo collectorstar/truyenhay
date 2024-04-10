@@ -4,14 +4,16 @@
   <span>Comic Name:</span>
   <input
     class="name-search"
-    type="text"
+    type="search"
+    (search)="getAll()"
     [(ngModel)]="comicName"
     placeholder="Comic name"
   />
   <span>Chapter Name:</span>
   <input
     class="name-search"
-    type="text"
+    type="search"
+    (search)="getAll()"
     [(ngModel)]="chapterName"
     placeholder="Chapter Name"
   />

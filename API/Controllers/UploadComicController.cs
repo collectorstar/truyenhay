@@ -899,7 +899,7 @@ namespace API.Controllers
         public async Task<ActionResult<PagedList<ReportErrorChapterForAuthorDto>>> GetAllReportChapter([FromQuery] ReportChapterParam dto)
         {
             var list = from x in _uow.ReportErrorChapterRepository.GetAll().Where(rec => (dto.IsOnlyInprocessing && !rec.Status) || !dto.IsOnlyInprocessing)
-                       join y in _uow.ComicRepository.GetAll().Where(comic => comic.AuthorId == User.GetUserId() && comic.ApprovalStatus == ApprovalStatusComic.Accept) on x.ComicId equals y.Id
+                       join y in _uow.ComicRepository.GetAll().Where(comic => (string.IsNullOrWhiteSpace(dto.ComicName) || comic.Name.Contains(dto.ComicName)) && comic.AuthorId == User.GetUserId() && comic.ApprovalStatus == ApprovalStatusComic.Accept) on x.ComicId equals y.Id
                        join z in _uow.ChapterRepository.GetAll().Where(x => x.ApprovalStatus == ApprovalStatusChapter.Accept) on new { comicId = y.Id, chapterId = x.ChapterId } equals new { comicId = z.ComicId, chapterId = z.Id }
                        select new ReportErrorChapterForAuthorDto
                        {

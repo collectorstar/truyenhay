@@ -98,7 +98,12 @@
 
 <div class="search-comic">
   <h5 style="display: inline">{{ "Search: " }}</h5>
-  <input type="text" [(ngModel)]="comicName" placeholder="Comic Name" />
+  <input
+    type="search"
+    (search)="getAll()"
+    [(ngModel)]="comicName"
+    placeholder="Comic Name"
+  />
 </div>
 
 <button class="btn btn-success mb-2" (click)="getAll()">Search</button>

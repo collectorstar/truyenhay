@@ -1,11 +1,12 @@
 <h4 style="color: #2980b9; margin: 10px 0">User Management ></h4>
 
 <div class="box-search">
-  <span class="">{{ "Search Email: " }}</span>
+  <span class="">{{ "Search: " }}</span>
   <input
-    type="text"
+    type="search"
+    (search)="getAll()"
     [(ngModel)]="email"
-    placeholder="input email"
+    placeholder="Email"
     class="inputserch"
   />
 </div>

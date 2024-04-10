@@ -22,7 +22,12 @@
       <div class="create-comic">
         <div class="boxsearch mt-1 mb-2">
           <span>Search:</span>
-          <input type="text" [(ngModel)]="name" placeholder="Name comic" />
+          <input
+            type="search"
+            (search)="getAll()"
+            [(ngModel)]="name"
+            placeholder="Name Comic"
+          />
           <button class="btn btn-success" (click)="getAll()">Search</button>
           <button class="btn btn-success" (click)="checkValidCreateComic()">
             <i class="fa fa-plus"></i> Create
@@ -149,7 +154,8 @@
         <span>Search:</span>
         <input
           class="name-search"
-          type="text"
+          type="search"
+          (search)="getAllError()"
           [(ngModel)]="nameError"
           placeholder="Name comic"
         />

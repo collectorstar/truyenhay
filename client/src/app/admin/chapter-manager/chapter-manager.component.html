@@ -5,6 +5,7 @@
   <input
     class="name-search"
     type="search"
+    (search)="getAll()"
     [(ngModel)]="comicName"
     placeholder="Comic Name"
   />
@@ -12,6 +13,7 @@
   <input
     class="name-search"
     type="search"
+    (search)="getAll()"
     [(ngModel)]="chapterName"
     placeholder="Chapter Name"
   />
