@@ -7,7 +7,7 @@
             <img
               (click)="
                 router.navigateByUrl(
-                  '/comic-detail/' + data.comicName.replaceAll(' ','-')+ '/' + data.id
+                  '/comic-detail/' + toValidURL(data.comicName) + '/' + data.id
                 )
               "
               style="max-height: 240px"
@@ -15,7 +15,6 @@
               [lazyLoad]="data.urlImage"
               [alt]="data.comicName"
               [title]="data.comicName"
-              (click)="clickImg(data)"
             />
           </a>
           <div class="text-chapter">
@@ -23,10 +22,7 @@
               class="comic-name"
               (click)="
                 router.navigateByUrl(
-                  '/comic-detail/' +
-                    data.comicName.replaceAll(' ', '-') +
-                    '/' +
-                    data.id
+                  '/comic-detail/' + toValidURL(data.comicName) + '/' + data.id
                 )
               "
               >{{ data.comicName }}</a
@@ -40,11 +36,11 @@
                 (click)="
                   router.navigateByUrl(
                     '/comic-detail/' +
-                      data.comicName.replaceAll(' ', '-') +
+                      toValidURL(data.comicName) +
                       '/' +
                       data.id +
                       '/' +
-                      data.newestChapter.replaceAll(' ', '-') +
+                      toValidURL(data.newestChapter) +
                       '/' +
                       data.newestChapterId
                   )

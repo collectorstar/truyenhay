@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Repositories
 {
-    public class NotityRepository : INotityRepository
+    public class NotifyRepository : INotifyRepository
     {
         private readonly DataContext _context;
 
-        public NotityRepository(DataContext context)
+        public NotifyRepository(DataContext context)
         {
             _context = context;
         }

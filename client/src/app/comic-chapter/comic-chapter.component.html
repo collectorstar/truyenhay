@@ -4,7 +4,7 @@
       class="comic-name"
       (click)="
         router.navigateByUrl(
-          '/comic-detail/' + comic.name.replaceAll(' ', '-') + '/' + comic.id
+          '/comic-detail/' + toValidURL(comic.name) + '/' + comic.id
         )
       "
       >{{ comic.name }}</a
@@ -39,7 +39,7 @@
     class="comic-icon"
     (click)="
       router.navigateByUrl(
-        '/comic-detail/' + comic.name.replaceAll(' ', '-') + '/' + comic.id
+        '/comic-detail/' + toValidURL(comic.name) + '/' + comic.id
       )
     "
     ><i class="fa-solid fa-list-ul"></i

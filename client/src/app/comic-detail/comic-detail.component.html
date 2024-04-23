@@ -119,11 +119,11 @@
           (click)="
             router.navigateByUrl(
               '/comic-detail/' +
-                comic.name.replaceAll(' ', '-') +
+                toValidURL(comic.name) +
                 '/' +
                 comic.id +
                 '/' +
-                comic.chapterNameContinue.replaceAll(' ', '-') +
+                toValidURL(comic.chapterNameContinue) +
                 '/' +
                 comic.chapterIdContinue
             )
@@ -165,11 +165,11 @@
           [ngClass]="chapter.hasRead ? 'has-read' : ''"
           [routerLink]="
             '/comic-detail/' +
-            comic.name.replaceAll(' ', '-') +
+            toValidURL(comic.name) +
             '/' +
             comic.id +
             '/' +
-            chapter.name.replaceAll(' ', '-') +
+            toValidURL(chapter.name) +
             '/' +
             chapter.id
           "

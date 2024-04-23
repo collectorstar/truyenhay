@@ -16,7 +16,7 @@ namespace API.Interfaces
         IReportErrorChapterRepository ReportErrorChapterRepository { get; }
         IRequestIncMaxComicRepository RequestIncMaxComicRepository { get; }
         ICommentRepository CommentRepository { get; }
-        INotityRepository NotityRepository { get; }
+        INotifyRepository NotifyRepository { get; }
 
         Task<bool> Complete();
         bool HasChanges();

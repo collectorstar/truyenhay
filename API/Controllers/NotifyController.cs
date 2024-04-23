@@ -1,4 +1,7 @@
 using System.Diagnostics;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Web;
 using API.Dtos;
 using API.Entities;
 using API.Extensions;
@@ -29,7 +32,7 @@ namespace API.Controllers
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == User.GetUserId());
             if (user == null) return Unauthorized();
 
-            var list = from x in _uow.NotityRepository.GetAll().Where(x => x.UserRecvId == user.Id).OrderByDescending(x => x.CreationTime)
+            var list = from x in _uow.NotifyRepository.GetAll().Where(x => x.UserRecvId == user.Id).OrderByDescending(x => x.CreationTime)
                        join y in _uow.ComicRepository.GetAll().Where(x => x.Status && x.ApprovalStatus == ApprovalStatusComic.Accept) on x.ComicIdRef equals y.Id into joincomic
                        from y in joincomic.DefaultIfEmpty()
                        join z in _uow.ChapterRepository.GetAll().Where(x => x.Status && x.ApprovalStatus == ApprovalStatusChapter.Accept) on x.ChapterIdRef equals z.Id into joinchapter
@@ -48,9 +51,10 @@ namespace API.Controllers
                                 : "",
                            Link = x.Type == NotifyType.RequestAuthor ? "/upload-comic"
                                 : x.Type == NotifyType.ApprovalComic ? "/upload-comic"
-                                : x.Type == NotifyType.ApprovalChapter ? "/comic-detail/" + y.Name.Replace(" ", "-") + "/" + y.Id + "/" + z.Name.Replace(" ", "-") + "/" + z.Id
+                                // : x.Type == NotifyType.ApprovalChapter ? "/comic-detail/" + y.Name.Replace(" ", "-") + "/" + y.Id + "/" + z.Name.Replace(" ", "-") + "/" + z.Id
+                                : x.Type == NotifyType.ApprovalChapter ? "/comic-detail/" + ToValidURL(y.Name) + "/" + y.Id + "/" + ToValidURL(z.Name) + "/" + z.Id
                                 : x.Type == NotifyType.RequestIncMaxComic ? "/upload-comic"
-                                : x.Type == NotifyType.FixDoneChapter ? "/comic-detail/" + y.Name.Replace(" ", "-") + "/" + y.Id + "/" + z.Name.Replace(" ", "-") + "/" + z.Id
+                                : x.Type == NotifyType.FixDoneChapter ? "/comic-detail/" + ToValidURL(y.Name) + "/" + y.Id + "/" + ToValidURL(z.Name) + "/" + z.Id
                                 : "",
                        };
 
@@ -59,10 +63,20 @@ namespace API.Controllers
             return Ok(result);
         }
 
+        public static string ToValidURL(string inputString)
+        {
+            string noSpacesString = Regex.Replace(inputString, @"\s", "-");
+            string encodedString = Regex.Replace(noSpacesString, @"[^a-zA-Z0-9-_.~]",
+                match => Uri.EscapeDataString(match.Value));
+            string normalizedString = Regex.Replace(encodedString, @"--+", "-");
+            string lowercaseString = normalizedString.ToLower();
+            return lowercaseString;
+        }
+
         [HttpPost("mark-all-readed")]
         public async Task<ActionResult> MarkAllReaded()
         {
-            var list = await _uow.NotityRepository.GetAll().Where(x => !x.IsReaded && x.UserRecvId == User.GetUserId()).ToListAsync();
+            var list = await _uow.NotifyRepository.GetAll().Where(x => !x.IsReaded && x.UserRecvId == User.GetUserId()).ToListAsync();
             if (list.Any())
             {
                 list.ForEach(x => x.IsReaded = true);
@@ -75,7 +89,7 @@ namespace API.Controllers
         [HttpPost("mark-readed")]
         public async Task<ActionResult> MarkReaded([FromBody] int notifyId)
         {
-            var notify = await _uow.NotityRepository.GetAll().Where(x => x.Id == notifyId).FirstOrDefaultAsync();
+            var notify = await _uow.NotifyRepository.GetAll().Where(x => x.Id == notifyId).FirstOrDefaultAsync();
             if (notify != null)
             {
                 notify.IsReaded = true;

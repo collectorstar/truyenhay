@@ -39,7 +39,7 @@ namespace API.Extensions
             services.AddScoped<IReportErrorChapterRepository, ReportErrorChapterRepository>();
             services.AddScoped<IRequestIncMaxComicRepository, RequestIncMaxComicRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
-            services.AddScoped<INotityRepository, NotityRepository>();
+            services.AddScoped<INotifyRepository, NotifyRepository>();
             return services;
         }
     }

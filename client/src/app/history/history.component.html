@@ -9,7 +9,7 @@
         [defaultImage]="'/assets/loading.gif'"
         (click)="
           router.navigateByUrl(
-            '/comic-detail/' + comic.name.replaceAll(' ', '-') + '/' + comic.id
+            '/comic-detail/' + toValidURL(comic.name) + '/' + comic.id
           )
         "
         [lazyLoad]="comic.mainImage"
@@ -21,7 +21,7 @@
       class="comic-name"
       (click)="
         router.navigateByUrl(
-          '/comic-detail/' + comic.name.replaceAll(' ', '-') + '/' + comic.id
+          '/comic-detail/' + toValidURL(comic.name) + '/' + comic.id
         )
       "
     >
@@ -31,11 +31,11 @@
       class="comic-read-continue"
       [routerLink]="
         '/comic-detail/' +
-        comic.name.replaceAll(' ', '-') +
+        toValidURL(comic.name) +
         '/' +
         comic.id +
         '/' +
-        comic.chapterNameContinue.replaceAll(' ', '-') +
+        toValidURL(comic.chapterNameContinue) +
         '/' +
         comic.chapterIdContinue
       "

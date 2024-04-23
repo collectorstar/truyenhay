@@ -2,7 +2,7 @@ using API.Entities;
 
 namespace API.Interfaces
 {
-    public interface INotityRepository
+    public interface INotifyRepository
     {
         Task Add(Notify notify);
         Task AddRange(List<Notify> notifies);

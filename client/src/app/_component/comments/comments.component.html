@@ -50,11 +50,11 @@
             (click)="
               router.navigateByUrl(
                 '/comic-detail/' +
-                  comment.comicName.replaceAll(' ', '-') +
+                  toValidURL(comment.comicName) +
                   '/' +
                   comment.comicId +
                   '/' +
-                  comment.name.replaceAll(' ', '-') +
+                  toValidURL(comment.name) +
                   '/' +
                   comment.chapterId
               )

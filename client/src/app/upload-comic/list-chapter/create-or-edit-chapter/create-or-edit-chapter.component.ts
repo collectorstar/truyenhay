@@ -72,7 +72,7 @@ export class CreateOrEditChapterComponent implements OnInit {
   }
 
   validate(): boolean {
-    if (this.selectedRow?.name == '') {
+    if (this.selectedRow?.name.trim() == '') {
       this.toastr.error('Empty Name');
       return false;
     }

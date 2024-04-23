@@ -56,10 +56,7 @@
           <img
             (click)="
               router.navigateByUrl(
-                '/comic-detail/' +
-                  item.name.replaceAll(' ', '-') +
-                  '/' +
-                  item.id
+                '/comic-detail/' + toValidURL(item.name) + '/' + item.id
               )
             "
             [defaultImage]="'/assets/loading.gif'"

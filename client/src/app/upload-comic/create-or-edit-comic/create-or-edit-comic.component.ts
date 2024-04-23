@@ -77,7 +77,7 @@ export class CreateOrEditComicComponent {
   }
 
   validate(): boolean {
-    if (this.selectedRow?.name == '') {
+    if (this.selectedRow?.name.trim() == '') {
       this.toastr.error('Empty Name');
       return false;
     }
@@ -88,7 +88,7 @@ export class CreateOrEditComicComponent {
     }
 
     if (this.selectedGenres.length > 10) {
-      this.toastr.error('Do not choose more than 5 genres!');
+      this.toastr.error('Do not choose more than 10 genres!');
       return false;
     }
 

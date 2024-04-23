@@ -25,15 +25,17 @@
         <div class="col-5">
           <a
             class="chapterInfo-name"
-            [routerLink]="
-              'comic-detail/' +
-              comic.name.replaceAll(' ', '-') +
-              '/' +
-              comic.id +
-              '/' +
-              item.name.replaceAll(' ', '-') +
-              '/' +
-              item.id
+            (click)="
+              router.navigateByUrl(
+                'comic-detail/' +
+                  toValidURL(comic.name) +
+                  '/' +
+                  comic.id +
+                  '/' +
+                  toValidURL(item.name) +
+                  '/' +
+                  item.id
+              )
             "
             >{{ item.name }}</a
           >

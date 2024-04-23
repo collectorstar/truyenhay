@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { finalize } from 'rxjs';
+import { CheckValidEmail } from 'src/app/_extensions/checkEmail';
 import { ComicForComicManagerDto } from 'src/app/_models/comicForComicManagerDto';
 import { BusyService } from 'src/app/_services/busy.service';
 import { ComicManagerService } from 'src/app/_services/comic-manager.service';
@@ -44,6 +45,11 @@ export class TransferComicComponent {
   validate(): boolean {
     if (this.email.trim() == '') {
       this.toastrService.error('Empty Email');
+      return false;
+    }
+
+    if (!CheckValidEmail(this.email)) {
+      this.toastrService.error('Email invalid');
       return false;
     }
 

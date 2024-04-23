@@ -88,7 +88,7 @@ namespace API.Controllers
                 IsReaded = false
             };
 
-            await _uow.NotityRepository.Add(notify);
+            await _uow.NotifyRepository.Add(notify);
 
             if (!await _uow.Complete())
             {
@@ -120,7 +120,7 @@ namespace API.Controllers
             if (!await _uow.Complete())
             {
                 _uow.RollbackTransaction();
-                return BadRequest("Fail to Accept request");
+                return BadRequest("Fail to Deny request");
             }
 
             var notify = new Notify()
@@ -132,7 +132,7 @@ namespace API.Controllers
                 IsReaded = false
             };
 
-            await _uow.NotityRepository.Add(notify);
+            await _uow.NotifyRepository.Add(notify);
 
             if (!await _uow.Complete())
             {

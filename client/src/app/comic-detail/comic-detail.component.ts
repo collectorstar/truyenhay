@@ -177,11 +177,11 @@ export class ComicDetailComponent implements OnInit {
       let chapterWant = this.comic.chapters[this.comic.chapters.length - 1];
       this.router.navigateByUrl(
         '/comic-detail/' +
-          this.comic.name.replaceAll(' ', '-') +
+          this.toValidURL(this.comic.name) +
           '/' +
           this.comic.id +
           '/' +
-          chapterWant.name.replaceAll(' ', '-') +
+          this.toValidURL(chapterWant.name) +
           '/' +
           chapterWant.id
       );
@@ -192,11 +192,11 @@ export class ComicDetailComponent implements OnInit {
       let chapterWant = this.comic.chapters[0];
       this.router.navigateByUrl(
         '/comic-detail/' +
-          this.comic.name.replaceAll(' ', '-') +
+          this.toValidURL(this.comic.name) +
           '/' +
           this.comic.id +
           '/' +
-          chapterWant.name.replaceAll(' ', '-') +
+          this.toValidURL(chapterWant.name) +
           '/' +
           chapterWant.id
       );
@@ -269,5 +269,18 @@ export class ComicDetailComponent implements OnInit {
   changePageComment(event: Pagination) {
     this.paginationParamsComment = event;
     this.getAllComment();
+  }
+
+  toValidURL(inputString: string): string {
+    const noSpacesString = inputString.replace(/\s/g, '-');
+    const encodedString = noSpacesString.replace(
+      /[^a-zA-Z0-9-_.~]/g,
+      (char) => {
+        return encodeURIComponent(char);
+      }
+    );
+    const normalizedString = encodedString.replace(/--+/g, '-');
+    const lowercaseString = normalizedString.toLowerCase();
+    return lowercaseString;
   }
 }

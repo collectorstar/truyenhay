@@ -68,7 +68,7 @@ namespace API.Controllers
 
             var mailContent = new MailContent();
             mailContent.To = requestAuthor.Email;
-            mailContent.Subject = "truyenhay reset password";
+            mailContent.Subject = "Deny request author";
             mailContent.Body = $@"
             <h3>Hello, I am the manager of tuyenhay</h3>
             <p>I am sending this email to inform you that your request to become an author on {requestAuthor.CreationTime.ToString("dd/MM/yyyy")} has been denied</p>
@@ -90,7 +90,7 @@ namespace API.Controllers
                 IsReaded = false
             };
 
-            await _uow.NotityRepository.Add(notify);
+            await _uow.NotifyRepository.Add(notify);
 
             if (!await _uow.Complete()) return BadRequest("Fail to update data");
 
@@ -129,7 +129,7 @@ namespace API.Controllers
                 IsReaded = false
             };
 
-            await _uow.NotityRepository.Add(notify);
+            await _uow.NotifyRepository.Add(notify);
 
             if (!await _uow.Complete()) return BadRequest("Fail to update data");
 
@@ -182,7 +182,7 @@ namespace API.Controllers
                 IsReaded = false
             };
 
-            await _uow.NotityRepository.Add(notify);
+            await _uow.NotifyRepository.Add(notify);
 
             if (!await _uow.Complete()) return BadRequest("Fail to update data");
 

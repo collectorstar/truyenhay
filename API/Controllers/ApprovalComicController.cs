@@ -69,7 +69,7 @@ namespace API.Controllers
                 IsReaded = false
             };
 
-            await _uow.NotityRepository.Add(notify);
+            await _uow.NotifyRepository.Add(notify);
 
             if (!await _uow.Complete()) return BadRequest("Fail to create notify");
 
@@ -96,7 +96,7 @@ namespace API.Controllers
                 IsReaded = false
             };
 
-            await _uow.NotityRepository.Add(notify);
+            await _uow.NotifyRepository.Add(notify);
 
             if (!await _uow.Complete()) return BadRequest("Fail to create notify");
 
@@ -123,10 +123,10 @@ namespace API.Controllers
             }
 
             #region delete notify
-            var notifies = await _uow.NotityRepository.GetAll().Where(x => x.ComicIdRef == comic.Id).ToListAsync();
+            var notifies = await _uow.NotifyRepository.GetAll().Where(x => x.ComicIdRef == comic.Id).ToListAsync();
             if (notifies.Any())
             {
-                _uow.NotityRepository.DeleteRange(notifies);
+                _uow.NotifyRepository.DeleteRange(notifies);
                 if (!await _uow.Complete())
                 {
                     _uow.RollbackTransaction();
@@ -236,11 +236,11 @@ namespace API.Controllers
 
             #region delete notify
             var notifies = (from x in comics
-                            join y in _uow.NotityRepository.GetAll() on x.Id equals y.ComicIdRef
+                            join y in _uow.NotifyRepository.GetAll() on x.Id equals y.ComicIdRef
                             select y).ToList();
             if (notifies.Any())
             {
-                _uow.NotityRepository.DeleteRange(notifies);
+                _uow.NotifyRepository.DeleteRange(notifies);
                 if (!await _uow.Complete())
                 {
                     _uow.RollbackTransaction();

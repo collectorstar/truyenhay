@@ -70,7 +70,7 @@ namespace API.Controllers
                 IsReaded = false
             };
 
-            await _uow.NotityRepository.Add(notify);
+            await _uow.NotifyRepository.Add(notify);
 
             if (!await _uow.Complete()) return BadRequest("Fail to create notify");
 
@@ -101,7 +101,7 @@ namespace API.Controllers
                 IsReaded = false
             };
 
-            await _uow.NotityRepository.Add(notify);
+            await _uow.NotifyRepository.Add(notify);
 
             if (!await _uow.Complete()) return BadRequest("Fail to create notify");
 
@@ -181,10 +181,10 @@ namespace API.Controllers
             #endregion
 
             #region delete notify
-            var notifies = await _uow.NotityRepository.GetAll().Where(x => x.ComicIdRef == chapter.ComicId && x.ChapterIdRef == chapter.Id).ToListAsync();
+            var notifies = await _uow.NotifyRepository.GetAll().Where(x => x.ComicIdRef == chapter.ComicId && x.ChapterIdRef == chapter.Id).ToListAsync();
             if (notifies.Any())
             {
-                _uow.NotityRepository.DeleteRange(notifies);
+                _uow.NotifyRepository.DeleteRange(notifies);
                 if (!await _uow.Complete())
                 {
                     _uow.RollbackTransaction();

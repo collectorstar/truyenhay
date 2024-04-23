@@ -99,7 +99,7 @@ export class UploadComicService {
     for (const file of files) {
       form.append('files', file);
     }
-    form.append('rank', dto.rank.toString());
+    form.append('rank', (dto?.rank ?? 0).toString());
 
     return this.http.post<any>(
       this.baseUrl + 'uploadComic/create-or-edit-chapter',

@@ -121,4 +121,17 @@ export class ListChapterComponent implements OnInit {
         },
       });
   }
+
+  toValidURL(inputString: string): string {
+    const noSpacesString = inputString.replace(/\s/g, '-');
+    const encodedString = noSpacesString.replace(
+      /[^a-zA-Z0-9-_.~]/g,
+      (char) => {
+        return encodeURIComponent(char);
+      }
+    );
+    const normalizedString = encodedString.replace(/--+/g, '-');
+    const lowercaseString = normalizedString.toLowerCase();
+    return lowercaseString;
+  }
 }

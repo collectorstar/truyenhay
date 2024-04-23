@@ -26,7 +26,7 @@ export class HistoryComponent implements OnInit {
     private historyService: HistoryService,
     private toastr: ToastrService,
     private busyService: BusyService,
-    public router: Router,
+    public router: Router
   ) {}
   ngOnInit(): void {
     this.getAll();
@@ -64,5 +64,18 @@ export class HistoryComponent implements OnInit {
   convertToK(target: number): string {
     if (target < 1000) return target + '';
     return (target / 1000).toFixed(2) + 'k';
+  }
+
+  toValidURL(inputString: string): string {
+    const noSpacesString = inputString.replace(/\s/g, '-');
+    const encodedString = noSpacesString.replace(
+      /[^a-zA-Z0-9-_.~]/g,
+      (char) => {
+        return encodeURIComponent(char);
+      }
+    );
+    const normalizedString = encodedString.replace(/--+/g, '-');
+    const lowercaseString = normalizedString.toLowerCase();
+    return lowercaseString;
   }
 }

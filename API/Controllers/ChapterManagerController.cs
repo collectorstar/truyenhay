@@ -76,10 +76,10 @@ namespace API.Controllers
             #endregion
 
             #region delete notify
-            var notifies = await _uow.NotityRepository.GetAll().Where(x => x.ComicIdRef == comic.Id && x.ChapterIdRef == chapter.Id).ToListAsync();
+            var notifies = await _uow.NotifyRepository.GetAll().Where(x => x.ComicIdRef == comic.Id && x.ChapterIdRef == chapter.Id).ToListAsync();
             if (notifies.Any())
             {
-                _uow.NotityRepository.DeleteRange(notifies);
+                _uow.NotifyRepository.DeleteRange(notifies);
                 if (!await _uow.Complete())
                 {
                     _uow.RollbackTransaction();

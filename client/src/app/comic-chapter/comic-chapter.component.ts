@@ -3,7 +3,7 @@ import { BusyService } from '../_services/busy.service';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ChapterService } from '../_services/chapter.service';
-import { finalize, forkJoin } from 'rxjs';
+import { Subscription, finalize, forkJoin } from 'rxjs';
 import { User } from '../_models/user';
 import { AccountService } from '../_services/account.service';
 import { ComicInfoForComicChapterDto } from '../_models/comicInfoForComicChapterDto';
@@ -251,11 +251,11 @@ export class ComicChapterComponent implements OnInit, OnDestroy {
           this.busyService.idle();
           this.router.navigateByUrl(
             '/comic-detail/' +
-              this.comic.name.replaceAll(' ', '-') +
+              this.toValidURL(this.comic.name) +
               '/' +
               this.comic.id +
               '/' +
-              this.chapter.name.replaceAll(' ', '-') +
+              this.toValidURL(this.chapter.name) +
               '/' +
               this.chapter.id
           );
@@ -304,16 +304,20 @@ export class ComicChapterComponent implements OnInit, OnDestroy {
     });
   }
 
-  openModelChapter() {
-    if (this.user == null) {
-      this.toastr.error('Please login!');
-      return;
+  reverseList<T>(list: T[]): T[] {
+    const reversedList: T[] = [];
+    for (let i = list.length - 1; i >= 0; i--) {
+      reversedList.push(list[i]);
     }
+    return reversedList;
+  }
+
+  openModelChapter() {
     const config = {
       class: 'modal-dialog',
       initialState: {
         chapter: this.chapter,
-        chaptersForModal: this.chaptersForModal,
+        chaptersForModal: this.reverseList(this.chaptersForModal),
       },
     };
 
@@ -445,5 +449,18 @@ export class ComicChapterComponent implements OnInit, OnDestroy {
 
   disposeAction(event: boolean) {
     this.canAction = event;
+  }
+
+  toValidURL(inputString: string): string {
+    const noSpacesString = inputString.replace(/\s/g, '-');
+    const encodedString = noSpacesString.replace(
+      /[^a-zA-Z0-9-_.~]/g,
+      (char) => {
+        return encodeURIComponent(char);
+      }
+    );
+    const normalizedString = encodedString.replace(/--+/g, '-');
+    const lowercaseString = normalizedString.toLowerCase();
+    return lowercaseString;
   }
 }

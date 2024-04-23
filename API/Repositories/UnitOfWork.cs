@@ -25,7 +25,7 @@ namespace API.Repositories
         public IReportErrorChapterRepository ReportErrorChapterRepository => new ReportErrorChapterRepository(_context);
         public IRequestIncMaxComicRepository RequestIncMaxComicRepository => new RequestIncMaxComicRepository(_context);
         public ICommentRepository CommentRepository => new CommentRepository(_context);
-        public INotityRepository NotityRepository => new NotityRepository(_context);
+        public INotifyRepository NotifyRepository => new NotifyRepository(_context);
         public async Task<bool> Complete()
         {
             return await _context.SaveChangesAsync() > 0;

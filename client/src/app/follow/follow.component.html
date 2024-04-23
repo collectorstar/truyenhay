@@ -16,7 +16,7 @@
           (click)="
             router.navigateByUrl(
               '/comic-detail/' +
-                comic.comicName.replaceAll(' ', '-') +
+                toValidURL(comic.comicName) +
                 '/' +
                 comic.id
             )
@@ -31,11 +31,11 @@
           (click)="
             router.navigateByUrl(
               '/comic-detail/' +
-                comic.comicName.replaceAll(' ', '-') +
+                toValidURL(comic.comicName) +
                 '/' +
                 comic.id +
                 '/' +
-                comic.chapterNameContinue.replaceAll(' ', '-') +
+                toValidURL(comic.chapterNameContinue) +
                 '/' +
                 comic.chapterIdContinue
             )
@@ -48,7 +48,7 @@
         (click)="
           router.navigateByUrl(
             '/comic-detail/' +
-              comic.comicName.replaceAll(' ', '-') +
+              toValidURL(comic.comicName) +
               '/' +
               comic.id
           )
@@ -63,11 +63,11 @@
             [ngClass]="chapter.hasRead ? 'has-read' : ''"
             [routerLink]="
               '/comic-detail/' +
-              comic.comicName.replaceAll(' ', '-') +
+              toValidURL(comic.comicName) +
               '/' +
               comic.id +
               '/' +
-              chapter.name.replaceAll(' ', '-') +
+              toValidURL(chapter.name) +
               '/' +
               chapter.id
             "

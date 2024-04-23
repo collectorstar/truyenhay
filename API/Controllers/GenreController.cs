@@ -5,6 +5,7 @@ using API.Helpers;
 using API.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -72,6 +73,13 @@ namespace API.Controllers
         public async Task<ActionResult> DeleteGenre(int id)
         {
             _unitOfWork.GenreRepository.Delete(id);
+
+            var list = await _unitOfWork.ComicGenreRepository.GetAll().Where(x => x.GenreId == id).ToListAsync();
+
+            if(list.Any()){
+                _unitOfWork.ComicGenreRepository.DeleteRange(list);
+            }
+
             if (await _unitOfWork.Complete()) return Ok(new {message = "Delete success!"});
             return BadRequest("Data not found");
         }

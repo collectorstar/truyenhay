@@ -122,10 +122,7 @@
           [defaultImage]="'/assets/loading.gif'"
           (click)="
             router.navigateByUrl(
-              '/comic-detail/' +
-                comic.comicName.replaceAll(' ', '-') +
-                '/' +
-                comic.id
+              '/comic-detail/' + toValidURL(comic.comicName) + '/' + comic.id
             )
           "
           [lazyLoad]="comic.mainImage"
@@ -152,10 +149,7 @@
         class="comic-name"
         (click)="
           router.navigateByUrl(
-            '/comic-detail/' +
-              comic.comicName.replaceAll(' ', '-') +
-              '/' +
-              comic.id
+            '/comic-detail/' + toValidURL(comic.comicName) + '/' + comic.id
           )
         "
       >
@@ -168,11 +162,11 @@
             [ngClass]="chapter.hasRead ? 'has-read' : ''"
             [routerLink]="
               '/comic-detail/' +
-              comic.comicName.replaceAll(' ', '-') +
+              toValidURL(comic.comicName) +
               '/' +
               comic.id +
               '/' +
-              chapter.name.replaceAll(' ', '-') +
+              toValidURL(chapter.name) +
               '/' +
               chapter.id
             "
