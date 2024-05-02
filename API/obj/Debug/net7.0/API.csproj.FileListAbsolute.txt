@@ -75,7 +75,6 @@ D:\truyenhay\API\obj\Debug\net7.0\staticwebassets.pack.json
 D:\truyenhay\API\obj\Debug\net7.0\staticwebassets.build.json
 D:\truyenhay\API\obj\Debug\net7.0\staticwebassets.development.json
 D:\truyenhay\API\obj\Debug\net7.0\scopedcss\bundle\API.styles.css
-D:\truyenhay\API\obj\Debug\net7.0\API.csproj.CopyComplete
 D:\truyenhay\API\obj\Debug\net7.0\API.dll
 D:\truyenhay\API\obj\Debug\net7.0\refint\API.dll
 D:\truyenhay\API\obj\Debug\net7.0\API.pdb
@@ -92,3 +91,5 @@ D:\truyenhay\API\bin\Debug\net7.0\MailKit.dll
 D:\truyenhay\API\bin\Debug\net7.0\MimeKit.dll
 D:\truyenhay\API\bin\Debug\net7.0\System.Security.Cryptography.Pkcs.dll
 D:\truyenhay\API\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Security.Cryptography.Pkcs.dll
+D:\truyenhay\API\obj\Debug\net7.0\API.sourcelink.json
+D:\truyenhay\API\obj\Debug\net7.0\API.csproj.Up2Date

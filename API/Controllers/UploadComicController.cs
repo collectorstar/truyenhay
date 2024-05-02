@@ -996,6 +996,9 @@ namespace API.Controllers
             var check = await _uow.ChapterRepository.GetAll().FirstOrDefaultAsync(x => x.ComicId == comic.Id && x.ApprovalStatus == ApprovalStatusChapter.Waiting);
             if (check != null) return BadRequest("You has a chapter waiting");
 
+            var check1 = await _uow.ChapterRepository.GetAll().FirstOrDefaultAsync(x => x.ComicId == comic.Id && x.ApprovalStatus == ApprovalStatusChapter.Deny);
+            if (check1 != null) return BadRequest("You has a chapter deny");
+
             return Ok();
 
         }
