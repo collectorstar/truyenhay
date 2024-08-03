@@ -1,0 +1,8 @@
+/API/wwwroot
+/API/appsettings.Development.json
+/API/appsettings.json
+/API/bin/*
+/API/.vs/*
+/API/*.bin
+/API/.vs/*
+/API/obj/*

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\truyenhay\\API\\API.csproj": {}
+    "E:\\coding\\truyenhay\\API\\API.csproj": {}
   },
   "projects": {
-    "D:\\truyenhay\\API\\API.csproj": {
+    "E:\\coding\\truyenhay\\API\\API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\truyenhay\\API\\API.csproj",
+        "projectUniqueName": "E:\\coding\\truyenhay\\API\\API.csproj",
         "projectName": "API",
-        "projectPath": "D:\\truyenhay\\API\\API.csproj",
+        "projectPath": "E:\\coding\\truyenhay\\API\\API.csproj",
         "packagesPath": "C:\\Users\\ACER\\.nuget\\packages\\",
-        "outputPath": "D:\\truyenhay\\API\\obj\\",
+        "outputPath": "E:\\coding\\truyenhay\\API\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\ACER\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -22,6 +22,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -111,7 +112,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303\\RuntimeIdentifierGraph.json"
         }
       }
     }

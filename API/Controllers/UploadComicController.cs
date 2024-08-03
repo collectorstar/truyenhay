@@ -348,11 +348,15 @@ namespace API.Controllers
                 var hasReadeds = (from y in chapters
                                   join x in _uow.ChapterHasReadedRepository.GetAll() on y.Id equals x.ChapterId
                                   select x).ToList();
-                _uow.ChapterHasReadedRepository.DeleteRange(hasReadeds);
-                if (!await _uow.Complete())
+                if (hasReadeds.Any())
                 {
-                    _uow.RollbackTransaction();
-                    return BadRequest("fail to delete chapterhasread");
+                    _uow.ChapterHasReadedRepository.DeleteRange(hasReadeds);
+
+                    if (!await _uow.Complete())
+                    {
+                        _uow.RollbackTransaction();
+                        return BadRequest("fail to delete chapterhasread");
+                    }
                 }
 
                 #endregion

@@ -1,13 +1,9 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\truyenhay\\",
+  "WorkspaceRootPath": "E:\\coding\\truyenhay\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{96EA66C4-9A20-499A-BCBD-C8BFF5130810}|API\\API.csproj|d:\\truyenhay\\api\\controllers\\comicdetailcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{96EA66C4-9A20-499A-BCBD-C8BFF5130810}|API\\API.csproj|solutionrelative:api\\controllers\\comicdetailcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{96EA66C4-9A20-499A-BCBD-C8BFF5130810}|API\\API.csproj|d:\\truyenhay\\api\\controllers\\uploadcomiccontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{96EA66C4-9A20-499A-BCBD-C8BFF5130810}|API\\API.csproj|e:\\coding\\truyenhay\\api\\controllers\\uploadcomiccontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{96EA66C4-9A20-499A-BCBD-C8BFF5130810}|API\\API.csproj|solutionrelative:api\\controllers\\uploadcomiccontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -18,21 +14,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 6,
           "Children": [
             {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "ComicDetailController.cs",
-              "DocumentMoniker": "D:\\truyenhay\\API\\Controllers\\ComicDetailController.cs",
-              "RelativeDocumentMoniker": "API\\Controllers\\ComicDetailController.cs",
-              "ToolTip": "D:\\truyenhay\\API\\Controllers\\ComicDetailController.cs",
-              "RelativeToolTip": "API\\Controllers\\ComicDetailController.cs",
-              "ViewState": "AQIAABUAAAAAAAAAAAAAAC0AAAA0AAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-03-13T07:19:23.454Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
             },
             {
               "$type": "Bookmark",
@@ -55,20 +41,17 @@
               "Name": "ST:0:0:{131369f2-062d-44a2-8671-91ff31efb4f4}"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
-            },
-            {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "UploadComicController.cs",
-              "DocumentMoniker": "D:\\truyenhay\\API\\Controllers\\UploadComicController.cs",
+              "DocumentMoniker": "E:\\coding\\truyenhay\\API\\Controllers\\UploadComicController.cs",
               "RelativeDocumentMoniker": "API\\Controllers\\UploadComicController.cs",
-              "ToolTip": "D:\\truyenhay\\API\\Controllers\\UploadComicController.cs",
+              "ToolTip": "E:\\coding\\truyenhay\\API\\Controllers\\UploadComicController.cs",
               "RelativeToolTip": "API\\Controllers\\UploadComicController.cs",
-              "ViewState": "AQIAABUBAAAAAAAAAAAAACQBAAAsAAAA",
+              "ViewState": "AQIAAEEAAAAAAAAAAAAwwEgAAABZAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-03-13T08:42:32.536Z"
+              "WhenOpened": "2024-08-02T07:43:50.279Z",
+              "EditorCaption": ""
             }
           ]
         }

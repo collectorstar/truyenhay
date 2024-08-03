@@ -130,6 +130,7 @@ export class UserManagerComponent implements OnInit {
       .pipe(
         finalize(() => {
           this.busyService.idle();
+          this.selectedRow = null;
         })
       )
       .subscribe({
