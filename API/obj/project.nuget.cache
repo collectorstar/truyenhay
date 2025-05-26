@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "u81JxK78WsY=",
+  "dgSpecHash": "AVwO4Pgohb8=",
   "success": true,
   "projectFilePath": "E:\\coding\\truyenhay\\API\\API.csproj",
   "expectedPackageFiles": [
@@ -131,5 +131,16 @@
     "C:\\Users\\ACER\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.4\\system.threading.tasks.extensions.4.5.4.nupkg.sha512",
     "C:\\Users\\ACER\\.nuget\\packages\\system.windows.extensions\\6.0.0\\system.windows.extensions.6.0.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'MimeKit' 4.3.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-gmc6-fwg3-75m5",
+      "libraryId": "MimeKit",
+      "targetGraphs": [
+        "net7.0"
+      ]
+    }
+  ]
 }
